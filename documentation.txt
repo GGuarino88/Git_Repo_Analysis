@@ -1,0 +1,22 @@
+USEFUL LINKS
+
+Writing first Django App
+https://docs.djangoproject.com/en/4.2/intro/tutorial01/
+
+Django app settings
+https://docs.digitalocean.com/tutorials/app-deploy-django-app/
+
+Django documentation
+https://docs.djangoproject.com/en/4.2/ref/django-admin/#django-admin-startproject
+
+Password generator
+https://passwordsgenerator.net/
+
+Django environment variables - Secret key
+https://stackoverflow.com/questions/15209978/where-to-store-secret-keys-django
+
+Set up DjangoApp on VS code
+https://www.youtube.com/watch?v=eOVLhM6_6t0
+
+Django
+https://www.youtube.com/watch?v=6oOHlcHkX2U
