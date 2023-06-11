@@ -2,6 +2,9 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import datetime
 
+#mac OS patch
+plt.switch_backend('Agg')
+
 class GraphPlotter:
     def plot_contributors_graph(self, contributors, repository_url, repo_directory):
         x = range(len(contributors))

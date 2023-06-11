@@ -32,6 +32,7 @@
     </div>
     <br><br>
     <form action="/analyze" method="POST">
+        {% csrf_token %}
         <div id="repositoryInput">
             <input type="text" name="repository_url" placeholder="Enter GitHub repository URL" required>
             <br><br>
@@ -40,6 +41,7 @@
         </div>
     </form>
     <form action="/upload" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
         <div id="fileInput" style="display: none;">
             <input type="file" name="file">
             <br><br>
