@@ -25,13 +25,20 @@ First Time setting up virtual Environment
 ```bash
 python3 -m venv my_venv
 ```
-Everytime we access the application
+Everytime we access the code editor
 ```bash
 source my_venv/bin/activate
 ```
 Install requirements (First time and as new dependencies are installed)
 ```bash
 pip install -r requirements.txt
+```
+Create environment Variables in the Base directory "../RepoAnalysis/.env"
+```bash
+touch .env
+nano .env
+SECRET_KEY=<DJANGO_SECRET_KEY>
+GIT_API_TOKEN=<GIT_HUB_PERSONAL_TOKEN>
 ```
 3. Run the application:
 ```bash
