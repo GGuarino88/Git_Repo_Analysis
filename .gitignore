@@ -1,4 +1,6 @@
+.DS_Store
 .env
 __pycache__/
 *.pyc
 my_venv/
+results/

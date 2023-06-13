@@ -1,24 +1,4 @@
 # Git_Repo_Analysis
-MET-CS-673 Team#1 Repository
-
-Steps to set up your environment from Terminal
-
-  python3 get-pip.py
-
-  pip install django
-
-  python3 -m venv my_venv
-
-  source my_venv/bin/activate
-
-  git clone https://github.com/GGuarino88/Git_Repo_Analysis
-
-  pip install -r requirements.txt
-
-  python3 manage.py runserver
-
-
-# GitHub Analysis
 
 GitHub Analysis is a web application that analyzes GitHub repositories and provides insights into contributors, code churn over time, and commit activity.
 
@@ -30,29 +10,42 @@ GitHub Analysis is a web application that analyzes GitHub repositories and provi
 - Analyze commit activity and present it as a graph.
 
 ## Requirements
-
-- Python 3.6+
-- Flask
-- GitHub API token (replace `YOUR_GITHUB_API_TOKEN` in `main.py`)
+```bash
+python3 get-pip.py
+```
+- GitHub API token (replace `YOUR_GITHUB_API_TOKEN` in `views.py`)
 
 ## Getting Started
-
 1. Clone the repository:
-
 ```bash
-git clone https://github.com/girikMET/gitHub_Analysis.
+git clone https://github.com/GGuarino88/Git_Repo_Analysis
 ```
-2. Install the required dependencies:
+2. Activate virtual environment and Install the required dependencies:
+First Time setting up virtual Environment
 ```bash
-sudo apt-get -y update && sudo apt-get install python3 python3-pip apache2
-cd gitHub_Analysis
+python3 -m venv my_venv
+```
+Everytime we access the code editor
+```bash
+source my_venv/bin/activate
+```
+Install requirements (First time and as new dependencies are installed)
+```bash
 pip install -r requirements.txt
+```
+Create environment Variables in the Base directory "../RepoAnalysis/.env"
+```bash
+touch .env
+nano .env
+SECRET_KEY=<DJANGO_SECRET_KEY>
+DEBUG=True # Will switch to "False" once in production
+GIT_API_TOKEN=<GIT_HUB_PERSONAL_TOKEN>
 ```
 3. Run the application:
 ```bash
-python main.py or python3 main.py
+python3 manage.py runserver
 ```
-4. Access the application in your web browser at http://localhost:5000.
+4. Access the application in your web browser at http://127.0.0.1:8000/.
 ```Usage
 Enter a repository URL in the provided input field.
 ```
