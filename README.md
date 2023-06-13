@@ -38,6 +38,7 @@ Create environment Variables in the Base directory "../RepoAnalysis/.env"
 touch .env
 nano .env
 SECRET_KEY=<DJANGO_SECRET_KEY>
+DEBUG=True # Will switch to "False" once in production
 GIT_API_TOKEN=<GIT_HUB_PERSONAL_TOKEN>
 ```
 3. Run the application:
