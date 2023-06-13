@@ -13,7 +13,6 @@ GitHub Analysis is a web application that analyzes GitHub repositories and provi
 ```bash
 python3 get-pip.py
 ```
-- GitHub API token (replace `YOUR_GITHUB_API_TOKEN` in `views.py`)
 
 ## Getting Started
 1. Clone the repository:
@@ -37,9 +36,9 @@ Create environment Variables in the Base directory "../RepoAnalysis/.env"
 ```bash
 touch .env
 nano .env
-SECRET_KEY=<DJANGO_SECRET_KEY>
+SECRET_KEY=<DJANGO_SECRET_KEY> # Located in Settings.py
 DEBUG=True # Will switch to "False" once in production
-GIT_API_TOKEN=<GIT_HUB_PERSONAL_TOKEN>
+GIT_API_TOKEN=<GIT_HUB_PERSONAL_TOKEN> # Generate your own in GitHUB
 ```
 3. Run the application:
 ```bash
