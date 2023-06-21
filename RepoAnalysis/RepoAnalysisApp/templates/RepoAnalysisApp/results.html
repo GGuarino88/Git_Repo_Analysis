@@ -1,20 +1,47 @@
-
 <!doctype html>
-
 {% load static %}
 
 <html>
 <head>
     <title>Analysis Results</title>
+    <!-- Include Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .result-card {
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .result-image {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
 </head>
 <body>
-    <h1>Analysis Results</h1>
-    <p>Repository URL: {{ repository_url }}</p>
-    <h2>Contributors Graph</h2>
-    <img src="{%static "results/" %}{{ repo_name }}/contributors_graph.png" alt="Contributors Graph">
-    <h2>Code Churn Over Time</h2>
-    <img src="{%static "results/" %}{{ repo_name }}/code_churn_over_time.png" alt="Code Churn Over Time">
-    <h2>Commit Activity</h2>
-    <img src="{%static "results/" %}{{ repo_name }}/commit_activity.png" alt="Commit Activity">
+    <div class="container">
+        <h1 class="mb-4">Analysis Results</h1>
+        <p class="lead">Repository URL: {{ repository_url }}</p>
+        <div class="result-card">
+            <h2>Contributors Graph</h2>
+            <img class="result-image" src="{%static "results/" %}{{ repo_name }}/contributors_graph.png" alt="Contributors Graph">
+        </div>
+        <div class="result-card">
+            <h2>Code Churn Over Time</h2>
+            <img class="result-image" src="{%static "results/" %}{{ repo_name }}/code_churn_over_time.png" alt="Code Churn Over Time">
+        </div>
+        <div class="result-card">
+            <h2>Commit Activity</h2>
+            <img class="result-image" src="{%static "results/" %}{{ repo_name }}/commit_activity.png" alt="Commit Activity">
+        </div>
+    </div>
+    
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
