@@ -2,51 +2,66 @@
 <html>
 <head>
     <title>GitHub Repository Analyzer</title>
+    <!-- Include Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        .input-group {
-            display: inline-block;
+        body {
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-control {
+            width: 50%;
+            margin-bottom: 10px;
         }
     </style>
     <script>
         function toggleForm() {
-	    var repositoryRadio = document.getElementById("repositoryRadio");
-            var repositoryForm = document.getElementById("repositoryForm");
-            var fileForm = document.getElementById("fileForm");
-	    if (repositoryRadio.checked) {
-                repositoryForm.style.display = "block";
-                fileForm.style.display = "none";
+            var repositoryRadio = document.getElementById("repositoryRadio");
+            var repositoryInput = document.getElementById("repositoryInput");
+            var fileInput = document.getElementById("fileInput");
+            if (repositoryRadio.checked) {
+                repositoryInput.style.display = "block";
+                fileInput.style.display = "none";
             } else {
-                repositoryForm.style.display = "none";
-                fileForm.style.display = "block";
+                repositoryInput.style.display = "none";
+                fileInput.style.display = "block";
             }
         }
     </script>
 </head>
 <body>
-    <h1>GitHub Repository Analyzer</h1>
-    <div class="input-group">
-        <input type="radio" name="input_method" id="repositoryRadio" value="repository" checked onclick="toggleForm()"> Using GitHub Repository
-    </div>
-    <div class="input-group">
-        <input type="radio" name="input_method" id="fileRadio" value="txt_file" onclick="toggleForm()"> Using TXT File contains Group of Repositories
-    </div>
-    <br><br>
-    <form action="/analyze" method="POST">
-        {% csrf_token %}
-        <div id="repositoryInput">
-            <input type="text" name="repository_url" placeholder="Enter GitHub repository URL" required>
-            <br><br>
-            <input type="submit" name="submit" value="Generate Report">
-	    <input type="hidden" name="input_method" value="repository">
+    <div class="container">
+        <h1 class="mb-4">GitHub Repository Analyzer</h1>
+        <div class="form-group">
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="input_method" id="repositoryRadio" value="repository" checked onclick="toggleForm()">
+                <label class="form-check-label" for="repositoryRadio">Using GitHub Repository</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="input_method" id="fileRadio" value="txt_file" onclick="toggleForm()">
+                <label class="form-check-label" for="fileRadio">Using TXT File contains Group of Repositories</label>
+            </div>
         </div>
-    </form>
-    <form action="/upload" method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        <div id="fileInput" style="display: none;">
-            <input type="file" name="file">
-            <br><br>
-            <input type="submit" name="submit" value="Upload and Generate Report">
-        </div>
-    </form>
+        <form action="/analyze" method="POST">
+            {% csrf_token %}
+            <div id="repositoryInput" class="form-group">
+                <input type="text" class="form-control" name="repository_url" placeholder="Enter GitHub repository URL" required>
+                <input type="submit" class="btn btn-primary" name="submit" value="Generate Report">
+                <input type="hidden" name="input_method" value="repository">
+            </div>
+        </form>
+        <form action="/upload" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div id="fileInput" class="form-group" style="display: none;">
+                <input type="file" class="form-control-file" name="file">
+                <input type="submit" class="btn btn-primary mt-2" name="submit" value="Upload and Generate Report">
+            </div>
+        </form>
+    </div>
+    <!-- Include Bootstrap JavaScript -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
