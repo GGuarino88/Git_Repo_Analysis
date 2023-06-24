@@ -15,6 +15,8 @@ import os
 
 import environ
 
+from datetime import timedelta
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -67,6 +69,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
+    # Autologout package
+    'django_auto_logout.middleware.auto_logout',
 ]
 
 ROOT_URLCONF = 'RepoAnalysisApp.urls'
@@ -85,6 +90,9 @@ TEMPLATES = [
                 
                 # 'allauth' needs this from django
                 'django.template.context_processors.request',
+                
+                # autologout package
+                'django_auto_logout.context_processors.auto_logout_client',
             ],
         },
     },
@@ -171,4 +179,10 @@ SOCIALACCOUNT_PROVIDERS = {
             'read:org',
         ],
     }
+}
+
+# User will be logged out after 10 minutes of inactivity and redirected to login page
+AUTO_LOGOUT = {
+    'IDLE_TIME': timedelta(seconds=10),
+    'MESSAGE': 'The session has expired. Please login again to continue.',
 }

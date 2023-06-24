@@ -1,6 +1,7 @@
 import os
 import csv
-from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
 from django.conf import settings
 
 ## Modules Initialization
@@ -79,10 +80,12 @@ def home(request):
     context={}
     return render(request, "RepoAnalysisApp/home.html", context)
 
+@login_required
 def index(request):
     context={}
     return render(request, "RepoAnalysisApp/index.html", context)
 
+@login_required
 def analyze(request):
 
     if request.method == "POST":
