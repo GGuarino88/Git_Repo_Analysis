@@ -153,8 +153,6 @@ STATICFILES_DIRS = [
     
 ]
 
-LOGIN_REDIRECT_URL = '/'
-
 SITE_ID = 1
 
 # Default primary key field type
@@ -181,8 +179,17 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
+# Login and Logout URLS
+LOGIN_URL = '/'
+LOGOUT_URL = 'logout/'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL ='/'
+
+SOCIALACCOUNT_LOGIN_ON_GET = True
+
 # User will be logged out after 10 minutes of inactivity and redirected to login page
 AUTO_LOGOUT = {
-    'IDLE_TIME': timedelta(seconds=10),
+    'IDLE_TIME': timedelta(minutes=10),
+    'SESSION_TIME':timedelta(hours=1),
     'MESSAGE': 'The session has expired. Please login again to continue.',
 }

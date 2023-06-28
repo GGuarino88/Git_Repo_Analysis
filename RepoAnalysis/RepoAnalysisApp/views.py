@@ -1,7 +1,11 @@
 import os
 import csv
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
+from allauth.socialaccount.models import SocialAccount
+
+#from django.contrib import messages
+
+from django.shortcuts import render #, redirect
 from django.conf import settings
 
 ## Modules Initialization
@@ -77,7 +81,14 @@ def analyze_repository(repository_url):
 # Create your views here.
 
 def home(request):
+    
     context={}
+    
+    if request.user.is_authenticated:
+        data = SocialAccount.objects.get(user=request.user).extra_data
+        context = data
+        #print(context)
+        
     return render(request, "RepoAnalysisApp/home.html", context)
 
 @login_required
