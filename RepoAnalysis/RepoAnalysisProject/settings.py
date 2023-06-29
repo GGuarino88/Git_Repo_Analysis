@@ -32,9 +32,6 @@ environ.Env.read_env(env_file)
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env("SECRET_KEY")
 
-# Git hub API_TOKEN to be created in GIT
-GIT_API_TOKEN = env("GIT_API_TOKEN")
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool("DEBUG", default=False)
 
@@ -185,7 +182,8 @@ LOGOUT_URL = 'logout/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL ='/'
 
-SOCIALACCOUNT_LOGIN_ON_GET = True
+#SOCIALACCOUNT_LOGIN_ON_GET = True
+SOCIALACCOUNT_STORE_TOKENS = True
 
 # User will be logged out after 10 minutes of inactivity and redirected to login page
 AUTO_LOGOUT = {

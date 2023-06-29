@@ -1,16 +1,13 @@
 import os
 import csv
 from django.contrib.auth.decorators import login_required
-from allauth.socialaccount.models import SocialAccount
-
-#from django.contrib import messages
-
 from django.shortcuts import render #, redirect
 from django.conf import settings
 
 ## Modules Initialization
 from RepoAnalysisApp.utils.github_api import GitHubAPI
 from RepoAnalysisApp.utils.graph_plotter import GraphPlotter
+from RepoAnalysisApp.utils.SocialAccountDATA import SocialAccountDATA
 
 ## Results Dir Declaration create if not exists
 RESULTS_DIR = "RepoAnalysisApp/static/results"
@@ -38,9 +35,9 @@ def retry_api(api_call):
         print("Unable to retrieve data after 5 retries.")
     return response
 
-def analyze_repository(repository_url):
+def analyze_repository(repository_url, access_token):
     ## This is temporary API KEY, please use your gitHub KEY code while running locally
-    github_api = GitHubAPI(settings.GIT_API_TOKEN)
+    github_api = GitHubAPI(access_token)
     graph_plotter = GraphPlotter()
     repo_name = repository_url.replace("https://github.com/", "").replace("/", "_")
     repo_directory = os.path.join(RESULTS_DIR, repo_name)
@@ -85,9 +82,8 @@ def home(request):
     context={}
     
     if request.user.is_authenticated:
-        data = SocialAccount.objects.get(user=request.user).extra_data
+        data = SocialAccountDATA(request).get_extra_data()
         context = data
-        #print(context)
         
     return render(request, "RepoAnalysisApp/home.html", context)
 
@@ -98,16 +94,15 @@ def index(request):
 
 @login_required
 def analyze(request):
-
+    
     if request.method == "POST":
 
         input_method = request.POST.get("input_method")
 
         if input_method == 'repository':            
             repository_url = request.POST.get("repository_url")
-            analyze_repository(repository_url)
+            analyze_repository(repository_url, SocialAccountDATA(request).get_access_token())
             repo_name = repository_url.replace("https://github.com/", "").replace("/", "_")
-
             context={"repository_url": repository_url, "repo_name": repo_name}
 
             return render(request, "RepoAnalysisApp/results.html",context)
