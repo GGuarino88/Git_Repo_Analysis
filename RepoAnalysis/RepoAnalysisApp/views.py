@@ -2,7 +2,6 @@ import os
 import csv
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render #, redirect
-from django.conf import settings
 
 ## Modules Initialization
 from RepoAnalysisApp.utils.github_api import GitHubAPI
