@@ -15,6 +15,8 @@ import os
 
 import environ
 
+from datetime import timedelta
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -29,9 +31,6 @@ environ.Env.read_env(env_file)
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env("SECRET_KEY")
-
-# Git hub API_TOKEN to be created in GIT
-GIT_API_TOKEN = env("GIT_API_TOKEN")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool("DEBUG", default=False)
@@ -48,6 +47,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    
+    # Apps used for social login
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.github',
+    
     'RepoAnalysisApp', # Added app to the installed apps
 ]
 
@@ -59,6 +66,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
+    # Autologout package
+    'django_auto_logout.middleware.auto_logout',
 ]
 
 ROOT_URLCONF = 'RepoAnalysisApp.urls'
@@ -74,6 +84,12 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                
+                # 'allauth' needs this from django
+                'django.template.context_processors.request',
+                
+                # autologout package
+                'django_auto_logout.context_processors.auto_logout_client',
             ],
         },
     },
@@ -134,7 +150,44 @@ STATICFILES_DIRS = [
     
 ]
 
+SITE_ID = 1
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTHENTICATION_BACKENDS = [
+    
+    # Need to login by username in Django admin, regardless of 'allauth'
+    'django.contrib.auth.backends.ModelBackend',
+    
+    # 'allauth' specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+SOCIALACCOUNT_PROVIDERS = {
+    'github': {
+        'SCOPE': [
+            'user',
+            'repo',
+            'read:org',
+        ],
+    }
+}
+
+# Login and Logout URLS
+LOGIN_URL = '/'
+LOGOUT_URL = 'logout/'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL ='/'
+
+#SOCIALACCOUNT_LOGIN_ON_GET = True
+SOCIALACCOUNT_STORE_TOKENS = True
+
+# User will be logged out after 10 minutes of inactivity and redirected to login page
+AUTO_LOGOUT = {
+    'IDLE_TIME': timedelta(minutes=10),
+    'SESSION_TIME':timedelta(hours=1),
+    'MESSAGE': 'The session has expired. Please login again to continue.',
+}
