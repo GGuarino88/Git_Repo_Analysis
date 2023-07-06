@@ -42,7 +42,7 @@ GIT_API_TOKEN=<GIT_HUB_PERSONAL_TOKEN> # Generate your own in GitHUB
 ```
 3. Run the application:
 ```bash
-python3
+python3 manage.py runserver
 ```
 4. Access the application in your web browser at http://127.0.0.1:8000/.
 ```Usage
