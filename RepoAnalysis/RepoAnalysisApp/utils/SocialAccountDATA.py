@@ -6,6 +6,10 @@ class SocialAccountDATA:
     def __init__(self, request):
         
         self.__request = request
+        
+    def is_social(self):
+        
+        return SocialAccount.objects.filter(user=self.__request.user).exists()
     
     def get_extra_data(self):
         

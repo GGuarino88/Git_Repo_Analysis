@@ -1,12 +1,17 @@
 import os
 import csv
+
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render #, redirect
+from django.shortcuts import render, redirect
 
 ## Modules Initialization
 from RepoAnalysisApp.utils.github_api import GitHubAPI
 from RepoAnalysisApp.utils.graph_plotter import GraphPlotter
 from RepoAnalysisApp.utils.SocialAccountDATA import SocialAccountDATA
+
+# Social Accounts modules
+from allauth.account.views import SignupView, LoginView, LogoutView
+
 
 ## Results Dir Declaration create if not exists
 RESULTS_DIR = "RepoAnalysisApp/static/results"
@@ -79,16 +84,22 @@ def analyze_repository(repository_url, access_token):
 def home(request):
     
     context={}
+   
+    if request.user.is_superuser:
+        request.session.clear()
+        return redirect('home')
     
-    if request.user.is_authenticated:
+    elif request.user.is_authenticated:
         data = SocialAccountDATA(request).get_extra_data()
         context = data
-        
+        redirect('login')
+    
     return render(request, "RepoAnalysisApp/home.html", context)
 
 @login_required
 def index(request):
     context={}
+    
     return render(request, "RepoAnalysisApp/index.html", context)
 
 @login_required
@@ -117,3 +128,13 @@ def analyze(request):
 
     return render(request, "RepoAnalysisApp/index.html")
     
+    
+class RepoAnalysisLogin(LoginView):
+    template_name = 'account/login.html'
+    
+repoAnalysisLogin = RepoAnalysisLogin.as_view()
+
+class RepoAnalysisLogout(LogoutView):
+    template_name = 'account/logout.html'
+    
+repoAnalysisLogout = RepoAnalysisLogout.as_view()
