@@ -49,13 +49,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     
+    'RepoAnalysisApp', # Added app to the installed apps
+    
     # Apps used for social login
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.github',
-    
-    'RepoAnalysisApp', # Added app to the installed apps
 ]
 
 MIDDLEWARE = [
@@ -172,6 +172,7 @@ SOCIALACCOUNT_PROVIDERS = {
             'user',
             'repo',
             'read:org',
+            'user:mail',
         ],
     }
 }
@@ -182,8 +183,10 @@ LOGOUT_URL = 'logout/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL ='/'
 
-#SOCIALACCOUNT_LOGIN_ON_GET = True
+SOCIALACCOUNT_QUERY_EMAIL = True
 SOCIALACCOUNT_STORE_TOKENS = True
+
+ACCOUNT_EMAIL_VERIFICATION = "none"
 
 # User will be logged out after 10 minutes of inactivity and redirected to login page
 AUTO_LOGOUT = {
