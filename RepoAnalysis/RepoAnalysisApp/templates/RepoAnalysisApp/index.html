@@ -1,21 +1,120 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>GitHub Repository Analyzer</title>
-    <!-- Include Bootstrap CSS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
         body {
-            padding: 20px;
-            background-color: #f8f9fa;
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+            background: #f4f7fa;
         }
-        .form-group {
+        .header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #3f51b5;
+            padding: 20px 0;
+        }
+        .header a {
+            margin: 0 15px;
+            text-decoration: none;
+            color: #fff;
+            font-weight: 600;
+        }
+        h1 {
             margin-bottom: 20px;
+            color: #3f51b5;
         }
-        .form-control {
-            width: 50%;
+        p {
+            color: #555;
+            line-height: 1.5;
+            max-width: 600px;
+            margin: 0 auto 20px;
+        }
+        footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #3f51b5;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+        .message {
             margin-bottom: 10px;
         }
+        .github-btn {
+            background: #333;
+            color: #fff;
+            border-radius: 5px;
+            display: inline-flex;
+            align-items: center;
+            padding: 5px 10px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        .github-btn:hover {
+            background: #444;
+        }
+        .github-btn svg {
+            margin-right: 5px;
+        }
+        .form-group {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        max-width: 600px;
+        margin: 0 auto 20px;
+        padding: 20px;
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    .form-check-inline {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    .form-check-label {
+        color: #3f51b5;
+        font-weight: 600;
+        margin-left: 10px;
+    }
+    .form-control, .form-control-file {
+        border: 1px solid #3f51b5;
+        padding: 10px;
+        border-radius: 5px;
+        width: 90%; /* updated width */
+        margin-bottom: 10px;
+    }
+    .btn-primary {
+        background: #3f51b5;
+        border: none;
+        color: #fff;
+        padding: 10px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background 0.3s ease;
+        width: 90%; /* updated width */
+    }
+    .btn-primary:hover {
+        background: #4051B5;
+    }
+
     </style>
     <script>
         function toggleForm() {
@@ -32,36 +131,53 @@
         }
     </script>
 </head>
+
 <body>
-    <div class="container">
-        <h1 class="mb-4">GitHub Repository Analyzer</h1>
-        <div class="form-group">
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="input_method" id="repositoryRadio" value="repository" checked onclick="toggleForm()">
-                <label class="form-check-label" for="repositoryRadio">Using GitHub Repository</label>
-            </div>
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="input_method" id="fileRadio" value="txt_file" onclick="toggleForm()">
-                <label class="form-check-label" for="fileRadio">Using TXT File contains Group of Repositories</label>
-            </div>
-        </div>
-        <form action="/analyze" method="POST">
-            {% csrf_token %}
-            <div id="repositoryInput" class="form-group">
-                <input type="text" class="form-control" name="repository_url" placeholder="Enter GitHub repository URL" required>
-                <input type="submit" class="btn btn-primary" name="submit" value="Generate Report">
-                <input type="hidden" name="input_method" value="repository">
-            </div>
-        </form>
-        <form action="/upload" method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            <div id="fileInput" class="form-group" style="display: none;">
-                <input type="file" class="form-control-file" name="file">
-                <input type="submit" class="btn btn-primary mt-2" name="submit" value="Upload and Generate Report">
-            </div>
-        </form>
+
+    <div class="header">
+        <a href="#">Home</a>
+        <a href="about.html">About</a>
+        <a href="../accounts/github/login/?process=login/">Login</a>
+        <a href="logout/">Logout</a>
+        <a href="admin/">Admin</a>
     </div>
-    <!-- Include Bootstrap JavaScript -->
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <h1>GitHub Repository Analyzer</h1>
+
+    <div class="form-group">
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="input_method" id="repositoryRadio" value="repository" checked onclick="toggleForm()">
+            <label class="form-check-label" for="repositoryRadio">Using GitHub Repository</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="input_method" id="fileRadio" value="txt_file" onclick="toggleForm()">
+            <label class="form-check-label" for="fileRadio">Using TXT File contains Group of Repositories</label>
+        </div>
+    </div>
+    <form action="/analyze" method="POST">
+        {% csrf_token %}
+        <div id="repositoryInput" class="form-group">
+            <input type="text" class="form-control" name="repository_url" placeholder="Enter GitHub repository URL" required>
+            <input type="submit" class="btn btn-primary" name="submit" value="Generate Report">
+            <input type="hidden" name="input_method" value="repository">
+        </div>
+    </form>
+    <form action="/upload" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div id="fileInput" class="form-group" style="display: none;">
+            <input type="file" class="form-control-file" name="file">
+            <input type="submit" class="btn btn-primary mt-2" name="submit" value="Upload and Generate Report">
+        </div>
+    </form>
+
 </body>
+
+<footer>
+    {% for message in messages %}
+    <div class="message {{ message.tags }}">
+        {{ message }}
+    </div>
+    {% endfor %}
+</footer>
+
 </html>
