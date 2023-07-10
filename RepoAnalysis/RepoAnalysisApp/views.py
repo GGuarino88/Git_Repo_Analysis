@@ -96,11 +96,17 @@ def home(request):
     
     return render(request, "RepoAnalysisApp/home.html", context)
 
-@login_required
+
 def index(request):
     context={}
-    
-    return render(request, "RepoAnalysisApp/index.html", context)
+    if request.user.is_authenticated:
+        return render(request, "RepoAnalysisApp/index.html", context)
+    else:
+        return redirect("../accounts/github/login/?process=login/")
+
+def about(request):
+    context = {}
+    return render(request, "RepoAnalysisApp/about.html", context)
 
 @login_required
 def analyze(request):
