@@ -15,12 +15,6 @@ def create_directory(directory):
     if not os.path.exists(directory):
         os.makedirs(directory)
 
-## function to Save the file in csv
-def save_csv_file(data, filename):
-    with open(filename, 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerows(data)
-
 ## function to Save the file in json
 def save_json_file(data, filename):
     with open(filename, 'w') as file:
@@ -90,15 +84,12 @@ def home(request):
     elif request.user.is_authenticated:
         data = SocialAccountDATA(request).get_extra_data()
         context = data
-        return redirect('login')
+        redirect('login')
     return render(request, "RepoAnalysisApp/home.html", context)
 
 def index(request):
     context={}
-    if request.user.is_authenticated:
-        return render(request, "RepoAnalysisApp/index.html", context)
-    else:
-        return redirect("../accounts/github/login/?process=login/")
+    return render(request, "RepoAnalysisApp/index.html", context)
 
 def about(request):
     context = {}
