@@ -1,6 +1,7 @@
 import os
 import csv
 
+from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
@@ -84,21 +85,25 @@ def analyze_repository(repository_url, access_token):
 def home(request):
     
     context={}
-   
+    
     if request.user.is_superuser:
         request.session.clear()
         return redirect('home')
     
     elif request.user.is_authenticated:
+        
         data = SocialAccountDATA(request).get_extra_data()
         context = data
+        
         redirect('login')
     
     return render(request, "RepoAnalysisApp/home.html", context)
 
 @login_required
 def index(request):
-    context={}
+    
+    data = SocialAccountDATA(request).get_extra_data()
+    context = data
     
     return render(request, "RepoAnalysisApp/index.html", context)
 
@@ -115,7 +120,7 @@ def analyze(request):
             repo_name = repository_url.replace("https://github.com/", "").replace("/", "_")
             context={"repository_url": repository_url, "repo_name": repo_name}
 
-            return render(request, "RepoAnalysisApp/results.html",context)
+            return render(request, "RepoAnalysisApp/results.html", context)
 
         elif input_method == 'txt_file':
 

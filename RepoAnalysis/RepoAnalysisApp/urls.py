@@ -10,7 +10,7 @@ urlpatterns = [
     #path('login/', github_view.oauth2_login, name='login'),
     
     # admin view url
-    path('admin/', admin.site.urls),
+    path('admin/', admin.site.urls, name='admin'),
     
     # allauth views url
     
