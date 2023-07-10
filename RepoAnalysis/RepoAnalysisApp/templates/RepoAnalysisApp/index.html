@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <title>GitHub Repository Analyzer</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
@@ -116,7 +115,6 @@
     .btn-primary:hover {
         background: #4051B5;
     }
-
     </style>
     <script>
         function toggleForm() {
@@ -133,19 +131,15 @@
         }
     </script>
 </head>
-
 <body>
-
     <div class="header">
         <a href="../">Home</a>
-        <a href="about.html">About</a>
+        <a href="about/">About</a>
         <!-- <a href="../accounts/github/login/?process=login/">Login</a> -->
         <a href="logout/">Logout</a>
         <a href="admin/">Admin</a>
     </div>
-
     <h1>GitHub Repository Analyzer</h1>
-
     <div class="form-group">
         <div class="form-check form-check-inline">
             <input class="form-check-input" type="radio" name="input_method" id="repositoryRadio" value="repository" checked onclick="toggleForm()">
@@ -171,9 +165,7 @@
             <input type="submit" class="btn btn-primary mt-2" name="submit" value="Upload and Generate Report">
         </div>
     </form>
-
 </body>
-
 <footer>
     {% for message in messages %}
     <div class="message {{ message.tags }}">
@@ -181,5 +173,4 @@
     </div>
     {% endfor %}
 </footer>
-
 </html>

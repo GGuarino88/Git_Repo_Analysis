@@ -67,39 +67,31 @@
     </style>
 </head>
 <body>
-
     <div class="header">
         <a href="../">Home</a>
         <a href="about.html">About</a>
         <a href="logout/">Logout</a>
         <a href="admin/">Admin</a>
     </div>
-
     <div class="container">
         <h1>Analysis Results</h1>
         <p class="lead">Repository URL: {{ repository_url }}</p>
-
         <div class="result-card">
             <h2>Contributors Graph</h2>
             <img class="result-image" src="{% static "results/" %}{{ repo_name }}/contributors_graph.png" alt="Contributors Graph">
         </div>
-
         <div class="result-card">
             <h2>Code Churn Over Time</h2>
             <img class="result-image" src="{% static "results/" %}{{ repo_name }}/code_churn_over_time.png" alt="Code Churn Over Time">
         </div>
-
         <div class="result-card">
             <h2>Commit Activity</h2>
             <img class="result-image" src="{% static "results/" %}{{ repo_name }}/commit_activity.png" alt="Commit Activity">
         </div>
     </div>
-
     <footer>
         © 2023 GitHub Repository Analyzer. All rights reserved.
     </footer>
-
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
 </body>
 </html>
