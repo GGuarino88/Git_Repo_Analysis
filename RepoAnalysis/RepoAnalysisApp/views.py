@@ -1,6 +1,6 @@
 import os
 import csv
-
+import json
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
@@ -19,7 +19,12 @@ def create_directory(directory):
     if not os.path.exists(directory):
         os.makedirs(directory)
 
-## Save the file to csv function
+## function to Save the file in json
+def save_json_file(data, filename):
+    with open(filename, 'w') as file:
+        json.dump(data, file)
+
+## function to Save the file in csv
 def save_csv_file(data, filename):
     with open(filename, 'w', newline='') as file:
         writer = csv.writer(file)
@@ -54,6 +59,7 @@ def analyze_repository(repository_url, access_token):
         contributors_data = [[contributor["login"], contributor["contributions"]] for contributor in contributors]
         contributors_csv_file = os.path.join(repo_directory, "contributors_graph.csv")
         save_csv_file(contributors_data, contributors_csv_file)
+        save_json_file(contributors_data, contributors_json_file)
         total_contributions = sum(contributor["contributions"] for contributor in contributors)
         meaningful_contributors = [contributor["login"] for contributor in contributors if contributor["contributions"] > total_contributions / len(contributors)]
         if len(meaningful_contributors) == len(contributors):
@@ -69,6 +75,7 @@ def analyze_repository(repository_url, access_token):
         code_churn_data = [[entry[0], entry[1], entry[2]] for entry in code_churn]
         code_churn_csv_file = os.path.join(repo_directory, "code_churn_over_time.csv")
         save_csv_file(code_churn_data, code_churn_csv_file)
+        save_json_file(code_churn_data, code_churn_json_file)
 
     ## Commit Details
     commit_activity = retry_api(lambda: github_api.get_commit_activity(repository_url))
@@ -77,6 +84,7 @@ def analyze_repository(repository_url, access_token):
         commit_activity_data = [[data["week"], data["total"]] for data in commit_activity]
         commit_activity_csv_file = os.path.join(repo_directory, "commit_activity.csv")
         save_csv_file(commit_activity_data, commit_activity_csv_file)
+        save_json_file(commit_activity_data, commit_activity_json_file)
     print(f"Analyzing repository: {repository_url}")
 
 # Create your views here.
