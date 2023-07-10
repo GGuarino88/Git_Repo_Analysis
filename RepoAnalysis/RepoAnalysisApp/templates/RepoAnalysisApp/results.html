@@ -5,10 +5,42 @@
     <title>Analysis Results</title>
     <!-- Include Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
         body {
-            padding: 20px;
-            background-color: #f8f9fa;
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #f4f7fa;
+        }
+        .header {
+            background-color: #3f51b5;
+            padding: 20px 0;
+            width: 100%;
+        }
+        .header a {
+            margin: 0 15px;
+            text-decoration: none;
+            color: #fff;
+            font-weight: 600;
+        }
+        h1 {
+            margin-bottom: 20px;
+            color: #3f51b5;
+        }
+        p {
+            color: #555;
+            line-height: 1.5;
+            max-width: 600px;
+            margin: 0 auto 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 80px auto 80px; /* Adjust the margin-top and margin-bottom values depending on your header and footer height */
         }
         .result-card {
             border: 1px solid #e0e0e0;
@@ -16,31 +48,58 @@
             padding: 20px;
             margin-bottom: 20px;
             text-align: center;
+            background: #fff;
         }
         .result-image {
             max-width: 100%;
             height: auto;
         }
+        footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #3f51b5;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
+
+    <div class="header">
+        <a href="../">Home</a>
+        <a href="about.html">About</a>
+        <a href="logout/">Logout</a>
+        <a href="admin/">Admin</a>
+    </div>
+
     <div class="container">
-        <h1 class="mb-4">Analysis Results</h1>
+        <h1>Analysis Results</h1>
         <p class="lead">Repository URL: {{ repository_url }}</p>
+
         <div class="result-card">
             <h2>Contributors Graph</h2>
-            <img class="result-image" src="{%static "results/" %}{{ repo_name }}/contributors_graph.png" alt="Contributors Graph">
+            <img class="result-image" src="{% static "results/" %}{{ repo_name }}/contributors_graph.png" alt="Contributors Graph">
         </div>
+
         <div class="result-card">
             <h2>Code Churn Over Time</h2>
-            <img class="result-image" src="{%static "results/" %}{{ repo_name }}/code_churn_over_time.png" alt="Code Churn Over Time">
+            <img class="result-image" src="{% static "results/" %}{{ repo_name }}/code_churn_over_time.png" alt="Code Churn Over Time">
         </div>
+
         <div class="result-card">
             <h2>Commit Activity</h2>
-            <img class="result-image" src="{%static "results/" %}{{ repo_name }}/commit_activity.png" alt="Commit Activity">
+            <img class="result-image" src="{% static "results/" %}{{ repo_name }}/commit_activity.png" alt="Commit Activity">
         </div>
     </div>
-    
+
+    <footer>
+        © 2023 GitHub Repository Analyzer. All rights reserved.
+    </footer>
+
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 </body>
 </html>
