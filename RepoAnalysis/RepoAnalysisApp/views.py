@@ -82,15 +82,18 @@ def home(request):
         request.session.clear()
         return redirect('home')
     elif request.user.is_authenticated:
+        
         data = SocialAccountDATA(request).get_extra_data()
         context = data
+        
         redirect('login')
     return render(request, "RepoAnalysisApp/home.html", context)
-
+@login_required
 def index(request):
     context={}
     return render(request, "RepoAnalysisApp/index.html", context)
 
+@login_required
 def about(request):
     context = {}
     return render(request, "RepoAnalysisApp/about.html", context)

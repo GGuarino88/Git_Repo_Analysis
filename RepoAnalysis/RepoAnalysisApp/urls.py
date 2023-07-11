@@ -6,7 +6,7 @@ from . import views
 
 urlpatterns = [    
     # admin view url
-    path('admin/', admin.site.urls),
+    path('admin/', admin.site.urls, name='admin'),
     
     # allauth views url
     path('accounts/', include('allauth.urls')),
