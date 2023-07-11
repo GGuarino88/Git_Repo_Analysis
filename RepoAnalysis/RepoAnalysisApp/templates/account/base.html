@@ -7,41 +7,45 @@
     <title>{% block head_title %}{% endblock %}</title>
 
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
       body {
-        background: #f6f5f7;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-        font-family: 'Roboto', sans-serif;
+        background: linear-gradient(90deg,#535cd5, #7a41b7, #683bc7);
         height: 100vh;
-        margin: -20px 0 50px;
+        margin: 0;
+        font-family: 'Poppins', sans-serif;
+      }
+
+      .card {
+        border-radius: 1rem;
+        border: none;
+        box-shadow: 2px 2px 15px rgba(0,0,0,0.2);
+      }
+
+      .form-control-lg {
+        height: calc(1.5em + 1rem + 2px);
+      }
+
+      .btn-primary {
+        background-color: #dd4b39;
+      }
+
+      .btn-primary.btn-facebook {
+        background-color: #3b5998;
       }
     </style>
     {% block extra_head %}
     {% endblock %}
   </head>
   <body>
-    {% block body %}
-
-    {% if messages %}
-    <div>
-      <strong>{% trans "Messages:" %}</strong>
-      <ul>
-        {% for message in messages %}
-        <li>{{message}}</li>
-        {% endfor %}
-      </ul>
-    </div>
-    {% endif %}
-    <div class="container">
-    {% block content %}
-    {% endblock %}
-    {% endblock %}
-    {% block extra_body %}
-    {% endblock %}
-  </div>
+    <section class="vh-100">
+      <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+          {% block content %}
+          {% endblock %}
+        </div>
+      </div>
+    </section>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   </body>
 </html>
