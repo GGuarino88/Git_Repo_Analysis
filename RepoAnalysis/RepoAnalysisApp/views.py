@@ -13,6 +13,8 @@ from RepoAnalysisApp.utils.SocialAccountDATA import SocialAccountDATA
 # Social Accounts modules
 from allauth.account.views import SignupView, LoginView, LogoutView
 
+from .forms import ScanForm
+from .models import Scan
 
 ## Results Dir Declaration create if not exists
 RESULTS_DIR = "RepoAnalysisApp/static/results"
@@ -102,10 +104,26 @@ def home(request):
 @login_required
 def index(request):
     
-    data = SocialAccountDATA(request).get_extra_data()
-    context = data
+    # form = ScanForm(request.POST)
     
-    return render(request, "RepoAnalysisApp/index.html", context)
+    # if form.is_valid():
+    #     scan = form.save(commit=False)  #don't commit to DB
+    #     scan.author = request.user  #access the user
+    #     scan.save()   # save and commit to DB
+    #     form = ScanForm()
+    
+    mydata = Scan.objects.filter(author=request.user).values()
+    
+    print(request.POST)
+    
+    return render(request, "RepoAnalysisApp/index.html", {'mydata':mydata})
+
+@login_required
+def scan(request, scan_session):
+    
+    print(request.POST)
+    
+    return render(request,"RepoAnalysisApp/scan.html")
 
 @login_required
 def analyze(request):

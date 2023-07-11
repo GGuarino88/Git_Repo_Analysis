@@ -116,21 +116,22 @@
     }
 
     </style>
-    <script>
-        function toggleForm() {
-            var repositoryRadio = document.getElementById("repositoryRadio");
-            var repositoryInput = document.getElementById("repositoryInput");
-            var fileInput = document.getElementById("fileInput");
-            if (repositoryRadio.checked) {
-                repositoryInput.style.display = "block";
-                fileInput.style.display = "none";
-            } else {
-                repositoryInput.style.display = "none";
-                fileInput.style.display = "block";
-            }
-        }
-    </script>
 </head>
+
+<script>
+    function toggleForm() {
+        var repositoryRadio = document.getElementById("repositoryRadio");
+        var repositoryInput = document.getElementById("repositoryInput");
+        var fileInput = document.getElementById("fileInput");
+        if (repositoryRadio.checked) {
+            repositoryInput.style.display = "block";
+            fileInput.style.display = "none";
+        } else {
+            repositoryInput.style.display = "none";
+            fileInput.style.display = "block";
+        }
+    }
+</script>
 
 <body>
 
@@ -144,34 +145,36 @@
 
     <h1>GitHub Repository Analyzer</h1>
 
-    <div class="form-group">
-        <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="input_method" id="repositoryRadio" value="repository" checked onclick="toggleForm()">
-            <label class="form-check-label" for="repositoryRadio">Using GitHub Repository</label>
-        </div>
-        <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="input_method" id="fileRadio" value="txt_file" onclick="toggleForm()">
-            <label class="form-check-label" for="fileRadio">Using TXT File contains Group of Repositories</label>
-        </div>
-    </div>
-    <form action="/analyze" method="POST">
+    {%block content%}
+    {% comment %} <form action= "" method = "POST">
         {% csrf_token %}
-        <div id="repositoryInput" class="form-group">
-            <input type="text" class="form-control" name="repository_url" placeholder="Enter GitHub repository URL" required>
-            <input type="submit" class="btn btn-primary" name="submit" value="Generate Report">
-            <input type="hidden" name="input_method" value="repository">
-        </div>
-    </form>
-    <form action="/upload" method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        <div id="fileInput" class="form-group" style="display: none;">
-            <input type="file" class="form-control-file" name="file">
-            <input type="submit" class="btn btn-primary mt-2" name="submit" value="Upload and Generate Report">
-        </div>
-    </form>
+        {{form}}
+        <input type='submit'>
+    </form> {% endcomment %}
+
+        <table border='1'>
+        <tr>
+            <th>Title</th>
+            <th>Enter</th>
+        </tr>
+        {% for data in mydata %}
+            <form action="{% url 'scan' data.title %}" method = "POST">
+            {% csrf_token %}
+            <tr>
+                <td>
+                    <input type="text" id="id" name="id" value="{{ data.author_id }}" hidden>                
+                    <input type="text" id="title" name="title" value="{{ data.title }}">
+                <td>
+                    <input type='submit' value='Enter'>
+                </form>
+            </td>
+            {% endfor %}
+        </tr>
+        </table>
+
+    {%endblock%}
 
 </body>
-
 <footer>
     {% for message in messages %}
     <div class="message {{ message.tags }}">
