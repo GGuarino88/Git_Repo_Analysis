@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <title>GitHub Repository Analyzer</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
@@ -101,6 +100,7 @@
         width: 90%; /* updated width */
         margin-bottom: 10px;
     }
+
     .btn-primary {
         background: #3f51b5;
         border: none;
@@ -114,63 +114,48 @@
     .btn-primary:hover {
         background: #4051B5;
     }
-
     </style>
+    <script>
+        function toggleForm() {
+            var repositoryRadio = document.getElementById("repositoryRadio");
+            var repositoryInput = document.getElementById("repositoryInput");
+            var fileInput = document.getElementById("fileInput");
+            if (repositoryRadio.checked) {
+                repositoryInput.style.display = "block";
+                fileInput.style.display = "none";
+            } else {
+                repositoryInput.style.display = "none";
+                fileInput.style.display = "block";
+            }
+        }
+    </script>
 </head>
 
-<script>
-    function toggleForm() {
-        var repositoryRadio = document.getElementById("repositoryRadio");
-        var repositoryInput = document.getElementById("repositoryInput");
-        var fileInput = document.getElementById("fileInput");
-        if (repositoryRadio.checked) {
-            repositoryInput.style.display = "block";
-            fileInput.style.display = "none";
-        } else {
-            repositoryInput.style.display = "none";
-            fileInput.style.display = "block";
-        }
-    }
-</script>
-
 <body>
-
     <div class="header">
         <a href="{% url 'home'%}">Home</a>
-        <a href="about.html">About</a>
+        <a href="{% url 'about'%}">About</a>
         <a href="{% url 'login'%}">Login</a>
         <a href="{% url 'logout'%}">Logout</a>
-        <a href="../admin/">Admin</a>
     </div>
-
     <h1>GitHub Repository Analyzer</h1>
 
     {%block content%}
-    {% comment %} <form action= "" method = "POST">
-        {% csrf_token %}
-        {{form}}
-        <input type='submit'>
-    </form> {% endcomment %}
 
-        <table border='1'>
-        <tr>
-            <th>Title</th>
-            <th>Enter</th>
-        </tr>
+    <table border="1">
         {% for data in mydata %}
-            <form action="{% url 'scan' data.title %}" method = "POST">
-            {% csrf_token %}
-            <tr>
-                <td>
-                    <input type="text" id="id" name="id" value="{{ data.author_id }}" hidden>                
-                    <input type="text" id="title" name="title" value="{{ data.title }}">
-                <td>
-                    <input type='submit' value='Enter'>
-                </form>
-            </td>
-            {% endfor %}
+
+        <tr>
+            <form action="{% url 'scan' data.title %}" method="POST">
+                {% csrf_token %}
+
+                <td><input type="text" id="title" name="title" value="{{ data.title }}"></td>
+                <td><button type="submit" name= formmethod="post">Enter</td>
+            </form>
         </tr>
-        </table>
+        
+        {% endfor %}
+    </table>
 
     {%endblock%}
 
@@ -182,5 +167,4 @@
     </div>
     {% endfor %}
 </footer>
-
 </html>

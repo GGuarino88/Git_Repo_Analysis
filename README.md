@@ -50,3 +50,41 @@ Enter a repository URL in the provided input field.
 ```
 5. Click on the "Analyze" button.
 6. The analysis results, including the contributors graph, code churn over time, and commit activity.
+
+# GitHub Repository Analysis Community
+
+Welcome to the GitHub Repository Analysis community! This page provides information and resources for contributing to the project.
+
+## Code of Conduct
+
+We have adopted a [Code of Conduct](./CODE_OF_CONDUCT.md) to ensure a welcoming and inclusive community environment. Please read it and abide by the guidelines.
+
+## Contributing
+
+We welcome contributions from the community to make GitHub Repository Analysis even better. If you're interested in contributing, please check out our [Contributing Guidelines](./CONTRIBUTING.md) for more details.
+
+### Writing Contributing Guidelines
+
+If you're new to writing contributing guidelines, you can refer to our [Contributing Guidelines Template](./CONTRIBUTING_TEMPLATE.md) to get started.
+
+## License
+
+GitHub Repository Analysis is released under the [MIT License](./LICENSE). Make sure to review the license terms before using or contributing to the project.
+
+## Security Policy
+
+Ensuring the security of our users is a top priority. If you discover any security vulnerabilities or issues, please follow our [Security Policy](./SECURITY.md) and report them responsibly.
+
+### Set up a Security Policy
+
+To set up a security policy for your own projects, you can use our [Security Policy Template](./SECURITY_TEMPLATE.md) as a starting point.
+
+## Issue Templates
+
+To streamline the issue creation process and provide clear guidelines for bug reports, feature requests, and other types of issues, we have provided [Issue Templates](./.github/ISSUE_TEMPLATE).
+
+## Pull Request Template
+
+When submitting a pull request, please follow our [Pull Request Template](./.github/PULL_REQUEST_TEMPLATE.md) to ensure that all necessary information is included.
+
+We appreciate your contributions and look forward to building a thriving GitHub Repository Analysis community together!
