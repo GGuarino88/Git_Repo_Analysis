@@ -95,6 +95,7 @@
     </style>
 </head>
 <body>
+
     <div class="header">
         <a href="#">Home</a>
         <a href="{% url 'about'%}">About</a>
@@ -126,6 +127,7 @@
         </div>
     {% endif %}
 </body>
+
 <footer>
     {% for message in messages %}
     <div class="message {{ message.tags }}">
@@ -133,4 +135,5 @@
     </div>
     {% endfor %}
 </footer>
+
 </html>
