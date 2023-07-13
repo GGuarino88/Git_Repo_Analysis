@@ -1,12 +1,14 @@
 import os
 import csv
 import json
-from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+
 ## Modules Initialization
 from RepoAnalysisApp.utils.github_api import GitHubAPI
 from RepoAnalysisApp.utils.graph_plotter import GraphPlotter
 from RepoAnalysisApp.utils.SocialAccountDATA import SocialAccountDATA
+
 # Social Accounts modules
 from allauth.account.views import SignupView, LoginView, LogoutView
 

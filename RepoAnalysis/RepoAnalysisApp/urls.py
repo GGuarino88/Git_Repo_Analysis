@@ -1,9 +1,11 @@
+from . import views
 from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth import views as auth_views
 from allauth.socialaccount.providers.github import views as github_view
 
 from . import views
+
 
 urlpatterns = [    
     # admin view url
