@@ -130,7 +130,6 @@
         }
     </script>
 </head>
-
 <body>
     <div class="header">
         <a href="{% url 'home'%}">Home</a>
@@ -139,26 +138,20 @@
         <a href="{% url 'logout'%}">Logout</a>
     </div>
     <h1>GitHub Repository Analyzer</h1>
-
     {%block content%}
-
     <table border="1">
         {% for data in mydata %}
-
         <tr>
-            <form action="{% url 'scan' data.title %}" method="POST">
+            <form action="{% url 'scan.html' data.title %}" method="POST">
                 {% csrf_token %}
 
                 <td><input type="text" id="title" name="title" value="{{ data.title }}"></td>
                 <td><button type="submit" name= formmethod="post">Enter</td>
             </form>
         </tr>
-        
         {% endfor %}
     </table>
-
     {%endblock%}
-
 </body>
 <footer>
     {% for message in messages %}

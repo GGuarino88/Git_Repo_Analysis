@@ -1,5 +1,5 @@
-from allauth.socialaccount.models import SocialAccount
 from allauth.socialaccount.models import SocialToken
+from allauth.socialaccount.models import SocialAccount
 
 class SocialAccountDATA:
     def __init__(self, request):

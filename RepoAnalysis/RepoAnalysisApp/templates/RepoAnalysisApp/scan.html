@@ -1,9 +1,6 @@
 {%extends 'RepoAnalysisApp/index.html' %}
-
 {%block content%}
-
 {{scan_session}}
-
 <div class="form-check form-check-inline">
     <input class="form-check-input" type="radio" name="input_method" id="repositoryRadio" value="repository" checked onclick="toggleForm()">
     <label class="form-check-label" for="repositoryRadio">Using GitHub Repository</label>
@@ -13,7 +10,6 @@
     <label class="form-check-label" for="fileRadio">Using TXT File contains Group of Repositories</label>
 </div>
 </div>
-
 <form action={% url 'analyze' scan_session %} method="POST">
     {% csrf_token %}
     <div id="repositoryInput" class="form-group">
@@ -29,5 +25,4 @@
         <input type="submit" class="btn btn-primary mt-2" name="submit" value="Upload and Generate Report">
     </div>
 </form>
-
 {%endblock%}

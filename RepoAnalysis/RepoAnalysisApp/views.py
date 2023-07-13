@@ -1,6 +1,7 @@
 import os
 import csv
 import json
+from .models import Scan
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 
@@ -11,8 +12,6 @@ from RepoAnalysisApp.utils.SocialAccountDATA import SocialAccountDATA
 
 # Social Accounts modules
 from allauth.account.views import SignupView, LoginView, LogoutView
-
-from .models import Scan
 
 ## Results Dir Declaration create if not exists
 RESULTS_DIR = "RepoAnalysisApp/static/results"
@@ -80,30 +79,23 @@ def analyze_repository(repository_url, access_token):
     print(f"Analyzing repository: {repository_url}")
 
 # Create your views here.
-
 def home(request):
     context={}
-    
     if request.user.is_superuser:
         request.session.clear()
         return redirect('home')
     elif request.user.is_authenticated:
-        
         data = SocialAccountDATA(request).get_extra_data()
         context = data
-        
         redirect('login')
     return render(request, "RepoAnalysisApp/home.html", context)
 @login_required
 def index(request):
-    
     mydata = Scan.objects.filter(author=request.user).values()
-    
     return render(request, "RepoAnalysisApp/index.html", {'mydata':mydata})
 
 @login_required
-def scan(request, scan_session):
-    
+def scan(request, scan_session):    
     return render(request,"RepoAnalysisApp/scan.html", {'scan_session': scan_session})
 
 @login_required
@@ -127,7 +119,6 @@ def analyze(request, scan_session):
             context={"file_uploaded" : True}
             return render(request, "RepoAnalysisApp/results.html", context)
     return render(request, "RepoAnalysisApp/index.html")
-
 
 class RepoAnalysisLogin(LoginView):
     template_name = 'account/login.html'
