@@ -12,6 +12,8 @@ from RepoAnalysisApp.utils.SocialAccountDATA import SocialAccountDATA
 # Social Accounts modules
 from allauth.account.views import SignupView, LoginView, LogoutView
 
+from .models import Scan
+
 ## Results Dir Declaration create if not exists
 RESULTS_DIR = "RepoAnalysisApp/static/results"
 def create_directory(directory):
@@ -81,25 +83,36 @@ def analyze_repository(repository_url, access_token):
 
 def home(request):
     context={}
+    
     if request.user.is_superuser:
         request.session.clear()
         return redirect('home')
     elif request.user.is_authenticated:
+        
         data = SocialAccountDATA(request).get_extra_data()
         context = data
+        
         redirect('login')
     return render(request, "RepoAnalysisApp/home.html", context)
-
+@login_required
 def index(request):
-    context={}
-    return render(request, "RepoAnalysisApp/index.html", context)
+    
+    mydata = Scan.objects.filter(author=request.user).values()
+    
+    return render(request, "RepoAnalysisApp/index.html", {'mydata':mydata})
 
+@login_required
+def scan(request, scan_session):
+    
+    return render(request,"RepoAnalysisApp/scan.html", {'scan_session': scan_session})
+
+@login_required
 def about(request):
     context = {}
     return render(request, "RepoAnalysisApp/about.html", context)
 
 @login_required
-def analyze(request):
+def analyze(request, scan_session):
     if request.method == "POST":
         input_method = request.POST.get("input_method")
         if input_method == 'repository':

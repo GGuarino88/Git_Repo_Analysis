@@ -68,10 +68,9 @@
 </head>
 <body>
     <div class="header">
-        <a href="../">Home</a>
-        <a href="about.html">About</a>
-        <a href="logout/">Logout</a>
-        <a href="admin/">Admin</a>
+        <a href="{% url 'home'%}">Home</a>
+        <a href="{% url 'about'%}">About</a>
+        <a href="{% url 'logout'%}">Logout</a>
     </div>
     <div class="container">
         <h1>Analysis Results</h1>
