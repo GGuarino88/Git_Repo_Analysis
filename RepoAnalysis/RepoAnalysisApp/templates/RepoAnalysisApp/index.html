@@ -2,51 +2,162 @@
 <html>
 <head>
     <title>GitHub Repository Analyzer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        .input-group {
-            display: inline-block;
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+            background: #f4f7fa;
         }
+        .header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #3f51b5;
+            padding: 20px 0;
+        }
+        .header a {
+            margin: 0 15px;
+            text-decoration: none;
+            color: #fff;
+            font-weight: 600;
+        }
+        h1 {
+            margin-bottom: 20px;
+            color: #3f51b5;
+        }
+        p {
+            color: #555;
+            line-height: 1.5;
+            max-width: 600px;
+            margin: 0 auto 20px;
+        }
+        footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #3f51b5;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+        .message {
+            margin-bottom: 10px;
+        }
+        .github-btn {
+            background: #333;
+            color: #fff;
+            border-radius: 5px;
+            display: inline-flex;
+            align-items: center;
+            padding: 5px 10px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        .github-btn:hover {
+            background: #444;
+        }
+        .github-btn svg {
+            margin-right: 5px;
+        }
+        .form-group {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        max-width: 600px;
+        margin: 0 auto 20px;
+        padding: 20px;
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    .form-check-inline {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    .form-check-label {
+        color: #3f51b5;
+        font-weight: 600;
+        margin-left: 10px;
+    }
+    .form-control, .form-control-file {
+        border: 1px solid #3f51b5;
+        padding: 10px;
+        border-radius: 5px;
+        width: 90%; /* updated width */
+        margin-bottom: 10px;
+    }
+
+    .btn-primary {
+        background: #3f51b5;
+        border: none;
+        color: #fff;
+        padding: 10px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background 0.3s ease;
+        width: 90%; /* updated width */
+    }
+    .btn-primary:hover {
+        background: #4051B5;
+    }
     </style>
     <script>
         function toggleForm() {
-	    var repositoryRadio = document.getElementById("repositoryRadio");
-            var repositoryForm = document.getElementById("repositoryForm");
-            var fileForm = document.getElementById("fileForm");
-	    if (repositoryRadio.checked) {
-                repositoryForm.style.display = "block";
-                fileForm.style.display = "none";
+            var repositoryRadio = document.getElementById("repositoryRadio");
+            var repositoryInput = document.getElementById("repositoryInput");
+            var fileInput = document.getElementById("fileInput");
+            if (repositoryRadio.checked) {
+                repositoryInput.style.display = "block";
+                fileInput.style.display = "none";
             } else {
-                repositoryForm.style.display = "none";
-                fileForm.style.display = "block";
+                repositoryInput.style.display = "none";
+                fileInput.style.display = "block";
             }
         }
     </script>
 </head>
 <body>
+    <div class="header">
+        <a href="{% url 'home'%}">Home</a>
+        <a href="{% url 'about'%}">About</a>
+        <a href="{% url 'login'%}">Login</a>
+        <a href="{% url 'logout'%}">Logout</a>
+    </div>
     <h1>GitHub Repository Analyzer</h1>
-    <div class="input-group">
-        <input type="radio" name="input_method" id="repositoryRadio" value="repository" checked onclick="toggleForm()"> Using GitHub Repository
-    </div>
-    <div class="input-group">
-        <input type="radio" name="input_method" id="fileRadio" value="txt_file" onclick="toggleForm()"> Using TXT File contains Group of Repositories
-    </div>
-    <br><br>
-    <form action="/analyze" method="POST">
-        {% csrf_token %}
-        <div id="repositoryInput">
-            <input type="text" name="repository_url" placeholder="Enter GitHub repository URL" required>
-            <br><br>
-            <input type="submit" name="submit" value="Generate Report">
-	    <input type="hidden" name="input_method" value="repository">
-        </div>
-    </form>
-    <form action="/upload" method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        <div id="fileInput" style="display: none;">
-            <input type="file" name="file">
-            <br><br>
-            <input type="submit" name="submit" value="Upload and Generate Report">
-        </div>
-    </form>
+    {%block content%}
+    <table border="1">
+        {% for data in mydata %}
+        <tr>
+            <form action="{% url 'scan.html' data.title %}" method="POST">
+                {% csrf_token %}
+
+                <td><input type="text" id="title" name="title" value="{{ data.title }}"></td>
+                <td><button type="submit" name= formmethod="post">Enter</td>
+            </form>
+        </tr>
+        {% endfor %}
+    </table>
+    {%endblock%}
 </body>
+<footer>
+    {% for message in messages %}
+    <div class="message {{ message.tags }}">
+        {{ message }}
+    </div>
+    {% endfor %}
+</footer>
 </html>
