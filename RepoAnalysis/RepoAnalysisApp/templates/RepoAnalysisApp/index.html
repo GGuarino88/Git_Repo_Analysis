@@ -142,7 +142,7 @@
     <table border="1">
         {% for data in mydata %}
         <tr>
-            <form action="{% url 'scan.html' data.title %}" method="POST">
+            <form action="{% url 'scan' data.title %}" method="POST">
                 {% csrf_token %}
 
                 <td><input type="text" id="title" name="title" value="{{ data.title }}"></td>
