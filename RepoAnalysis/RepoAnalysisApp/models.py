@@ -6,3 +6,13 @@ class Scan(models.Model):
     description = models.TextField(max_length=200)
     class Meta():
         db_table = "user_scan"
+        
+class User_Scans(models.Model):
+    
+    scan_id = models.ForeignKey(Scan, on_delete=models.CASCADE)
+    name = models.CharField(max_length = 200)
+    url_name = models.URLField(max_length = 200)
+    
+    class Meta():
+        db_table = "user_scaned_repo"
+    

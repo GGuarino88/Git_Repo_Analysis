@@ -13,6 +13,8 @@ from RepoAnalysisApp.utils.SocialAccountDATA import SocialAccountDATA
 # Social Accounts modules
 from allauth.account.views import SignupView, LoginView, LogoutView
 
+from .models import Scan, User_Scans
+
 ## Results Dir Declaration create if not exists
 RESULTS_DIR = "RepoAnalysisApp/static/results"
 def create_directory(directory):
@@ -89,6 +91,7 @@ def home(request):
         context = data
         redirect('login')
     return render(request, "RepoAnalysisApp/home.html", context)
+
 @login_required
 def index(request):
     mydata = Scan.objects.filter(author=request.user).values()

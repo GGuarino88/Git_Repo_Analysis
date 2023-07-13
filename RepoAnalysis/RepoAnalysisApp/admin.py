@@ -1,4 +1,7 @@
-from .models import Scan
 from django.contrib import admin
+
+from .models import Scan, User_Scans
+
 # Register your models here
 admin.site.register(Scan)
+admin.site.register(User_Scans)
