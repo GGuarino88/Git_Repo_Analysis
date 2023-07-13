@@ -1,5 +1,4 @@
 import requests
-
 class GitHubAPI:
     def __init__(self, token):
         self.base_url = "https://api.github.com"
