@@ -75,17 +75,65 @@
     <div class="container">
         <h1>Analysis Results</h1>
         <p class="lead">Repository URL: {{ repository_url }}</p>
-        <div class="result-card">
-            <h2>Contributors Graph</h2>
-            <img class="result-image" src="{% static "results/" %}{{ repo_name }}/contributors_graph.png" alt="Contributors Graph">
-        </div>
-        <div class="result-card">
-            <h2>Code Churn Over Time</h2>
-            <img class="result-image" src="{% static "results/" %}{{ repo_name }}/code_churn_over_time.png" alt="Code Churn Over Time">
+	<div class="result-card">
+           <h2>Contributors Graph</h2>
+           <div class="row">
+              <div class="col-md-6">
+                 <img class="result-image" src="{% static "results/" %}{{ repo_name }}/contributors_graph.png" alt="Contributors Graph">
+              </div>
+              <div class="col-md-6">
+                 <h3>Contributors</h3>
+                 <ul>
+                    {% for contributor in contributors_data %}
+                    <li>{{ contributor.login }}: {{ contributor.contributions }} contributions</li>
+                    {% endfor %}
+                </ul>
+              </div>
+           </div>
+	</div>
+	<div class="result-card">
+           <h2>Code Churn Over Time</h2>
+           <div class="row">
+              <div class="col-md-6">
+                 <img class="result-image" src="{% static "results/" %}{{ repo_name }}/code_churn_over_time.png" alt="Code Churn Over Time">
+              </div>
+	      <div class="col-md-6">
+                 <h3>Code Churns</h3>
+                 <ul>
+                    {% for code_churn in code_churn_data %}
+                    <li>Additions: {{ code_churn.additions }}, Deletions: {{ code_churn.deletions }}, Commits: {{ code_churn.commits }}</li>
+                    {% endfor %}
+                </ul>
+              </div>
+           </div>
         </div>
         <div class="result-card">
             <h2>Commit Activity</h2>
             <img class="result-image" src="{% static "results/" %}{{ repo_name }}/commit_activity.png" alt="Commit Activity">
+        </div>
+	<div class="result-card">
+            <h2>Pull Requests</h2>
+            <img class="result-image" src="{% static "results/" %}{{ repo_name }}/pull_requests.png" alt="Commit Activity">
+        </div>
+	<div class="result-card">
+            <h2>Issues</h2>
+            <img class="result-image" src="{% static "results/" %}{{ repo_name }}/issues.png" alt="Commit Activity">
+        </div>
+	<div class="result-card">
+            <h2>Languages</h2>
+            <img class="result-image" src="{% static "results/" %}{{ repo_name }}/languages.png" alt="Commit Activity">
+        </div>
+	<div class="result-card">
+            <h2>Releases</h2>
+            <img class="result-image" src="{% static "results/" %}{{ repo_name }}/releases.png" alt="Commit Activity">
+        </div>
+	<div class="result-card">
+            <h2>Traffic Views</h2>
+            <img class="result-image" src="{% static "results/" %}{{ repo_name }}/traffic_views.png" alt="Commit Activity">
+        </div>
+	<div class="result-card">
+            <h2>Traffic Clones</h2>
+            <img class="result-image" src="{% static "results/" %}{{ repo_name }}/traffic_clones.png" alt="Commit Activity">
         </div>
     </div>
     <footer>
