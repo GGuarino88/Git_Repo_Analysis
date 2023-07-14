@@ -2,6 +2,7 @@ import os
 import csv
 import json
 from .models import Scan
+from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 
@@ -92,13 +93,45 @@ def home(request):
         redirect('login')
     return render(request, "RepoAnalysisApp/home.html", context)
 
+# class IndexView(ListView):
+#     model = Scan
+    
+#     def get(self, request, *args, **kwargs):
+#         mydata = Scan.objects.filter(author=request.user).values()
+#         context = {'mydata':mydata}
+#         return render(request, "RepoAnalysisApp/index.html", context)
+    
+# index = IndexView.as_view()
+
 @login_required
 def index(request):
     mydata = Scan.objects.filter(author=request.user).values()
+    print(mydata)
     return render(request, "RepoAnalysisApp/index.html", {'mydata':mydata})
 
 @login_required
+def scan_create(request):
+    context={}
+    return render(request, "RepoAnalysisApp/ScanSession/scan-create.html")
+
+@login_required
+def scan_edit(request, id):
+    context={}
+    return render(request, "RepoAnalysisApp/ScanSession/scan-edit.html")
+
+@login_required
+def scan_delete(request, id):
+    context={}
+    return render(request, "RepoAnalysisApp/ScanSession/scan-delete.html")
+
+@login_required
 def scan(request, scan_session):    
+    
+    scan_session = request.POST['title']
+    scan_session_id = request.POST['id']
+    user_scanned_repos = User_Scans.objects.filter(scan_id=scan_session_id).values()
+    print(user_scanned_repos)
+    
     return render(request,"RepoAnalysisApp/scan.html", {'scan_session': scan_session})
 
 @login_required

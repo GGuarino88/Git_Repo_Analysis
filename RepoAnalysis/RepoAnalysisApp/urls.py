@@ -17,6 +17,10 @@ urlpatterns = [
     # application views url
     path('', views.home, name='home'),
     path('index/',views.index, name='index'),
+    path('index/scan-create/', views.scan_create, name='scan-create'),
+    path('index/scan-edit/<str:id>', views.scan_edit, name='scan-edit'),
+    path('index/scan-delete/<str:id>', views.scan_delete, name='scan-delete'),
+    
     path('index/<str:scan_session>', views.scan, name='scan'),
     path('index/<str:scan_session>/analyze',views.analyze,name='analyze'),
     path('about', views.about, name='about'),

@@ -144,13 +144,16 @@
         <tr>
             <form action="{% url 'scan' data.title %}" method="POST">
                 {% csrf_token %}
-
+                <input id="id" name="id" value="{{data.id}}" hidden>
                 <td><input type="text" id="title" name="title" value="{{ data.title }}"></td>
                 <td><button type="submit" name= formmethod="post">Enter</td>
+                <td><a type="button" class="btn btn-warning" href="{% url 'scan-edit' data.id %}">Edit</a></td>
+                <td><a type="button" class="btn btn-danger" href="{% url 'scan-delete' data.id %}">Delete</a></td>   
             </form>
         </tr>
         {% endfor %}
     </table>
+    <a type="button" class="btn btn-success" href="{% url 'scan-create' %}">Create</a>
     {%endblock%}
 </body>
 <footer>
