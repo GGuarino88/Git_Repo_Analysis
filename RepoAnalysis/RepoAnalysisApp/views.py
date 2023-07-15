@@ -1,9 +1,10 @@
 import os
 import csv
 import json
-from .models import Scan
-from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
+from django.urls import reverse_lazy
+from django.views.generic import CreateView, DetailView, UpdateView, DeleteView
 from django.shortcuts import render, redirect
+from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 
 ## Modules Initialization
@@ -93,36 +94,45 @@ def home(request):
         redirect('login')
     return render(request, "RepoAnalysisApp/home.html", context)
 
-# class IndexView(ListView):
-#     model = Scan
-    
-#     def get(self, request, *args, **kwargs):
-#         mydata = Scan.objects.filter(author=request.user).values()
-#         context = {'mydata':mydata}
-#         return render(request, "RepoAnalysisApp/index.html", context)
-    
-# index = IndexView.as_view()
-
 @login_required
 def index(request):
     mydata = Scan.objects.filter(author=request.user).values()
     print(mydata)
     return render(request, "RepoAnalysisApp/index.html", {'mydata':mydata})
 
-@login_required
-def scan_create(request):
-    context={}
-    return render(request, "RepoAnalysisApp/ScanSession/scan-create.html")
+@method_decorator(login_required, name='dispatch')
+class ScanCreateView(CreateView):
+    model = Scan
+    template_name = 'RepoAnalysisApp/ScanSession/scan-create.html'
+    fields = ('title',)
+    success_url = reverse_lazy('index')
 
-@login_required
-def scan_edit(request, id):
-    context={}
-    return render(request, "RepoAnalysisApp/ScanSession/scan-edit.html")
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+    
+scan_create = ScanCreateView.as_view()
 
-@login_required
-def scan_delete(request, id):
-    context={}
-    return render(request, "RepoAnalysisApp/ScanSession/scan-delete.html")
+@method_decorator(login_required, name='dispatch')
+class ScanEditView(UpdateView):
+    model = Scan
+    template_name = 'RepoAnalysisApp/ScanSession/scan-edit.html'
+    fields = ('title',)
+    success_url = reverse_lazy('index')
+    
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+    
+scan_edit = ScanEditView.as_view()
+
+@method_decorator(login_required, name='dispatch')
+class ScanDeleteView(DeleteView):
+    model = Scan
+    template_name = 'RepoAnalysisApp/ScanSession/scan-delete.html'
+    success_url = reverse_lazy('index')
+    
+scan_delete = ScanDeleteView.as_view()
 
 @login_required
 def scan(request, scan_session):    
