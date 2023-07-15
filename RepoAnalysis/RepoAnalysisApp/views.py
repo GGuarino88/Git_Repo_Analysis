@@ -49,7 +49,7 @@ def analyze_repository(repository_url, access_token):
     ## Contributors Details
     contributors = retry_api(lambda: github_api.get_contributors(repository_url))
     if contributors:
-        graph_plotter.plot_contributors_graph(contributors, repository_url, repo_directory)
+        #graph_plotter.plot_contributors_graph(contributors, repository_url, repo_directory)
         contributors_data = [{"login": contributor["login"], "contributions": contributor["contributions"]} for contributor in contributors]
         contributors_json_file = os.path.join(repo_directory, "contributors_graph.json")
         save_json_file(contributors_data, contributors_json_file)
@@ -64,7 +64,7 @@ def analyze_repository(repository_url, access_token):
     ## Code CRUD Details
     code_churn = retry_api(lambda: github_api.get_code_churn(repository_url))
     if code_churn:
-        graph_plotter.plot_code_churn(code_churn, repository_url, repo_directory)
+        #graph_plotter.plot_code_churn(code_churn, repository_url, repo_directory)
         code_churn_data = [{"additions": entry[0], "deletions": entry[1], "commits": entry[2]} for entry in code_churn]
         code_churn_json_file = os.path.join(repo_directory, "code_churn_over_time.json")
         save_json_file(code_churn_data, code_churn_json_file)
@@ -72,7 +72,7 @@ def analyze_repository(repository_url, access_token):
     ## Commit Details
     commit_activity = retry_api(lambda: github_api.get_commit_activity(repository_url))
     if commit_activity:
-        graph_plotter.plot_commit_activity(commit_activity, repository_url, repo_directory)
+        #graph_plotter.plot_commit_activity(commit_activity, repository_url, repo_directory)
         commit_activity_data = [{"week": data["week"], "total": data["total"]} for data in commit_activity]
         commit_activity_json_file = os.path.join(repo_directory, "commit_activity.json")
         save_json_file(commit_activity_data, commit_activity_json_file)
@@ -89,28 +89,28 @@ def analyze_repository(repository_url, access_token):
     if pull_requests:
         pull_requests_json_file = os.path.join(repo_directory, "pull_requests.json")
         save_json_file(pull_requests, pull_requests_json_file)
-        graph_plotter.plot_pull_requests(pull_requests, repository_url, repo_directory)
+        #graph_plotter.plot_pull_requests(pull_requests, repository_url, repo_directory)
 
     ## Issues
     issues = retry_api(lambda: github_api.get_issues(repository_url))
     if issues:
         issues_json_file = os.path.join(repo_directory, "issues.json")
         save_json_file(issues, issues_json_file)
-        graph_plotter.plot_issues(issues, repository_url, repo_directory)
+        #graph_plotter.plot_issues(issues, repository_url, repo_directory)
 
     ## Languages
     languages = retry_api(lambda: github_api.get_languages(repository_url))
     if languages:
         languages_json_file = os.path.join(repo_directory, "languages.json")
         save_json_file(languages, languages_json_file)
-        graph_plotter.plot_languages(languages, repository_url, repo_directory)
+        #graph_plotter.plot_languages(languages, repository_url, repo_directory)
 
     ## Releases
     releases = retry_api(lambda: github_api.get_releases(repository_url))
     if releases:
         releases_json_file = os.path.join(repo_directory, "releases.json")
         save_json_file(releases, releases_json_file)
-        graph_plotter.plot_releases(releases, repository_url, repo_directory)
+        #graph_plotter.plot_releases(releases, repository_url, repo_directory)
 
     ## Traffic Views
     traffic_views = retry_api(lambda: github_api.get_traffic_views(repository_url))
@@ -122,7 +122,7 @@ def analyze_repository(repository_url, access_token):
         print("DEBUG: traffic_views = ", traffic_views)
         traffic_views_json_file = os.path.join(repo_directory, "traffic_views.json")
         save_json_file(traffic_views, traffic_views_json_file)
-        graph_plotter.plot_traffic_views(traffic_views, repository_url, repo_directory)
+        #graph_plotter.plot_traffic_views(traffic_views, repository_url, repo_directory)
 
     ## Traffic Clones
     traffic_clones = retry_api(lambda: github_api.get_traffic_clones(repository_url))
@@ -132,7 +132,7 @@ def analyze_repository(repository_url, access_token):
             traffic_clones = json.loads(traffic_clones)
         traffic_clones_json_file = os.path.join(repo_directory, "traffic_clones.json")
         save_json_file(traffic_clones, traffic_clones_json_file)
-        graph_plotter.plot_traffic_clones(traffic_clones, repository_url, repo_directory)
+        #graph_plotter.plot_traffic_clones(traffic_clones, repository_url, repo_directory)
 
 # Create your views here.
 def home(request):
