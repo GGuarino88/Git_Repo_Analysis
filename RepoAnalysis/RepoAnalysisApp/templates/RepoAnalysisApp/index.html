@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>GitHub Repository Analyzer</title>
+
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
         body {
@@ -187,13 +188,13 @@
         <a href="{% url 'login'%}">Login</a>
         <a href="{% url 'logout'%}">Logout</a>
     </div>
-    <h1>GitHub Repository Analyzer</h1>
+    <h1>GitHub Repository Analysis</h1>
     {%block content%}
 
     <div class="card">
         <div class="card-body">
             <div class="d-flex justify-content-end">
-                <a type="button" class="btn btn-success mb-3" href="{% url 'scan-create' %}">Create New Session</a>
+                <a type="button" class="btn btn-success mb-3" href="{% url 'scan-create' %} ">Create New Session</a>
             </div>
             <table class="table">
                 <thead>
@@ -209,8 +210,6 @@
                     <td>
                         <form action="{% url 'scan' data.title %}" method="POST" style="display: inline;">
                             {% csrf_token %}
-                            <input id="id" name="id" value="{{data.id}}" hidden>
-                            <input type="text" id="title" name="title" value="{{ data.title }}" hidden>
                             <button type="submit" class="btn btn-primary btn-sm">Enter</button>
                         </form>
                         <a class="btn btn-warning btn-sm" href="{% url 'scan-edit' data.id %}">Edit</a>
@@ -222,7 +221,9 @@
             </table>
         </div>
     </div>
+
     {%endblock%}
+
 </body>
 <footer>
     {% for message in messages %}

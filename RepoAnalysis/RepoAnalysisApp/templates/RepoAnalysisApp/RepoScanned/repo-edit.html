@@ -1,9 +1,8 @@
 {% extends "RepoAnalysisApp/ScanSession/base.html" %}
 
 {% block content %}
-
 <div class="card-body">
-    <h5>Add A new Repository for {{scan_session}}</h5>
+    <h5>Edit Scan Session</h5>
     <form method="post">
         {% csrf_token %}
         {{form.as_p}}

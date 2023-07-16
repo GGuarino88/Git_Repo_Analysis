@@ -110,7 +110,7 @@ class ScanCreateView(CreateView):
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super().form_valid(form)
-    
+
 scan_create = ScanCreateView.as_view()
 
 @method_decorator(login_required, name='dispatch')
@@ -137,12 +137,81 @@ scan_delete = ScanDeleteView.as_view()
 @login_required
 def scan(request, scan_session):    
     
-    scan_session = request.POST['title']
-    scan_session_id = request.POST['id']
-    user_scanned_repos = User_Scans.objects.filter(scan_id=scan_session_id).values()
-    print(user_scanned_repos)
+    context = {}
     
-    return render(request,"RepoAnalysisApp/scan.html", {'scan_session': scan_session})
+    scan_session_id = Scan.objects.filter(title=scan_session).values()[0]['id']
+    user_scanned_repos = User_Scans.objects.filter(scan_id=scan_session_id).values()
+    context = {'scan_session' : scan_session, 'user_scanned_repos': user_scanned_repos}
+    
+    return render(request,"RepoAnalysisApp/scan.html", context)
+
+@method_decorator(login_required, name='dispatch')
+class RepoCreateView(CreateView):
+    
+    model = User_Scans
+    template_name = 'RepoAnalysisApp/RepoScanned/repo-create.html'
+    fields = ('name','url_name')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        scan_session ={'scan_session': self.kwargs['scan_session']}
+        context.update(scan_session)
+        return context
+    
+    def form_valid(self, form):
+        scan_session = self.kwargs['scan_session']
+        form.instance.scan_id = Scan.objects.filter(title=scan_session)[0]
+        return super().form_valid(form)
+    
+    def get_success_url(self):
+
+          scan_session=self.kwargs['scan_session']
+          return reverse_lazy('scan', kwargs={'scan_session': scan_session})
+    
+repo_create = RepoCreateView.as_view()
+
+@method_decorator(login_required, name='dispatch')
+class RepoEditView(UpdateView):
+    model = User_Scans
+    template_name = 'RepoAnalysisApp/RepoScanned/repo-edit.html'
+    fields = ('name','url_name')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        scan_session ={'scan_session': self.kwargs['scan_session']}
+        context.update(scan_session)
+        return context
+    
+    def form_valid(self, form):
+        scan_session = self.kwargs['scan_session']
+        form.instance.scan_id = Scan.objects.filter(title=scan_session)[0]
+        return super().form_valid(form)
+    
+    def get_success_url(self):
+
+        scan_session=self.kwargs['scan_session']
+        return reverse_lazy('scan', kwargs={'scan_session': scan_session})
+    
+repo_edit = RepoEditView.as_view()
+
+@method_decorator(login_required, name='dispatch')
+class RepoDeleteView(DeleteView):
+    model = User_Scans
+    template_name = 'RepoAnalysisApp/RepoScanned/repo-delete.html'
+    success_url = reverse_lazy('index')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        scan_session ={'scan_session': self.kwargs['scan_session']}
+        context.update(scan_session)
+        return context
+    
+    def get_success_url(self):
+
+          scan_session=self.kwargs['scan_session']
+          return reverse_lazy('scan', kwargs={'scan_session': scan_session})
+    
+repo_delete = RepoDeleteView.as_view()
 
 @login_required
 def about(request):
@@ -150,7 +219,8 @@ def about(request):
     return render(request, "RepoAnalysisApp/about.html", context)
 
 @login_required
-def analyze(request, scan_session):
+def analyze(request, scan_session, url_name):
+    
     if request.method == "POST":
         input_method = request.POST.get("input_method")
         if input_method == 'repository':

@@ -21,7 +21,11 @@ urlpatterns = [
     path('index/scan-edit/<int:pk>', views.scan_edit, name='scan-edit'),
     path('index/scan-delete/<int:pk>', views.scan_delete, name='scan-delete'),
     
+    path('index/<str:scan_session>/repo-create/', views.repo_create, name='repo-create'),
+    path('index/<str:scan_session>/repo-edit/<int:pk>', views.repo_edit, name='repo-edit'),
+    path('index/<str:scan_session>/repo-delete/<int:pk>', views.repo_delete, name='repo-delete'),
+    
     path('index/<str:scan_session>', views.scan, name='scan'),
-    path('index/<str:scan_session>/analyze',views.analyze,name='analyze'),
+    path('index/<str:scan_session>/<str:url_name>/analyze',views.analyze,name='analyze'),
     path('about', views.about, name='about'),
 ]

@@ -9,8 +9,8 @@ class Scan(models.Model):
 class User_Scans(models.Model):
     
     scan_id = models.ForeignKey(Scan, on_delete=models.CASCADE)
-    name = models.CharField(max_length = 200)
-    url_name = models.URLField(max_length = 200)
+    name = models.CharField(max_length = 200, unique=True)
+    url_name = models.URLField(max_length = 200, unique=True)
     
     class Meta():
         db_table = "user_scaned_repo"

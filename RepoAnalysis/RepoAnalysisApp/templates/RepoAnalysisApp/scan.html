@@ -1,6 +1,44 @@
 {%extends 'RepoAnalysisApp/index.html' %}
 {%block content%}
 {{scan_session}}
+
+<div class="card">
+    <div class="card-body">
+        <div class="d-flex justify-content-end">
+            <a type="button" class="btn btn-success mb-3" href="{% url 'repo-create' scan_session %}">Add a new Repository</a>
+        </div>
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Repo Name</th>
+                <th scope="col">URL</th>
+                <th scope="col">Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for repo in user_scanned_repos %}
+            <tr>
+                <td>{{ repo.name }}</td>
+                <td>{{ repo.url_name }}</td>
+                <td>
+                    <form action={% url 'analyze' scan_session repo.name %} method="POST">
+                        {% csrf_token %}
+                        <div id="repositoryInput" class="form-group">
+                            <input type="submit" class="btn btn-primary" name="submit" value="Generate Report">
+                            <input type="hidden" class="form-control" name="repository_url" value="{{ repo.url_name }}">
+                            <input type="hidden" name="input_method" value="repository">
+                        </div>
+                    </form>
+                    <a class="btn btn-warning btn-sm" href="{% url 'repo-edit' scan_session repo.id %}">Edit</a>
+                    <a class="btn btn-danger btn-sm" href="{% url 'repo-delete' scan_session repo.id %}">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
 <div class="form-check form-check-inline">
     <input class="form-check-input" type="radio" name="input_method" id="repositoryRadio" value="repository" checked onclick="toggleForm()">
     <label class="form-check-label" for="repositoryRadio">Using GitHub Repository</label>
@@ -10,14 +48,6 @@
     <label class="form-check-label" for="fileRadio">Using TXT File contains Group of Repositories</label>
 </div>
 </div>
-<form action={% url 'analyze' scan_session %} method="POST">
-    {% csrf_token %}
-    <div id="repositoryInput" class="form-group">
-        <input type="text" class="form-control" name="repository_url" placeholder="Enter GitHub repository URL" required>
-        <input type="submit" class="btn btn-primary" name="submit" value="Generate Report">
-        <input type="hidden" name="input_method" value="repository">
-    </div>
-</form>
 <form action="/upload" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     <div id="fileInput" class="form-group" style="display: none;">
