@@ -53,7 +53,7 @@ def analyze_repository(repository_url, access_token):
     ## Contributors Details
     contributors = retry_api(lambda: github_api.get_contributors(repository_url))
     if contributors:
-        graph_plotter.plot_contributors_graph(contributors, repository_url, repo_directory)
+        #graph_plotter.plot_contributors_graph(contributors, repository_url, repo_directory)
         contributors_data = [{"login": contributor["login"], "contributions": contributor["contributions"]} for contributor in contributors]
         contributors_json_file = os.path.join(repo_directory, "contributors_graph.json")
         save_json_file(contributors_data, contributors_json_file)
@@ -68,7 +68,7 @@ def analyze_repository(repository_url, access_token):
     ## Code CRUD Details
     code_churn = retry_api(lambda: github_api.get_code_churn(repository_url))
     if code_churn:
-        graph_plotter.plot_code_churn(code_churn, repository_url, repo_directory)
+        #graph_plotter.plot_code_churn(code_churn, repository_url, repo_directory)
         code_churn_data = [{"additions": entry[0], "deletions": entry[1], "commits": entry[2]} for entry in code_churn]
         code_churn_json_file = os.path.join(repo_directory, "code_churn_over_time.json")
         save_json_file(code_churn_data, code_churn_json_file)
@@ -76,11 +76,67 @@ def analyze_repository(repository_url, access_token):
     ## Commit Details
     commit_activity = retry_api(lambda: github_api.get_commit_activity(repository_url))
     if commit_activity:
-        graph_plotter.plot_commit_activity(commit_activity, repository_url, repo_directory)
+        #graph_plotter.plot_commit_activity(commit_activity, repository_url, repo_directory)
         commit_activity_data = [{"week": data["week"], "total": data["total"]} for data in commit_activity]
         commit_activity_json_file = os.path.join(repo_directory, "commit_activity.json")
         save_json_file(commit_activity_data, commit_activity_json_file)
     print(f"Analyzing repository: {repository_url}")
+
+    ## Repository Info
+    repo_info = retry_api(lambda: github_api.get_repository_info(repository_url))
+    if repo_info:
+        repo_info_json_file = os.path.join(repo_directory, "repo_info.json")
+        save_json_file(repo_info, repo_info_json_file)
+
+    ## Pull Requests
+    pull_requests = retry_api(lambda: github_api.get_pull_requests(repository_url))
+    if pull_requests:
+        pull_requests_json_file = os.path.join(repo_directory, "pull_requests.json")
+        save_json_file(pull_requests, pull_requests_json_file)
+        #graph_plotter.plot_pull_requests(pull_requests, repository_url, repo_directory)
+
+    ## Issues
+    issues = retry_api(lambda: github_api.get_issues(repository_url))
+    if issues:
+        issues_json_file = os.path.join(repo_directory, "issues.json")
+        save_json_file(issues, issues_json_file)
+        #graph_plotter.plot_issues(issues, repository_url, repo_directory)
+
+    ## Languages
+    languages = retry_api(lambda: github_api.get_languages(repository_url))
+    if languages:
+        languages_json_file = os.path.join(repo_directory, "languages.json")
+        save_json_file(languages, languages_json_file)
+        #graph_plotter.plot_languages(languages, repository_url, repo_directory)
+
+    ## Releases
+    releases = retry_api(lambda: github_api.get_releases(repository_url))
+    if releases:
+        releases_json_file = os.path.join(repo_directory, "releases.json")
+        save_json_file(releases, releases_json_file)
+        #graph_plotter.plot_releases(releases, repository_url, repo_directory)
+
+    ## Traffic Views
+    traffic_views = retry_api(lambda: github_api.get_traffic_views(repository_url))
+    if traffic_views:
+        # Ensure that traffic_views is a list of dictionaries
+        if isinstance(traffic_views, str):
+            traffic_views = json.loads(traffic_views)
+            print("DEBUG: traffic_views = ", traffic_views)
+        print("DEBUG: traffic_views = ", traffic_views)
+        traffic_views_json_file = os.path.join(repo_directory, "traffic_views.json")
+        save_json_file(traffic_views, traffic_views_json_file)
+        #graph_plotter.plot_traffic_views(traffic_views, repository_url, repo_directory)
+
+    ## Traffic Clones
+    traffic_clones = retry_api(lambda: github_api.get_traffic_clones(repository_url))
+    if traffic_clones:
+        # Ensure that traffic_clones is a list of dictionaries
+        if isinstance(traffic_clones, str):
+            traffic_clones = json.loads(traffic_clones)
+        traffic_clones_json_file = os.path.join(repo_directory, "traffic_clones.json")
+        save_json_file(traffic_clones, traffic_clones_json_file)
+        #graph_plotter.plot_traffic_clones(traffic_clones, repository_url, repo_directory)
 
 # Create your views here.
 def home(request):
@@ -134,9 +190,7 @@ class ScanDeleteView(DeleteView):
     
 scan_delete = ScanDeleteView.as_view()
 
-@login_required
-def scan(request, scan_session):    
-    
+def scan(request, scan_session):
     context = {}
     
     scan_session_id = Scan.objects.filter(title=scan_session).values()[0]['id']
@@ -227,7 +281,20 @@ def analyze(request, scan_session, url_name):
             repository_url = request.POST.get("repository_url")
             analyze_repository(repository_url, SocialAccountDATA(request).get_access_token())
             repo_name = repository_url.replace("https://github.com/", "").replace("/", "_")
-            context={"repository_url": repository_url, "repo_name": repo_name}
+            def load_json_data(file_name):
+                file_path = os.path.join(RESULTS_DIR, repo_name, file_name)
+                with open(file_path, 'r') as f:
+                    return json.load(f)
+            contributors_data = load_json_data("contributors_graph.json")
+            code_churn_data = load_json_data("code_churn_over_time.json")
+            commit_activity_data = load_json_data("commit_activity.json")
+            context = {
+                "repository_url": repository_url,
+                "repo_name": repo_name,
+                "contributors_data": contributors_data,
+                "code_churn_data": code_churn_data,
+                "commit_activity_data": commit_activity_data
+            }
             return render(request, "RepoAnalysisApp/results.html", context)
         elif input_method == 'txt_file':
             file = request.FILES["file"]
