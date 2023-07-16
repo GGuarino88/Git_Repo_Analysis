@@ -70,7 +70,6 @@
             padding: 20px;
             text-align: center;
         }
-
         .underlined::after {
             content: "";
             display: block;
@@ -79,30 +78,23 @@
             background: linear-gradient(45deg, #3f51b5, #9c27b0);
             margin-top: 10px;
         }
-
-
         .header a {
             transition: color 0.3s ease-in-out;
         }
-
         .header a:hover {
             color: #eee;
         }
-
         .result-card {
             box-shadow: 0 0 15px 0 rgba(0,0,0,0.1);
             transition: all 0.3s ease-in-out;
         }
-
         .result-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 0 20px 0 rgba(0,0,0,0.2);
         }
-
         .result-card h2 {
             position: relative;
         }
-
         .result-card h2::after {
             content: "";
             position: absolute;
@@ -112,7 +104,6 @@
             bottom: -10px;
             left: 0;
         }
-
         footer {
             background: linear-gradient(45deg, #3f51b5, #9c27b0);
         }
@@ -180,33 +171,26 @@
             padding: 20px;
             text-align: center;
         }
-
         .header a {
             transition: color 0.3s ease-in-out;
         }
-
         .header a:hover {
             color: #eee;
         }
-
         .result-card {
             box-shadow: 0 0 15px 0 rgba(0,0,0,0.1);
             transition: all 0.3s ease-in-out;
         }
-
         .result-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 0 20px 0 rgba(0,0,0,0.2);
         }
-
         .result-card h2 {
             position: relative;
         }
-
         h3{
             color: #3f51b5;
         }
-
         .result-card h2::after {
             content: "";
             position: absolute;
@@ -216,11 +200,9 @@
             bottom: -10px;
             left: 0;
         }
-
         footer {
             background: linear-gradient(45deg, #3f51b5, #9c27b0);
         }
-
         /* Styling for bulleted list */
         .list-group-item {
             border: none;
@@ -230,33 +212,24 @@
             content: "• ";
             color: #3f51b5;
         }
-
         h2{
             color: #3f51b5;
         }
-
-
-
         /* new */
-
         .full-height {
             height: 50vh; /* This will make the div take the full height of the viewport */
         }
-
         .equal-height {
             display: flex;
             flex-direction: column;
         }
-
         .equal-height > .result-card {
             flex: 1 0 auto; /* This will make the children of .equal-height (your cards) grow to take up any available space */
         }
-
                 /* Styling for the div containing the cards */
         .full-height {
             height: auto; /* This will make the div adjust its height based on its content */
         }
-
         /* Styling for the cards */
         .result-card {
             border: 1px solid #e0e0e0;
@@ -271,12 +244,10 @@
             transition: all 0.3s ease-in-out;
             height: auto; /* This will make the card adjust its height based on its content */
         }
-
         .result-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 0 20px 0 rgba(0,0,0,0.2);
         }
-
         /* img */
         .modal {
             display: none;
@@ -290,24 +261,20 @@
             overflow: auto;
             background-color: rgba(0,0,0,0.9);
             }
-
             .modal-content {
             margin: auto;
             display: block;
             width: 80%;
             max-width: 700px;
             }
-
             .modal-content, #caption {
             animation-name: zoom;
             animation-duration: 0.6s;
             }
-
             @keyframes zoom {
             from {transform:scale(0)} 
             to {transform:scale(1)}
             }
-
             .close {
             position: absolute;
             top: 15px;
@@ -317,17 +284,12 @@
             font-weight: bold;
             transition: 0.3s;
             }
-
             .close:hover,
             .close:focus {
             color: #bbb;
             text-decoration: none;
             cursor: pointer;
             }
-
-
-
-
     </style>
     <script src="https://cdn.plot.ly/plotly-2.24.1.min.js" charset="utf-8"></script>
     <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
@@ -398,7 +360,6 @@
                 }
             }
             Plotly.newPlot(code, [addtion_trace, deletion_trace, modification_trace], layout)
-
         }
         async function plot_commit(url) {
             const path = url + "commit_activity.json"
@@ -422,7 +383,6 @@
                 y: Object.values(pr_data),
                 type: 'bar'
             }
-
             Plotly.newPlot(pull, [plot_data])
         }
         async function plot_issues(url) {
@@ -510,8 +470,6 @@
     <div class="container">
         <h1>Analysis Results</h1>
         <p class="lead">Repository URL: {{ repository_url }}</p>
-
-
         <div id="myModal" class="modal">
             <span class="close">&times;</span>
             <img class="modal-content" id="img01">
@@ -521,7 +479,6 @@
             <div class="col-md-12">
                 <h2>Contribution Summary</h2>
             </div>
-
             <!-- Card for the Graph -->
             <div class="col-md-6 equal-height">
                 <div class="result-card">
@@ -529,7 +486,6 @@
                     <div id="contributors"></div>
                 </div>
             </div>
-
             <!-- Card for the Contributors List -->
             <div class="col-md-6 equal-height">
                 <div class="result-card">
@@ -541,7 +497,6 @@
                     </ul>
                 </div>
             </div>
-
         </div>
         
         
@@ -574,12 +529,8 @@
                 </div>
             </div>
         </div>
-
         
         <!-- Most Modified Files -->
-
-
-
 <div class="result-card">
     <h2>Commit Activity</h2>
     <div id="commit"></div>
@@ -610,8 +561,6 @@
 </div>
 <div id="path" url="{% static "results/" %}{{ repo_name }}/" style="display: none;"></div>
 </div>
-
-
     </div>
     <footer>
         © 2023 GitHub Repository Analyzer. All rights reserved.

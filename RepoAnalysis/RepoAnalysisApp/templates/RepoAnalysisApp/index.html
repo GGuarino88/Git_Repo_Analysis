@@ -100,7 +100,6 @@
         width: 90%; /* updated width */
         margin-bottom: 10px;
     }
-
     .btn-primary {
         background: #3f51b5;
         border: none;
@@ -144,7 +143,6 @@
         <tr>
             <form action="{% url 'scan.html' data.title %}" method="POST">
                 {% csrf_token %}
-
                 <td><input type="text" id="title" name="title" value="{{ data.title }}"></td>
                 <td><button type="submit" name= formmethod="post">Enter</td>
             </form>
