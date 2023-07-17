@@ -1,0 +1,61 @@
+{% extends "RepoAnalysisApp/ScanSession/base.html" %}
+{% block content %}
+<div class="card-body">
+    <h5>Add A new Repository for {{ scan_session }}</h5>
+    <form id="repositoryForm" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <a type="button" class="btn btn-danger" href="{% url 'scan' scan_session %}">Cancel</a>
+        <input type="submit" class="btn btn-success" name="submit" id="generateReportBtn" value="Validate" disabled>
+    </form>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    const repositoryUrlInput = document.getElementById('id_url_name');
+    const generateReportBtn = document.getElementById('generateReportBtn');
+    let isFormSubmitted = false;
+    repositoryUrlInput.addEventListener('input', function() {
+        const isValidUrl = validateRepositoryUrl(repositoryUrlInput.value);
+        generateReportBtn.disabled = !isValidUrl;
+        generateReportBtn.value = isValidUrl ? 'Validate' : 'Submit';
+    });
+    function validateRepositoryUrl(url) {
+        const regex = /^(https?:\/\/)?(www\.)?github\.com\/[^\s\/]+\/[^\s\/]+$/;
+        return regex.test(url);
+    }
+    $('#repositoryForm').on('submit', function(e) {
+        if (!isFormSubmitted) {
+            e.preventDefault();
+            const repositoryUrl = repositoryUrlInput.value;
+            const isValidUrl = validateRepositoryUrl(repositoryUrl);
+            if (isValidUrl) {
+                checkRepositoryExists(repositoryUrl);
+            } else {
+                alert('Invalid repository URL');
+            }
+        } else {
+            isFormSubmitted = false;
+        }
+    });
+    function checkRepositoryExists(repositoryUrl) {
+        const strippedUrl = repositoryUrl.replace(/^(https?:\/\/)?(www\.)?github\.com\//, '');
+        const apiUrl = `https://api.github.com/repos/${strippedUrl}`;
+        $.ajax({
+            url: apiUrl,
+            type: 'GET',
+            success: function(response) {
+                console.log('Repository exists:', repositoryUrl);
+                generateReportBtn.disabled = false;
+                generateReportBtn.value = 'Submit';
+                $('#repositoryForm').submit();
+                isFormSubmitted = true;
+            },
+            error: function(xhr, status, error) {
+                console.log('Repository does not exist:', repositoryUrl);
+                generateReportBtn.value = 'Validate';
+                alert('The repository does not exist.');
+            }
+        });
+    }
+</script>
+{% endblock %}
