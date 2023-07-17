@@ -1,9 +1,12 @@
 import os
 import csv
 import json
-from .models import Scan
+from .models import Scan, User_Scans
+from django.urls import reverse_lazy
 from django.shortcuts import render, redirect
+from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
+from django.views.generic import CreateView, DetailView, UpdateView, DeleteView
 
 ## Modules Initialization
 from RepoAnalysisApp.utils.github_api import GitHubAPI
@@ -139,10 +142,103 @@ def home(request):
 def index(request):
     mydata = Scan.objects.filter(author=request.user).values()
     return render(request, "RepoAnalysisApp/index.html", {'mydata':mydata})
+	
+@method_decorator(login_required, name='dispatch')
+class ScanCreateView(CreateView):
+    model = Scan
+    template_name = 'RepoAnalysisApp/ScanSession/scan-create.html'
+    fields = ('title',)
+    success_url = reverse_lazy('index')
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+scan_create = ScanCreateView.as_view()
 
-@login_required
+@method_decorator(login_required, name='dispatch')
+class ScanEditView(UpdateView):
+    model = Scan
+    template_name = 'RepoAnalysisApp/ScanSession/scan-edit.html'
+    fields = ('title',)
+    success_url = reverse_lazy('index')
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+scan_edit = ScanEditView.as_view()
+
+@method_decorator(login_required, name='dispatch')
+class ScanDeleteView(DeleteView):
+    model = Scan
+    template_name = 'RepoAnalysisApp/ScanSession/scan-delete.html'
+    success_url = reverse_lazy('index')    
+scan_delete = ScanDeleteView.as_view()
+
 def scan(request, scan_session):
-    return render(request,"RepoAnalysisApp/scan.html", {'scan_session': scan_session})
+    context = {}
+    scan_session_id = Scan.objects.filter(title=scan_session).values()[0]['id']
+    user_scanned_repos = User_Scans.objects.filter(scan_id=scan_session_id).values()
+    context = {'scan_session' : scan_session, 'user_scanned_repos': user_scanned_repos}
+    return render(request,"RepoAnalysisApp/scan.html", context)
+
+@method_decorator(login_required, name='dispatch')
+class RepoCreateView(CreateView):    
+    model = User_Scans
+    template_name = 'RepoAnalysisApp/RepoScanned/repo-create.html'
+    fields = ('name','url_name')
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        scan_session ={'scan_session': self.kwargs['scan_session']}
+        context.update(scan_session)
+        return context
+    
+    def form_valid(self, form):
+        scan_session = self.kwargs['scan_session']
+        form.instance.scan_id = Scan.objects.filter(title=scan_session)[0]
+        return super().form_valid(form)
+    
+    def get_success_url(self):
+          scan_session=self.kwargs['scan_session']
+          return reverse_lazy('scan', kwargs={'scan_session': scan_session})
+    
+repo_create = RepoCreateView.as_view()
+@method_decorator(login_required, name='dispatch')
+class RepoEditView(UpdateView):
+    model = User_Scans
+    template_name = 'RepoAnalysisApp/RepoScanned/repo-edit.html'
+    fields = ('name','url_name')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        scan_session ={'scan_session': self.kwargs['scan_session']}
+        context.update(scan_session)
+        return context
+    
+    def form_valid(self, form):
+        scan_session = self.kwargs['scan_session']
+        form.instance.scan_id = Scan.objects.filter(title=scan_session)[0]
+        return super().form_valid(form)
+    
+    def get_success_url(self):
+        scan_session=self.kwargs['scan_session']
+        return reverse_lazy('scan', kwargs={'scan_session': scan_session})
+    
+repo_edit = RepoEditView.as_view()
+@method_decorator(login_required, name='dispatch')
+class RepoDeleteView(DeleteView):
+    model = User_Scans
+    template_name = 'RepoAnalysisApp/RepoScanned/repo-delete.html'
+    success_url = reverse_lazy('index')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        scan_session ={'scan_session': self.kwargs['scan_session']}
+        context.update(scan_session)
+        return context
+    
+    def get_success_url(self):
+          scan_session=self.kwargs['scan_session']
+          return reverse_lazy('scan', kwargs={'scan_session': scan_session})
+    
+repo_delete = RepoDeleteView.as_view()
 
 @login_required
 def about(request):
@@ -150,7 +246,7 @@ def about(request):
     return render(request, "RepoAnalysisApp/about.html", context)
 
 @login_required
-def analyze(request, scan_session):
+def analyze(request, scan_session, url_name):
     if request.method == "POST":
         input_method = request.POST.get("input_method")
         if input_method == 'repository':
@@ -164,7 +260,7 @@ def analyze(request, scan_session):
                         return json.load(f)
                 except FileNotFoundError:
                     print(f"File not found: {file_path}")
-                    return json.load(f)
+                    return {}
             contributors_data = load_json_data("contributors_graph.json")
             code_churn_data = load_json_data("code_churn_over_time.json")
             commit_activity_data = load_json_data("commit_activity.json")
