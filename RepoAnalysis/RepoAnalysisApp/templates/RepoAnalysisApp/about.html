@@ -1,16 +1,15 @@
 <!DOCTYPE html>
+{% load static %}
 <html>
-    {% load static %}
 <head>
     <title>Github Repository Analysis</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-    <link href="{% static 'RepoAnalysisApp/css/about.css'%}" rel="stylesheet">
+    <link href="{% static 'css/about.css'%}" rel="stylesheet">
 </head>
 <body>
     <div class="header">
         <button class="back-button" onclick="history.back()">&#8249; back</button>
         <a href="{% url 'home'%}">Home</a>
-        
         <a href="{% url 'logout'%}">Logout</a>
         <a href="admin/">Admin</a>
     </div>
@@ -53,6 +52,5 @@
     </div>
 </body>
 <footer>
-    
 </footer>
 </html>
