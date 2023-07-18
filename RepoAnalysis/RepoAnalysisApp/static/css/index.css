@@ -154,12 +154,24 @@ footer {
 }
 
 .card {
-    max-width: 800px; /* adjust as needed */
+    width: 700px; /* adjust as needed */
     margin: 30px auto;
     padding: 20px;
     background: #fff;
     border-radius: 10px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+.card1 {
+    max-width: 100%; /* adjust as needed */
+    margin: 30px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.ead{
+    padding-left: 40px !important;
 }
 
 .card-body {
@@ -196,4 +208,20 @@ footer {
     text-decoration: none;
     position: absolute;
     left: 0;
+}
+
+.table {
+    width: 100%;
+    /* ...other styles... */
+}
+
+/* Align content to the right in the cells with class .action-buttons */
+.action-buttons {
+    text-align: right;
+}
+
+
+.actions-header, .actions-cell {
+    text-align: right;
+    padding-right: 77px !important; 
 }

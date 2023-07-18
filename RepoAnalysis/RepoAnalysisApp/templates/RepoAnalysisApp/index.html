@@ -25,14 +25,14 @@
                 <thead>
                 <tr>
                     <th scope="col">Session</th>
-                    <th scope="col">Actions</th>
+                    <th scope="col" class="actions-header">Actions</th>
                 </tr>
                 </thead>
                 <tbody>
                 {% for data in mydata %}
                 <tr>
                     <td>{{ data.title }}</td>
-                    <td>
+                    <td class="action-buttons">
                         <form action="{% url 'scan' data.title %}" method="POST" style="display: inline;">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-primary btn-sm">Enter</button>
