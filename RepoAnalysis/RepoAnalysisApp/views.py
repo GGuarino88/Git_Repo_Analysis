@@ -240,7 +240,7 @@ class RepoDeleteView(DeleteView):
     
 repo_delete = RepoDeleteView.as_view()
 
-@login_required
+
 def about(request):
     context = {}
     return render(request, "RepoAnalysisApp/about.html", context)
