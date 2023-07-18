@@ -6,176 +6,10 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
-    <link href="{% static 'RepoAnalysisApp/css/results.css'%}" rel="stylesheet">
+    <link href="{% static 'css/results.css'%}" rel="stylesheet">
     <script src="https://cdn.plot.ly/plotly-2.24.1.min.js" charset="utf-8"></script>
     <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
-    <script>
-        async function get_data(path) {
-            try {
-                let response = await fetch(path)
-                return await response.json()
-            } catch (error) {
-                console.log(error)
-            }
-        }
-        async function plot_contributors(url) {
-            const path = url + "contributors_graph.json"
-            let data = await get_data(path)
-            const x = data.map(ob => ob.login)
-            const y = data.map(ob => ob.contributions)
-            let plot_data = {
-                x : x,
-                y : y,
-                type: 'bar'
-            }
-            let layout = {
-                yaxis: {
-                    title: {
-                        text: 'contributions'
-                    }
-                }
-            }
-            const contributions = document.getElementById("contributors")
-            Plotly.newPlot(contributions, [plot_data], layout)
-        }
-        const formatDate = (timestamp) => {
-            const date = new Date(timestamp)
-            const year = date.getFullYear()
-            const month = String(date.getMonth() + 1).padStart(2,'0')
-            const day = String(date.getDate()).padStart(2,'0')
-            return `${year}-${month}-${day}`
-        }
-        async function plot_code_churn(url) {
-            const path = url + "code_churn_over_time.json"
-            let data = await get_data(path)
-            const code = document.getElementById("code")
-            const week = data.map(ob => formatDate(ob.additions * 1000))
-            const additions = data.map(ob => ob.deletions)
-            const deletions = data.map(ob => -ob.commits)
-            const modifications = additions.map((val, ind) => val + deletions[ind])
-            let addtion_trace = {
-                x : week,
-                y : additions,
-                name: "addtions"
-            }
-            let deletion_trace = {
-                x : week,
-                y : deletions,
-                name: "deletions"
-            }
-            let modification_trace = {
-                x : week,
-                y : modifications,
-                name: "modifications"
-            }
-            let layout = {
-                yaxis: {
-                    title: {
-                        text: 'lines of code'
-                    }
-                }
-            }
-            Plotly.newPlot(code, [addtion_trace, deletion_trace, modification_trace], layout)
-        }
-        async function plot_commit(url) {
-            const path = url + "commit_activity.json"
-            let data = await get_data(path)
-            const commit = document.getElementById("commit")
-            const week = data.map(ob => formatDate(ob.week * 1000))
-            const total = data.map(ob => ob.total)
-            let plot_data = {
-                x : week,
-                y : total,
-            }
-            Plotly.newPlot(commit, [plot_data])
-        }
-        async function plot_pr(url) {
-            const path = url + "pull_requests.json"
-            let data = await get_data(path)
-            const pull = document.getElementById("pull")
-            const pr_data = _.countBy(data, 'user.login')
-            let plot_data = {
-                x: Object.keys(pr_data),
-                y: Object.values(pr_data),
-                type: 'bar'
-            }
-            Plotly.newPlot(pull, [plot_data])
-        }
-        async function plot_issues(url) {
-            const path = url + "issues.json"
-            let data = await get_data(path)
-            const issues = document.getElementById("issues")
-        }
-        async function plot_lang(url) {
-            const path = url + "languages.json"
-            let data = await get_data(path)
-            const lang = document.getElementById("languages")
-            let plot_data = {
-                labels: Object.keys(data),
-                values: Object.values(data),
-                type: 'pie'
-            }
-            Plotly.newPlot(lang, [plot_data])
-        }
-        async function plot_releases(url) {
-            const path = url + "releases.json"
-            let data = await get_data(path)
-            const releases = document.getElementById("releases")
-        }
-        async function plot_views(url) {
-            const path = url + "traffic_views.json"
-            let data = await get_data(path)
-            const views = document.getElementById("views")
-            const view_data = data.views
-            const timestamps = view_data.map(view => view.timestamp.slice(0,10))
-            const count = view_data.map(view => view.count)
-            const uniques = view_data.map(view => view.uniques)
-            let count_trace = {
-                x : timestamps,
-                y : count,
-                name: 'count'
-            }
-            let unique_trace = {
-                x : timestamps,
-                y : uniques,
-                name : 'uniques'
-            }
-            Plotly.newPlot(views, [count_trace, unique_trace])
-        }
-        async function plot_clones(url) {
-            const path = url + "traffic_clones.json"
-            let data = await get_data(path)
-            const clones = document.getElementById("clones")
-            const clone_data = data.clones
-            const timestamps = clone_data.map(clone => clone.timestamp.slice(0,10))
-            const count = clone_data.map(clone => clone.count)
-            const uniques = clone_data.map(clone => clone.uniques)
-            let count_trace = {
-                x : timestamps,
-                y : count,
-                name: 'count'
-            }
-            let unique_trace = {
-                x : timestamps,
-                y : uniques,
-                name : 'uniques'
-            }
-            Plotly.newPlot(clones, [count_trace, unique_trace])
-        }
-        window.addEventListener("DOMContentLoaded", () => {
-            const repo_name = `{{repo_name}}`
-            const url = document.getElementById('path').getAttribute('url')
-            plot_contributors(url)
-            plot_code_churn(url)
-            plot_commit(url)
-            plot_pr(url)
-            plot_issues(url)
-            plot_lang(url)
-            plot_releases(url)
-            plot_views(url)
-            plot_clones(url)
-        })
-    </script>
+	<script src="{% static 'js/results.js' %}"></script>
 </head>
 <body>
     <div class="header">
@@ -216,10 +50,6 @@
                 </div>
             </div>
         </div>
-        
-        
-        
-        
         <div class="row full-height">
             <!-- Common Heading -->
             <div class="col-md-12">
@@ -234,7 +64,6 @@
                     <div id="code"></div>
                 </div>
             </div>
-        
             <!-- Card for the Details -->
             <div class="col-md-6 equal-height">
                 <div class="result-card">
@@ -247,7 +76,6 @@
                 </div>
             </div>
         </div>
-        
         <!-- Most Modified Files -->
 <div class="result-card">
     <h2>Commit Activity</h2>
@@ -284,6 +112,5 @@
         © 2023 GitHub Repository Analyzer. All rights reserved.
     </footer>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="{% static 'RepoAnalysisApp/js/results.js' %}"></script>
 </body>
 </html>
