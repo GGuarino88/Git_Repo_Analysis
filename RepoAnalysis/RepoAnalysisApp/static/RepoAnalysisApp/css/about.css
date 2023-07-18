@@ -62,9 +62,11 @@ footer {
     padding: 10px;
 }
 .member img {
-    width: 100%;
-    height: auto;
+    width: 100% !important; /* specify a width */
+    height: 200px !important; /* specify a height */
+    /* object-fit: cover; makes sure the image keeps aspect ratio */
 }
+
 .header {
     position: absolute;
     top: 0;
