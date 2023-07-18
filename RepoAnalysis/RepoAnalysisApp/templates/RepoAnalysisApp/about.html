@@ -1,126 +1,58 @@
 <!DOCTYPE html>
 <html>
+    {% load static %}
 <head>
     <title>Github Repository Analysis</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            text-align: center;
-            background: #f4f7fa;
-        }
-        .header {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background-color: #3f51b5;
-            padding: 20px 0;
-        }
-        .header a {
-            margin: 0 15px;
-            text-decoration: none;
-            color: #fff;
-            font-weight: 600;
-        }
-        h1 {
-            margin-bottom: 20px;
-            color: #3f51b5;
-        }
-        p {
-            color: #555;
-            line-height: 1.5;
-            max-width: 600px;
-            margin: 0 auto 20px;
-        }
-        footer {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: #3f51b5;
-            color: #fff;
-            padding: 20px;
-            text-align: center;
-        }
-        .message {
-            margin-bottom: 10px;
-        }
-        .github-btn {
-            background: #333;
-            color: #fff;
-            border-radius: 5px;
-            display: inline-flex;
-            align-items: center;
-            padding: 5px 10px;
-            cursor: pointer;
-            transition: background 0.3s ease;
-        }
-        .github-btn:hover {
-            background: #444;
-        }
-        .github-btn svg {
-            margin-right: 5px;
-        }
-        .cool-button {
-            background-color: #3f51b5;
-            border: none;
-            color: white;
-            padding: 15px 32px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            margin: 4px 2px;
-            cursor: pointer;
-            transition: all 0.3s ease-out;
-            position: relative;
-            border-radius: 12px;
-            box-shadow: 0 9px 30px rgba(0, 0, 0, 0);
-        }
-        .cool-button:hover {
-            background-color: #4051B5;
-            box-shadow: 0 15px 20px rgba(0, 0, 0, 0.1);
-            transform: translateY(-2px);
-        }
-        ul {
-            text-align: left;
-        }
-    </style>
+    <link href="{% static 'RepoAnalysisApp/css/about.css'%}" rel="stylesheet">
 </head>
 <body>
     <div class="header">
+        <button class="back-button" onclick="history.back()">&#8249; back</button>
         <a href="{% url 'home'%}">Home</a>
-        <a href="{% url 'about'%}">About</a>
-        <a href="../accounts/github/login/?process=login/">Login</a>
+        
         <a href="{% url 'logout'%}">Logout</a>
-        <a href="../admin/">Admin</a>
+        <a href="admin/">Admin</a>
     </div>
     <h1>Github Repository Analysis</h1>
-    <p>This project is designed for MET 673 and allows professors analyzing github repository activities 
+    <p>This project is designed for MET 673 and allows professor in analyzing github repository activities 
     intuitively.</p>
-    Team member: 
-    <ul>
-        <li>Sashank Varma Rudraraju</li>
-        <li>Giuseppe Guarino</li>
-        <li>Giri Dhawan</li>
-        <li>Sahithi</li>
-        <li>Tanya Bisht</li>
-        <li>Heng Lu</li>
-    </ul>
+    Team members:
+    <div class="team-members">
+        <div class="member">
+            <img src="{% static 'RepoAnalysisApp/images/Sashank Varma Rudraraju1071.jpg' %}" alt="Sashank Varma Rudraraju">
+            <h3>Sashank Varma</h3>
+            <p>Product Manager</p>
+        </div>
+        <div class="member">
+            <img src="https://via.placeholder.com/150" alt="Giuseppe Guarino">
+            <h3>Giuseppe Guarino</h3>
+            <p>Configuration Manager</p>
+        </div>
+        <div class="member">
+            <img src="https://via.placeholder.com/150" alt="Giri Dhawan">
+            <h3>Giri Dhawan</h3>
+            <p>Resource Engineer</p>
+        </div>
+        <div class="member">
+            <img src="https://via.placeholder.com/150" alt="Sahithi">
+            <h3>Sahithi</h3>
+            <p>Design</p>
+        </div>
+        
+        <div class="member">
+            <img src="https://via.placeholder.com/150" alt="Heng Lu">
+            <h3>Heng Lu</h3>
+            <p>UI/UX</p>
+        </div>
+        <div class="member">
+            <img src="https://via.placeholder.com/150" alt="Tanya Bisht">
+            <h3>Tanya Bisht</h3>
+            <p>Test</p>
+        </div>
+    </div>
 </body>
 <footer>
-    {% for message in messages %}
-    <div class="message {{ message.tags }}">
-        {{ message }}
-    </div>
-    {% endfor %}
+    
 </footer>
 </html>
