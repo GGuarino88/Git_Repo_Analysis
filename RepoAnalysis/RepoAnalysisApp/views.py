@@ -2,6 +2,9 @@ import os
 import csv
 import json
 from .models import Scan, User_Scans
+from .forms import ScanForm
+from django.contrib import messages
+from django.db import IntegrityError
 from django.urls import reverse_lazy
 from django.shortcuts import render, redirect
 from django.utils.decorators import method_decorator
@@ -146,23 +149,26 @@ def index(request):
 @method_decorator(login_required, name='dispatch')
 class ScanCreateView(CreateView):
     model = Scan
+    form_class = ScanForm
     template_name = 'RepoAnalysisApp/ScanSession/scan-create.html'
-    fields = ('title',)
     success_url = reverse_lazy('index')
+    
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super().form_valid(form)
+    
 scan_create = ScanCreateView.as_view()
 
 @method_decorator(login_required, name='dispatch')
 class ScanEditView(UpdateView):
     model = Scan
+    form_class = ScanForm
     template_name = 'RepoAnalysisApp/ScanSession/scan-edit.html'
-    fields = ('title',)
     success_url = reverse_lazy('index')
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super().form_valid(form)
+
 scan_edit = ScanEditView.as_view()
 
 @method_decorator(login_required, name='dispatch')
