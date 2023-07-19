@@ -6,6 +6,7 @@ async function get_data(path) {
         console.log(error)
     }
 }
+
 async function plot_contributors(url) {
     const path = url + "contributors_graph.json"
     let data = await get_data(path)
@@ -26,6 +27,7 @@ async function plot_contributors(url) {
     const contributions = document.getElementById("contributors")
     Plotly.newPlot(contributions, [plot_data], layout)
 }
+
 const formatDate = (timestamp) => {
     const date = new Date(timestamp)
     const year = date.getFullYear()
@@ -33,6 +35,7 @@ const formatDate = (timestamp) => {
     const day = String(date.getDate()).padStart(2,'0')
     return `${year}-${month}-${day}`
 }
+
 async function plot_code_churn(url) {
     const path = url + "code_churn_over_time.json"
     let data = await get_data(path)
@@ -65,6 +68,7 @@ async function plot_code_churn(url) {
     }
     Plotly.newPlot(code, [addtion_trace, deletion_trace, modification_trace], layout)
 }
+
 async function plot_commit(url) {
     const path = url + "commit_activity.json"
     let data = await get_data(path)
@@ -77,6 +81,7 @@ async function plot_commit(url) {
     }
     Plotly.newPlot(commit, [plot_data])
 }
+
 async function plot_pr(url) {
     const path = url + "pull_requests.json"
     let data = await get_data(path)
@@ -89,11 +94,13 @@ async function plot_pr(url) {
     }
     Plotly.newPlot(pull, [plot_data])
 }
+
 async function plot_issues(url) {
     const path = url + "issues.json"
     let data = await get_data(path)
     const issues = document.getElementById("issues")
 }
+
 async function plot_lang(url) {
     const path = url + "languages.json"
     let data = await get_data(path)
@@ -105,11 +112,33 @@ async function plot_lang(url) {
     }
     Plotly.newPlot(lang, [plot_data])
 }
+
 async function plot_releases(url) {
-    const path = url + "releases.json"
-    let data = await get_data(path)
-    const releases = document.getElementById("releases")
+  const path = url + "releases.json";
+  let data = await get_data(path);
+  const releasesContainer = document.getElementById("releases");
+  if (data.length === 0) {
+    releasesContainer.innerText = "No releases available for this repository.";
+    return;
+  }
+  const releasesElement = document.createElement("div");
+  releasesElement.id = "releases-plot";
+  releasesContainer.appendChild(releasesElement);
+  const xValues = data.map(release => release.created_at.split("T")[0]);
+  const yValues = data.map(release => release.name);
+  Plotly.newPlot("releases-plot", [{
+    x: xValues,
+    y: yValues,
+    type: 'scatter',
+    mode: 'lines',
+    name: 'Releases',
+    line: {
+      color: 'rgba(0, 123, 255, 1)',
+      width: 1
+    }
+  }]);
 }
+
 async function plot_views(url) {
     const path = url + "traffic_views.json"
     let data = await get_data(path)
@@ -130,6 +159,7 @@ async function plot_views(url) {
     }
     Plotly.newPlot(views, [count_trace, unique_trace])
 }
+
 async function plot_clones(url) {
     const path = url + "traffic_clones.json"
     let data = await get_data(path)
@@ -150,6 +180,7 @@ async function plot_clones(url) {
     }
     Plotly.newPlot(clones, [count_trace, unique_trace])
 }
+
 window.addEventListener("DOMContentLoaded", () => {
     const repo_name = `{{repo_name}}`
     const url = document.getElementById('path').getAttribute('url')
