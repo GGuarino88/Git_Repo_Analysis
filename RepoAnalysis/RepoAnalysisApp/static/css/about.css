@@ -49,10 +49,11 @@ footer {
 }
 .team-members {
     display: flex;
-    overflow-x: scroll;
-    width: 80%; /* adjust as needed */
-    margin: 0 auto;
-}
+    flex-direction: center;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
 .member {
     flex: 0 0 auto;
     width: 200px; /* adjust as needed */
