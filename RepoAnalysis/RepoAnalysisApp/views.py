@@ -155,7 +155,11 @@ class ScanCreateView(CreateView):
     
     def form_valid(self, form):
         form.instance.author = self.request.user
-        return super().form_valid(form)
+        try:
+            return super().form_valid(form)
+        except IntegrityError:
+            form.add_error(None,'Scan Session already exists')
+            return self.form_invalid(form)
     
 scan_create = ScanCreateView.as_view()
 
@@ -167,8 +171,12 @@ class ScanEditView(UpdateView):
     success_url = reverse_lazy('index')
     def form_valid(self, form):
         form.instance.author = self.request.user
-        return super().form_valid(form)
-
+        try:
+            return super().form_valid(form)
+        except IntegrityError:
+            form.add_error(None,'Scan Session already exists')
+            return self.form_invalid(form)
+        
 scan_edit = ScanEditView.as_view()
 
 @method_decorator(login_required, name='dispatch')
@@ -179,8 +187,8 @@ class ScanDeleteView(DeleteView):
 scan_delete = ScanDeleteView.as_view()
 
 def scan(request, scan_session):
-    context = {}
-    scan_session_id = Scan.objects.filter(title=scan_session).values()[0]['id']
+    context = {} 
+    scan_session_id = Scan.objects.filter(title=scan_session).filter(author_id=request.user.id).values()[0]['id']
     user_scanned_repos = User_Scans.objects.filter(scan_id=scan_session_id).values()
     context = {'scan_session' : scan_session, 'user_scanned_repos': user_scanned_repos}
     return render(request,"RepoAnalysisApp/scan.html", context)
@@ -198,8 +206,12 @@ class RepoCreateView(CreateView):
     
     def form_valid(self, form):
         scan_session = self.kwargs['scan_session']
-        form.instance.scan_id = Scan.objects.filter(title=scan_session)[0]
-        return super().form_valid(form)
+        form.instance.scan_id = Scan.objects.filter(title=scan_session).filter(author_id=self.request.user.id)[0]
+        try:
+            return super().form_valid(form)
+        except IntegrityError:
+            form.add_error(None,'Repository already exists in this session')
+            return self.form_invalid(form)
     
     def get_success_url(self):
           scan_session=self.kwargs['scan_session']
@@ -220,8 +232,12 @@ class RepoEditView(UpdateView):
     
     def form_valid(self, form):
         scan_session = self.kwargs['scan_session']
-        form.instance.scan_id = Scan.objects.filter(title=scan_session)[0]
-        return super().form_valid(form)
+        form.instance.scan_id = Scan.objects.filter(title=scan_session).filter(author_id=self.request.user.id)[0]
+        try:
+            return super().form_valid(form)
+        except IntegrityError:
+            form.add_error(None,'Repository already exists in this session')
+            return self.form_invalid(form)
     
     def get_success_url(self):
         scan_session=self.kwargs['scan_session']
