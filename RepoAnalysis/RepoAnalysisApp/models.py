@@ -21,7 +21,8 @@ class User_Scans(models.Model):
     class Meta():
         db_table = "user_scaned_repo"
         constraints = [
-            models.UniqueConstraint(fields=['scan_id', 'name', 'url_name'], name='scan session repo constraint')
+            models.UniqueConstraint(fields=['scan_id', 'name'], name='scan_id_repo_name'),
+            models.UniqueConstraint(fields=['scan_id', 'url_name'], name='repo_name_url_name')
         ]
     def __str__(self):
         return f"{self.name}"
