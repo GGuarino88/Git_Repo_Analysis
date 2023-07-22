@@ -1,12 +1,10 @@
 {% extends "RepoAnalysisApp/ScanSession/base.html" %}
+{% block card_title %}Delete Scan Session{% endblock %}
 {% block content %}
-<div class="card-body">
-    <h5>Delete Scan Session</h5>
-    <form method="post">
-        {% csrf_token %}
-        <p>Delete <strong>{{ object.title }} </strong> from list? </p>
-        <button type="submit" class="btn btn-danger">Delete</button>
-        <a type="button" class="btn btn-success" href="{%url 'index' %}">Cancel</a>
-    </form>
-</div>
+<form method="post">
+    {% csrf_token %}
+    <p>Delete <strong>{{ object.title }} </strong> from list? </p>
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a type="button" class="btn btn-success" href="{%url 'index' %}">Cancel</a>
+</form>
 {% endblock %}

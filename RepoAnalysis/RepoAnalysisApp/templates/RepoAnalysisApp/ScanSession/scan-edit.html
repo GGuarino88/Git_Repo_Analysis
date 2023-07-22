@@ -1,12 +1,12 @@
 {% extends "RepoAnalysisApp/ScanSession/base.html" %}
+{% block card_title %}Edit Scan Session{% endblock %}
 {% block content %}
-<div class="card-body">
-    <h5>Edit Scan Session</h5>
-    <form method="post">
-        {% csrf_token %}
-        {{form.as_p}}
-        <a type="button" class="btn btn-danger" href="{%url 'index' %}">Cancel</a>
-        <button type="submit" class="btn btn-success">Create</button>
-    </form>
-</div>
+<form method="post">
+    {% csrf_token %}
+    <div class="form-group">
+        {{ form.title }}
+    </div>
+    <a type="button" class="btn btn-danger" href="{%url 'index' %}">Cancel</a>
+    <button type="submit" class="btn btn-success">Create</button>
+</form>
 {% endblock %}

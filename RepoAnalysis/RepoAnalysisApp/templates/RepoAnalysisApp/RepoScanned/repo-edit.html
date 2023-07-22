@@ -1,14 +1,20 @@
 {% extends "RepoAnalysisApp/ScanSession/base.html" %}
+{% block card_title %}Edit Scan Session{% endblock %}
 {% block content %}
-<div class="card-body">
-    <h5>Edit Scan Session</h5>
-    <form id="repositoryForm" method="post">
-        {% csrf_token %}
-        {{form.as_p}}
-        <a type="button" class="btn btn-danger" href="{%url 'scan' scan_session %}">Cancel</a>
-        <input type="submit" class="btn btn-success" name="submit" id="generateReportBtn" value="Validate" disabled>
-    </form>
-</div>
+<form id="repositoryForm" method="post">
+    {% csrf_token %}
+    {{ form.title }}
+    <div class="form-group">
+        <div class="form-group">
+            {{ form.repo_name}}
+        </div>
+            <div class="form-group">
+            {{ form.url_name}}
+            </div>
+    </div>
+    <a type="button" class="btn btn-danger" href="{%url 'scan' scan_session %}">Cancel</a>
+    <input type="submit" class="btn btn-success" name="submit" id="generateReportBtn" value="Validate" disabled>
+</form>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     const repositoryUrlInput = document.getElementById('id_url_name');
