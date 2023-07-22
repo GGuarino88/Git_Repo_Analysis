@@ -4,7 +4,8 @@
     <h5>Create Scan Session</h5>
     <form method="post">
         {% csrf_token %}
-        {{form.as_p}}
+        {{ form.name }}
+        {{ form.title }}
         <a type="button" class="btn btn-danger" href="{%url 'index' %}">Cancel</a>
         <button type="submit" class="btn btn-success">Create</button>
     </form>

@@ -1,12 +1,36 @@
+from django import forms
 from django.forms import ModelForm
-from django.core.exceptions import NON_FIELD_ERRORS
-from .models import Scan
+from .models import Scan, User_Scans
+
+
 class ScanForm(ModelForm):
+    title = forms.CharField(widget=forms.TextInput(attrs={
+        'class': 'input',
+        'type': 'text',
+        'placeholder': 'Enter Title'
+
+    }))
+
     class Meta:
         model = Scan
-        fields = ['title',]
-        error_messages = {
-            NON_FIELD_ERRORS: {
-                'unique_together': "%(model_name)s's %(field_labels)s are not unique.",
-            }
-        }
+        fields = ['title', ]
+
+
+class UserScanForm(ModelForm):
+    repo_name = forms.CharField(widget=forms.TextInput(attrs={
+        'class': 'input',
+        'type': 'text',
+        'placeholder': 'Enter Repository Name'
+
+    }))
+
+    url_name = forms.CharField(widget=forms.TextInput(attrs={
+        'class': 'input',
+        'type': 'text',
+        'placeholder': 'Enter Repository URL'
+
+    }))
+
+    class Meta:
+        model = User_Scans
+        fields = ['repo_name', 'url_name']

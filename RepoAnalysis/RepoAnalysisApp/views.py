@@ -2,7 +2,7 @@ import os
 import csv
 import json
 from .models import Scan, User_Scans
-from .forms import ScanForm
+from .forms import ScanForm, UserScanForm
 from django.contrib import messages
 from django.db import IntegrityError
 from django.urls import reverse_lazy
@@ -196,8 +196,8 @@ def scan(request, scan_session):
 @method_decorator(login_required, name='dispatch')
 class RepoCreateView(CreateView):    
     model = User_Scans
+    form_class = UserScanForm
     template_name = 'RepoAnalysisApp/RepoScanned/repo-create.html'
-    fields = ('name','url_name')
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         scan_session ={'scan_session': self.kwargs['scan_session']}
@@ -221,8 +221,8 @@ repo_create = RepoCreateView.as_view()
 @method_decorator(login_required, name='dispatch')
 class RepoEditView(UpdateView):
     model = User_Scans
+    form_class = UserScanForm
     template_name = 'RepoAnalysisApp/RepoScanned/repo-edit.html'
-    fields = ('name','url_name')
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

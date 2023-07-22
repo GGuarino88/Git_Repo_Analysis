@@ -17,10 +17,10 @@
             <tbody>
             {% for repo in user_scanned_repos %}
             <tr>
-                <td>{{ repo.name }}</td>
+                <td>{{ repo.repo_name }}</td>
                 <td>{{ repo.url_name }}</td>
                 <td>
-                    <form action={% url 'analyze' scan_session repo.name %} method="POST">
+                    <form action={% url 'analyze' scan_session repo.repo_name %} method="POST">
                         {% csrf_token %}
                         <div id="repositoryInput" class="form-group">
                             <input type="submit" class="btn btn-primary" name="submit" value="Generate Report">
