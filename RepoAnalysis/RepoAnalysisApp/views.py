@@ -157,7 +157,7 @@ class ScanCreateView(CreateView):
         scan_session_title = form.cleaned_data.get('title')
         try:
             new_scan_session = super().form_valid(form)
-            messages.success(self.request, f'"{ scan_session_title }" Created Succesfully')
+            messages.success(self.request, f'Session: "{ scan_session_title }" Created')
             return new_scan_session
         except IntegrityError:
             form.add_error(None,f'"{scan_session_title}" already exists')
@@ -181,7 +181,7 @@ class ScanEditView(UpdateView):
             if (scan_session_title == new_scan_session_title):
                 messages.success(self.request, f'No changes to: "{scan_session_title}"')
             else:
-                messages.success(self.request, f'"{scan_session_title}" Changed to: "{new_scan_session_title}"')
+                messages.info(self.request, f'Session: "{scan_session_title}" Changed to: "{new_scan_session_title}"')
             return new_scan_session
         except IntegrityError:
             form.add_error(None,f'"{scan_session_title}" already exists')
@@ -196,7 +196,7 @@ class ScanDeleteView(DeleteView):
     
     def get_success_url(self):
         deleted_scan_session_title = self.get_object().__dict__['title']
-        messages.success(self.request, f'"{deleted_scan_session_title}" deleted successfully')
+        messages.success(self.request, f'Session: "{deleted_scan_session_title}" Deleted')
         return reverse_lazy('index')
          
 scan_delete = ScanDeleteView.as_view()
@@ -221,11 +221,18 @@ class RepoCreateView(CreateView):
     
     def form_valid(self, form):
         scan_session = self.kwargs['scan_session']
+        repo_name = form.cleaned_data.get('repo_name')
+        repo_url = form.cleaned_data.get('url_name')
         form.instance.scan_id = Scan.objects.filter(title=scan_session).filter(author_id=self.request.user.id)[0]
         try:
-            return super().form_valid(form)
-        except IntegrityError:
-            form.add_error(None,'Repository already exists in this session')
+            new_repo = super().form_valid(form)
+            messages.success(self.request, f'Repository: "{ repo_name }" Created Succesfully')
+            return new_repo
+        except IntegrityError as integrity_exc:
+            if str(integrity_exc) == 'UNIQUE constraint failed: user_scaned_repo.scan_id_id, user_scaned_repo.repo_name':
+                form.add_error(None, f'Repository Name: "{repo_name}" already exists in {scan_session}')
+            elif str(integrity_exc) == 'UNIQUE constraint failed: user_scaned_repo.scan_id_id, user_scaned_repo.url_name':
+                form.add_error(None, f'Repository URL: "{repo_url}" already exists in {scan_session}')
             return self.form_invalid(form)
     
     def get_success_url(self):
@@ -247,11 +254,24 @@ class RepoEditView(UpdateView):
     
     def form_valid(self, form):
         scan_session = self.kwargs['scan_session']
+        repo_name = form.initial.get('repo_name')
+        repo_url = form.initial.get('url_name')
+        new_repo_name = form.cleaned_data.get('repo_name')
+        new_repo_url = form.cleaned_data.get('url_name')
         form.instance.scan_id = Scan.objects.filter(title=scan_session).filter(author_id=self.request.user.id)[0]
         try:
-            return super().form_valid(form)
-        except IntegrityError:
-            form.add_error(None,'Repository already exists in this session')
+            edited_repo = super().form_valid(form)
+            repo_data_changed = [key for key, value in form.cleaned_data.items() if form.initial.get(key) != value]
+            if repo_data_changed[0] == 'repo_name':
+                messages.success(self.request, f'Repository name: "{ repo_name }" changed to: "{new_repo_name}"')
+            elif repo_data_changed[0] == 'url_name':
+                messages.success(self.request, f'"{ repo_name }" URL changed to: "{new_repo_url}"')
+            return edited_repo
+        except IntegrityError as integrity_exc:
+            if str(integrity_exc) == 'UNIQUE constraint failed: user_scaned_repo.scan_id_id, user_scaned_repo.repo_name':
+                form.add_error(None, f'Repository Name: "{repo_name}" already exists in {scan_session}')
+            elif str(integrity_exc) == 'UNIQUE constraint failed: user_scaned_repo.scan_id_id, user_scaned_repo.url_name':
+                form.add_error(None, f'Repository URL: "{repo_url}" already exists in {scan_session}')
             return self.form_invalid(form)
     
     def get_success_url(self):
@@ -273,6 +293,8 @@ class RepoDeleteView(DeleteView):
     
     def get_success_url(self):
           scan_session=self.kwargs['scan_session']
+          deleted_repo = self.get_object().__dict__['repo_name']
+          messages.success(self.request, f'Repository: "{deleted_repo}" Deleted')
           return reverse_lazy('scan', kwargs={'scan_session': scan_session})
     
 repo_delete = RepoDeleteView.as_view()

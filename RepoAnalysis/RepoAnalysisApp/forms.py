@@ -6,9 +6,10 @@ from .models import Scan, User_Scans
 class ScanForm(ModelForm):
     title = forms.CharField(widget=forms.TextInput(attrs={
         'class': 'form-field',
+        'id' : 'title',
         'type': 'text',
         'placeholder': 'Enter Title',
-
+        'size' : 50
     }))
 
     class Meta:
@@ -19,15 +20,19 @@ class ScanForm(ModelForm):
 class UserScanForm(ModelForm):
     repo_name = forms.CharField(widget=forms.TextInput(attrs={
         'class': 'form-field',
+        'id' : 'repo_name',
         'type': 'text',
-        'placeholder': 'Enter Repository Name'
+        'placeholder': 'Enter Repository Name',
+        'size' : 50
 
     }))
 
     url_name = forms.URLField(widget=forms.TextInput(attrs={
         'class': 'form-field',
+        'id' : 'url_name',
         'type': 'text',
-        'placeholder': 'Enter Repository URL'
+        'placeholder': 'Enter Repository URL',
+        'size' : 50
 
     }))
 
