@@ -1,5 +1,4 @@
 import os
-import csv
 import json
 from .models import Scan, User_Scans
 from .forms import ScanForm, UserScanForm
@@ -9,14 +8,14 @@ from django.urls import reverse_lazy
 from django.shortcuts import render, redirect
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
-from django.views.generic import CreateView, DetailView, UpdateView, DeleteView
+from django.views.generic import CreateView, UpdateView, DeleteView
 
 ## Modules Initialization
 from RepoAnalysisApp.utils.github_api import GitHubAPI
 from RepoAnalysisApp.utils.SocialAccountDATA import SocialAccountDATA
 
 # Social Accounts modules
-from allauth.account.views import SignupView, LoginView, LogoutView
+from allauth.account.views import LoginView, LogoutView
 
 ## Results Dir Declaration create if not exists
 RESULTS_DIR = "RepoAnalysisApp/static/results"
@@ -155,10 +154,13 @@ class ScanCreateView(CreateView):
     
     def form_valid(self, form):
         form.instance.author = self.request.user
+        scan_session_title = form.cleaned_data.get('title')
         try:
-            return super().form_valid(form)
+            new_scan_session = super().form_valid(form)
+            messages.success(self.request, f'"{ scan_session_title }" Created Succesfully')
+            return new_scan_session
         except IntegrityError:
-            form.add_error(None,'Scan Session already exists')
+            form.add_error(None,f'"{scan_session_title}" already exists')
             return self.form_invalid(form)
     
 scan_create = ScanCreateView.as_view()
@@ -169,12 +171,20 @@ class ScanEditView(UpdateView):
     form_class = ScanForm
     template_name = 'RepoAnalysisApp/ScanSession/scan-edit.html'
     success_url = reverse_lazy('index')
+ 
     def form_valid(self, form):
         form.instance.author = self.request.user
+        scan_session_title = form.initial.get('title')
+        new_scan_session_title = form.cleaned_data.get('title')
         try:
-            return super().form_valid(form)
+            new_scan_session = super().form_valid(form)
+            if (scan_session_title == new_scan_session_title):
+                messages.success(self.request, f'No changes to: "{scan_session_title}"')
+            else:
+                messages.success(self.request, f'"{scan_session_title}" Changed to: "{new_scan_session_title}"')
+            return new_scan_session
         except IntegrityError:
-            form.add_error(None,'Scan Session already exists')
+            form.add_error(None,f'"{scan_session_title}" already exists')
             return self.form_invalid(form)
         
 scan_edit = ScanEditView.as_view()
@@ -183,7 +193,12 @@ scan_edit = ScanEditView.as_view()
 class ScanDeleteView(DeleteView):
     model = Scan
     template_name = 'RepoAnalysisApp/ScanSession/scan-delete.html'
-    success_url = reverse_lazy('index')    
+    
+    def get_success_url(self):
+        deleted_scan_session_title = self.get_object().__dict__['title']
+        messages.success(self.request, f'"{deleted_scan_session_title}" deleted successfully')
+        return reverse_lazy('index')
+         
 scan_delete = ScanDeleteView.as_view()
 
 def scan(request, scan_session):

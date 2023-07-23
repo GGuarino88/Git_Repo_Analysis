@@ -7,7 +7,7 @@ class ScanForm(ModelForm):
     title = forms.CharField(widget=forms.TextInput(attrs={
         'class': 'form-field',
         'type': 'text',
-        'placeholder': 'Enter Title'
+        'placeholder': 'Enter Title',
 
     }))
 
