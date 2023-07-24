@@ -226,7 +226,7 @@ class RepoCreateView(CreateView):
         form.instance.scan_id = Scan.objects.filter(title=scan_session).filter(author_id=self.request.user.id)[0]
         try:
             new_repo = super().form_valid(form)
-            messages.success(self.request, f'Repository: "{ repo_name }" Created Succesfully')
+            messages.success(self.request, f'Repository: "{ repo_name }" Created')
             return new_repo
         except IntegrityError as integrity_exc:
             if str(integrity_exc) == 'UNIQUE constraint failed: user_scaned_repo.scan_id_id, user_scaned_repo.repo_name':
