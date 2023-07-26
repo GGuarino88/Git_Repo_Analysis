@@ -6,10 +6,8 @@
     <a href="{% url 'about'%}">About</a>
     <a href="{% url 'logout'%}">Logout</a>
 </div>
-
 <div class="content-body" style="padding-top: 20px; padding-bottom: 60px; flex-grow: 1; overflow: auto; width: 100%;">
 <h1 >GitHub Repository Analysis</h1>
-
 <h2>{{ scan_session }}</h2>
 <div style="margin-bottom: 50px; max-width: 70%;" class="card1" >
     <div class="card-body">
@@ -51,9 +49,7 @@
                 <input type="submit" class="btn btn-info" name="submit" value="Generate All Reports" style="background-color: #018749;; color: white; margin-top: 30px; padding: 15px 20px; border-radius: 5px; border: none; cursor: pointer;">
             </form>
         </div>
-        
     </div>
 </div>
 </div>
-
 {% endblock %}

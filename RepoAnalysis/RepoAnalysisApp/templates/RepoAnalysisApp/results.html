@@ -14,7 +14,6 @@
 <body>
     <div class="header">
         <button class="back-button" onclick="history.back()">&#8249; back</button>
-
         <a href="{% url 'home'%}">Home</a>
         <a href="{% url 'about'%}">About</a>
         <a href="{% url 'logout'%}">Logout</a>
@@ -55,11 +54,9 @@
             <div class="col-md-12">
                 <h2>Code Churn Over Time</h2>
             </div>
-            
             <!-- Card for the Graph -->
             <div class="col-md-6 equal-height">
                 <div class="result-card">
-                   
                     <h3 class="underlined">Graph</h3>
                     <div id="code"></div>
                 </div>
@@ -76,37 +73,36 @@
                 </div>
             </div>
         </div>
-        <!-- Most Modified Files -->
-<div class="result-card">
-    <h2>Commit Activity</h2>
-    <div id="commit"></div>
-</div>
-<div class="result-card">
-    <h2>Pull Requests</h2>
-    <div id="pull"></div>
-</div>
-<div class="result-card">
-    <h2>Issues</h2>
-    <div id="issues"></div>
-</div>
-<div class="result-card">
-    <h2>Languages</h2>
-    <div id="languages"></div>
-</div>
-<div class="result-card">
-    <h2>Releases</h2>
-    <div id="releases"></div>
-</div>
-<div class="result-card">
-    <h2>Traffic Views</h2>
-    <div id="views"></div>
-</div>
-<div class="result-card">
-    <h2>Traffic Clones</h2>
-    <div id="clones"></div>
-</div>
-<div id="path" url="{% static "results/" %}{{ repo_name }}/" style="display: none;"></div>
-</div>
+		<div class="result-card">
+			<h2>Commit Activity</h2>
+			<div id="commit"></div>
+		</div>
+		<div class="result-card">
+			<h2>Pull Requests</h2>
+			<div id="pull"></div>
+		</div>
+		<div class="result-card">
+			<h2>Issues</h2>
+			<div id="issues"></div>
+		</div>
+		<div class="result-card">
+			<h2>Languages</h2>
+			<div id="languages"></div>
+		</div>
+		<div class="result-card">
+			<h2>Releases</h2>
+			<div id="releases"></div>
+		</div>
+		<div class="result-card">
+			<h2>Traffic Views</h2>
+			<div id="views"></div>
+		</div>
+		<div class="result-card">
+			<h2>Traffic Clones</h2>
+			<div id="clones"></div>
+		</div>
+		<div id="path" url="{% static "results/" %}{{ repo_name }}/" style="display: none;"></div>
+		</div>
     </div>
     <footer>
         © 2023 GitHub Repository Analyzer. All rights reserved.
