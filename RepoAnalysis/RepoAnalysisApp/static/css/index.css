@@ -79,7 +79,6 @@ footer {
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
     
 }
-
 .form-check-inline {
     display: flex;
     align-items: center;
@@ -87,75 +86,57 @@ footer {
     width: 100%;
     margin-bottom: 10px;
 }
-
 .form-check-label {
     color: #3f51b5;
     font-weight: 600;
     margin-left: 10px;
 }
-
 .form-control,.form-control-file {
     border: 1px solid #3f51b5;
     padding: 10px;
     border-radius: 5px;
-    width: 90%; /* updated width */
+    width: 90%;
     margin-bottom: 10px;
 }
-
 .table {
     width: 100%;
     margin-top: 20px;
     border-collapse: collapse;
 }
-
 .table thead {
     background: #3f51b5;
     color: #fff;
 }
-
 .table tr {
     border-bottom: 1px solid #ccc;
 }
-
 .table td,
 .table th {
     padding: 10px;
 }
-
-/* .table tr:hover {
-    background: #f4f7fa;
-} */
-
-/* Updated .btn classes to match your existing button style */
 .btn-sm {
     padding: 5px 10px;
     font-size: 0.875em;
 }
-
 .btn-primary {
     background: #018749;
     color: #fff;
 }
-
 .btn-warning {
     background: #ffc107;
     color: #212529;
 }
-
 .btn-danger {
     background: #dc3545;
     color: #fff;
 }
-
-/* Hover effects for buttons */
 .btn-primary:hover,
 .btn-warning:hover,
 .btn-danger:hover {
     opacity: 0.8;
 }
-
 .card {
-    width: 700px; /* adjust as needed */
+    width: 700px;
     margin: 30px auto;
     padding: 20px;
     background: #fff;
@@ -163,22 +144,19 @@ footer {
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 .card1 {
-    max-width: 100%; /* adjust as needed */
+    max-width: 100%;
     margin: 30px auto;
     padding: 20px;
     background: #fff;
     border-radius: 10px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
-
 .ead{
     padding-left: 40px !important;
 }
-
 .card-body {
     padding: 20px;
 }
-
 .header {
     position: absolute;
     top: 0;
@@ -190,13 +168,11 @@ footer {
     justify-content: center;
     align-items: center;
 }
-
 .header-links {
     display: flex;
     justify-content: center;
     gap: 30px;
 }
-
 .back-button {
     cursor: pointer;
     background: none;
@@ -210,25 +186,16 @@ footer {
     position: absolute;
     left: 0;
 }
-
 .table {
     width: 100%;
-    /* ...other styles... */
 }
-
-/* Align content to the right in the cells with class .action-buttons */
 .action-buttons {
     text-align: right;
 }
-
-
 .actions-header, .actions-cell {
     text-align: right;
     padding-right: 77px !important; 
 }
-
-
-
 .header {
     position: fixed !important;
     top: 0 !important;
@@ -239,20 +206,18 @@ footer {
     position: fixed;
     bottom: 0;
     width: 100%;
-    z-index: 999; /* keeps the footer above other elements */
+    z-index: 999;
 }
 .content {
-    padding-top: 60px; /* adjusts content top padding to accommodate fixed header */
-    padding-bottom: 60px; /* adjusts content bottom padding to accommodate fixed footer */
+    padding-top: 60px;
+    padding-bottom: 60px;
 }
-
 body {
     display: flex;
     flex-direction: column;
     height: 100vh;
     margin: 0;
 }
-
 .header {
     position: sticky;
     top: 0;
@@ -267,21 +232,16 @@ body {
     flex: 1;
     overflow: auto;
 }
-
-
 body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-  }
-  
-  .header {
+}  
+.header {
     position: sticky;
     top: 0;
-  }
-  
+} 
   .content-body {
     flex-grow: 1;
     overflow: auto;
-  }
-  
+}

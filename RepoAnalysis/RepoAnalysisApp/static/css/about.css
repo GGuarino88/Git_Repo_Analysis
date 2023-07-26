@@ -63,11 +63,9 @@ footer {
     padding: 10px;
 }
 .member img {
-    width: 100% !important; /* specify a width */
-    height: 200px !important; /* specify a height */
-    /* object-fit: cover; makes sure the image keeps aspect ratio */
+    width: 100% !important;
+    height: 200px !important;
 }
-
 .header {
     position: absolute;
     top: 0;
@@ -79,13 +77,11 @@ footer {
     justify-content: center;
     align-items: center;
 }
-
 .header-links {
     display: flex;
     justify-content: center;
     gap: 30px;
 }
-
 .back-button {
     cursor: pointer;
     background: none;
