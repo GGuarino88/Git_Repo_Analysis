@@ -2,9 +2,9 @@
 {% block card_title %}Delete Scan Session{% endblock %}
 {% block content %}
 <form method="post">
-    {% csrf_token %}
-    <p>Delete <strong>{{ object.title }} </strong> from list? </p>
-    <button type="submit" class="btn btn-danger">Delete</button>
-    <a type="button" class="btn btn-success" href="{%url 'index' %}">Cancel</a>
+   {% csrf_token %}
+   <p>Delete <strong>{{ object.title }} </strong> from list? </p>
+   <button type="submit" class="btn btn-danger">Delete</button>
+   <a type="button" class="btn btn-success" href="{%url 'index' %}">Cancel</a>
 </form>
 {% endblock %}

@@ -1,55 +1,53 @@
 <!DOCTYPE html>
 {% load static %}
 <html>
-<head>
-    <title>Github Repository Analysis</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-    <link href="{% static 'css/about.css'%}" rel="stylesheet">
-</head>
-<body>
-    <div class="header">
-        <button class="back-button" onclick="history.back()">&#8249; back</button>
-        <a href="{% url 'home'%}">Home</a>
-        <a href="{% url 'logout'%}">Logout</a>
-        <a href="admin/">Admin</a>
-    </div>
-    <h1>Github Repository Analysis</h1>
-    <p>This project is designed for MET CS673 and allows professor in analyzing github repository activities intuitively.</p>
-    Team members:
-    <div class="team-members">
-        <div class="member">
+   <head>
+      <title>Github Repository Analysis</title>
+      <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+      <link href="{% static 'css/about.css'%}" rel="stylesheet">
+   </head>
+   <body>
+      <div class="header">
+         <button class="back-button" onclick="history.back()">&#8249; back</button>
+         <a href="{% url 'home'%}">Home</a>
+         <a href="{% url 'logout'%}">Logout</a>
+         <a href="admin/">Admin</a>
+      </div>
+      <h1>Github Repository Analysis</h1>
+      <p>This project is designed for MET CS673 and allows professor in analyzing github repository activities intuitively.</p>
+      Team members:
+      <div class="team-members">
+         <div class="member">
             <img style="width: 100% !important; height: 220px !important;" src="{% static 'images/sashank.jpg' %}" alt="Sashank Varma Rudraraju">
             <h3>Sashank Varma</h3>
             <p>Product Manager</p>
-        </div>
-        <div class="member">
+         </div>
+         <div class="member">
             <img style="width: 100% !important; height: 220px !important;" src="{% static 'images/giuseppe.jpg' %}" alt="Giuseppe Guarino">
             <h3>Giuseppe Guarino</h3>
             <p>Configuration Manager</p>
-        </div>
-        <div class="member">
+         </div>
+         <div class="member">
             <img style="width: 100% !important; height: 220px !important;" src="{% static 'images/giri.jpg' %}" alt="Giri Dhawan">
             <h3>Giri Dhawan</h3>
             <p>Resource Engineer</p>
-        </div>
-        <div class="member">
+         </div>
+         <div class="member">
             <img style="width: 100% !important; height: 220px !important;" src="{% static 'images/sahithi.jpg' %}" alt="Sahithi">
             <h3>Sahithi</h3>
             <p>Designing</p>
-        </div>
-        
-        <div class="member">
+         </div>
+         <div class="member">
             <img style="width: 100% !important; height: 220px !important;" src="{% static 'images/heng.jpg' %}" alt="Heng Lu">
             <h3>Heng Lu</h3>
             <p>UI/UX</p>
-        </div>
-        <div class="member">
+         </div>
+         <div class="member">
             <img style="width: 100% !important; height: 220px !important;" src="{% static 'images/tanya.jpg' %}" alt="Tanya Bisht">
             <h3>Tanya Bisht</h3>
             <p>Testing</p>
-        </div>
-    </div>
-</body>
-<footer>
-</footer>
+         </div>
+      </div>
+   </body>
+   <footer></footer>
 </html>
