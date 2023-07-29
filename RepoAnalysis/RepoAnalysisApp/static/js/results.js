@@ -150,26 +150,6 @@ async function plot_views(url) {
     }
     Plotly.newPlot(views, [count_trace, unique_trace])
 }
-async function plot_clones(url) {
-    const path = url + "traffic_clones.json"
-    let data = await get_data(path)
-    const clones = document.getElementById("clones")
-    const clone_data = data.clones
-    const timestamps = clone_data.map(clone => clone.timestamp.slice(0,10))
-    const count = clone_data.map(clone => clone.count)
-    const uniques = clone_data.map(clone => clone.uniques)
-    let count_trace = {
-        x : timestamps,
-        y : count,
-        name: 'count'
-    }
-    let unique_trace = {
-        x : timestamps,
-        y : uniques,
-        name : 'uniques'
-    }
-    Plotly.newPlot(clones, [count_trace, unique_trace])
-}
 window.addEventListener("DOMContentLoaded", () => {
     const repo_name = `{{repo_name}}`
     const url = document.getElementById('path').getAttribute('url')
