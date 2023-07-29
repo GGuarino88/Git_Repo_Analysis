@@ -63,12 +63,6 @@ class GitHubAPI:
         views = self.make_authenticated_request(endpoint)
         return views
 
-    def get_traffic_clones(self, repository_url):
-        owner, repo = self.parse_repository_url(repository_url)
-        endpoint = f"repos/{owner}/{repo}/traffic/clones"
-        clones = self.make_authenticated_request(endpoint)
-        return clones
-
     def get_commit_activity(self, repository_url):
         owner, repo = self.parse_repository_url(repository_url)
         endpoint = f"repos/{owner}/{repo}/stats/commit_activity"
