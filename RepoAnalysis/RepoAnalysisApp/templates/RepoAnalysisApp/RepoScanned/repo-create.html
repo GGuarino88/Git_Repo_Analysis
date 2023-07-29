@@ -50,9 +50,8 @@
 </form>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    const repositoryUrlInput = document.getElementById('url_name');
+    const repositoryUrlInput = document.getElementById('{{ form.url_name.id_for_label }}');
     const generateReportBtn = document.getElementById('generateReportBtn');
-    let isFormSubmitted = false;
     repositoryUrlInput.addEventListener('input', function() {
         const isValidUrl = validateRepositoryUrl(repositoryUrlInput.value);
         generateReportBtn.disabled = !isValidUrl;
@@ -62,6 +61,11 @@
         const regex = /^(https?:\/\/)?(www\.)?github\.com\/[^\s\/]+\/[^\s\/]+$/;
         return regex.test(url);
     }
+    if (repositoryUrlInput.value) {
+        generateReportBtn.disabled = !validateRepositoryUrl(repositoryUrlInput.value);
+        generateReportBtn.value = generateReportBtn.disabled ? 'Submit' : 'Validate';
+    }
+    let isFormSubmitted = false;
     $('#repositoryForm').on('submit', function(e) {
         if (!isFormSubmitted) {
             e.preventDefault();
