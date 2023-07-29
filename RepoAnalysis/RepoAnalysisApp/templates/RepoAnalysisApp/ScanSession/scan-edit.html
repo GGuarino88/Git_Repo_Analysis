@@ -2,11 +2,11 @@
 {% block card_title %}Edit Scan Session{% endblock %}
 {% block content %}
 <form method="post">
-    {% csrf_token %}
-    <div class="form-group">
-        {{ form.title }}
-    </div>
-    <a type="button" class="btn btn-danger" href="{%url 'index' %}">Cancel</a>
-    <button type="submit" class="btn btn-success">Create</button>
+   {% csrf_token %}
+   <div class="form-group">
+      {{ form.title }}
+   </div>
+   <a type="button" class="btn btn-danger" href="{%url 'index' %}">Cancel</a>
+   <button type="submit" class="btn btn-success">Create</button>
 </form>
 {% endblock %}
