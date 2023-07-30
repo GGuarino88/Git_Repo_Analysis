@@ -1,6 +1,5 @@
 ## Modules Initialization
-import os
-import json
+import os, time, json
 from django.contrib import messages
 from django.http import JsonResponse
 from .models import Scan, User_Scans
@@ -45,11 +44,20 @@ def retry_api(api_call):
         print("Unable to retrieve data after 5 retries.")
     return response
 
+def remove_all_files(directory):
+    files = os.listdir(directory)
+    for file in files:
+        file_path = os.path.join(directory, file)
+        if os.path.isfile(file_path):
+            os.remove(file_path)
+            print(f"Deleted file: {file_path}")
+
 def analyze_repository(repository_url, access_token):
     ## This is temporary API KEY, please use your gitHub KEY code while running locally
     github_api = GitHubAPI(access_token)
     repo_name = repository_url.replace("https://github.com/", "").replace("/", "_")
     repo_directory = os.path.join(RESULTS_DIR, repo_name)
+    remove_all_files(repo_directory)
     create_directory(repo_directory)
     try:
         ## Contributors Details
@@ -356,6 +364,7 @@ def analyze(request, scan_session, url_name):
                 "code_churn_data": code_churn_data,
                 "commit_activity_data": commit_activity_data,
             }
+            time.sleep(5)
             return render(request, "RepoAnalysisApp/results.html", context)
     return render(request, "RepoAnalysisApp/index.html")
 
