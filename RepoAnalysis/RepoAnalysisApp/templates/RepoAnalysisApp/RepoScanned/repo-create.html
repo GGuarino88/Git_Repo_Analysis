@@ -3,38 +3,11 @@
 <h1 style="text-align: center; color: #4B0082;">Add a new Repository for {{ scan_session }}</h1>
 {% endblock %}
 {% block content %}
-<style>
-   body {
-   background-color: #FAFAFA;
-   }
-   .form-group {
-   margin: 20px 0;
-   }
-   .form-group input {
-   width: 100%;
-   padding: 10px;
-   border: 1px solid #DDD;
-   border-radius: 4px;
-   }
-   .btn {
-   padding: 10px 20px;
-   border: none;
-   border-radius: 4px;
-   margin: 10px;
-   cursor: pointer;
-   }
-   .btn-danger {
-   background-color: #DC3545;
-   color: white;
-   }
-   .btn-success {
-   background-color: #28A745;
-   color: white;
-   }
-   #generateReportBtn:disabled {
-   background-color: #CCC;
-   }
-</style>
+<html>
+   <head>
+      <link href="{% static 'css/repo.css'%}" rel="stylesheet">
+   </head>
+</html>
 <form id="repositoryForm" method="post">
    {% csrf_token %}
    <div class="form-group">
