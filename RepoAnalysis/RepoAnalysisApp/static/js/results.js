@@ -89,11 +89,6 @@ async function plot_pr(url) {
     }
     Plotly.newPlot(pull, [plot_data])
 }
-async function plot_issues(url) {
-    const path = url + "issues.json"
-    let data = await get_data(path)
-    const issues = document.getElementById("issues")
-}
 async function plot_lang(url) {
     const path = url + "languages.json"
     let data = await get_data(path)
@@ -157,11 +152,9 @@ window.addEventListener("DOMContentLoaded", () => {
     plot_code_churn(url)
     plot_commit(url)
     plot_pr(url)
-    plot_issues(url)
     plot_lang(url)
     plot_releases(url)
     plot_views(url)
-    plot_clones(url)
 })
 
 function openModal(imgElement) {
