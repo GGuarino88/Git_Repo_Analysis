@@ -28,24 +28,39 @@
          </div>
          <div class="row full-height">
             <div class="col-md-12">
-               <h2>Contribution Summary</h2>
+               <h2>Commits Summary</h2>
             </div>
             <div class="col-md-6 equal-height">
                <div class="result-card">
                   <h3 class="underlined">Graph</h3>
+                  <div>The graph provides a visual representation of the commits made by contributors to repository. On the x-axis, we have the contributors' names. On the y-axis, we have the number of commits made, representing the volume of contributions. </div>
+
                   <div id="contributors"></div>
+                  <!-- <div>The graph provides a visual representation of the commits made by different contributors to repository. On the x-axis (horizontal axis), we have the contributors' names or identifiers. Each contributor is represented by a distinct bar along this axis. On the y-axis (vertical axis), we have the number of commits made, representing the volume of contributions. Each bar's height corresponds to the number of commits made by that specific contributor. </div> -->
                </div>
             </div>
             <div class="col-md-6 equal-height">
                <div class="result-card">
                   <h3 class="underlined">Details</h3>
-                  <ul class="list-group">
-                     {% for contributor in contributors_data %}
-                     <li class="list-group-item">{{ contributor.login }}: {{ contributor.contributions }} contributions</li>
-                     {% endfor %}
-                  </ul>
+                  <table class="table">
+                     <thead>
+                        <tr>
+                           <th>Contributor</th>
+                           <th>Number of Commits</th>
+                        </tr>
+                     </thead>
+                     <tbody>
+                        {% for contributor in contributors_data %}
+                        <tr>
+                           <td>{{ contributor.login }}</td>
+                           <td>{{ contributor.contributions }}</td>
+                        </tr>
+                        {% endfor %}
+                     </tbody>
+                  </table>
                </div>
             </div>
+            
          </div>
          <div class="row full-height">
             <div class="col-md-12">
