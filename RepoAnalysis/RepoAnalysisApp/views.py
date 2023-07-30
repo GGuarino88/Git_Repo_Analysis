@@ -364,7 +364,6 @@ def analyze(request, scan_session, url_name):
                 "code_churn_data": code_churn_data,
                 "commit_activity_data": commit_activity_data,
             }
-            time.sleep(5)
             return render(request, "RepoAnalysisApp/results.html", context)
     return render(request, "RepoAnalysisApp/index.html")
 
