@@ -360,7 +360,6 @@ def analyze(request, scan_session, url_name):
     return render(request, "RepoAnalysisApp/index.html")
 
 def generate_all_reports(request, scan_session):
-    print("Debugging: generate_all_reports - scan_session:", scan_session)
     if request.method == "POST":
         selected_repos_json = request.POST.get("selected_repos")
         selected_repos = json.loads(selected_repos_json)
@@ -374,8 +373,6 @@ def generate_all_reports(request, scan_session):
                     repo_ids.append(user_scan.id)
             access_token = SocialAccountDATA(request).get_access_token()
             for repository_url in selected_repos:
-                print(repository_url)
-                print(type(repository_url))
                 analyze_repository(repository_url, access_token)
             return JsonResponse({"message": "All reports generated successfully."})
         else:

@@ -52,7 +52,7 @@
             <form method="POST" id="generateAllReportsForm" action="{% url 'generate-all-reports' scan_session %}">
                {% csrf_token %}
                <input type="hidden" name="selected_repos" id="selectedReposField" value="">
-               <button type="submit" class="btn btn-info">Generate All Reports</button>
+               <button type="submit" class="btn btn-info" id="generateAllReportsBtn" disabled>Generate All Reports</button>
             </form>
          </div>
       </div>
@@ -63,16 +63,24 @@
    $(document).ready(function() {
       $("#selectAllCheckbox").change(function() {
          $(".repoCheckbox").prop("checked", this.checked);
+         updateGenerateAllReportsButtonState();
       });
+      $(".repoCheckbox").change(function() {
+         updateGenerateAllReportsButtonState();
+      });
+      function updateGenerateAllReportsButtonState() {
+         const atLeastOneCheckboxChecked = $(".repoCheckbox:checked").length > 0;
+         $("#generateAllReportsBtn").prop("disabled", !atLeastOneCheckboxChecked);
+      }
       $("#generateAllReportsForm").on("submit", function(e) {
-            e.preventDefault();
-            const selectedRepos = $(".repoCheckbox:checked").map(function() {
-                return $(this).val();
-            }).get();
-            const filteredSelectedRepos = selectedRepos.filter(Boolean);
-            $("#selectedReposField").val(JSON.stringify(filteredSelectedRepos));
-            this.submit();
-        });
+         e.preventDefault();
+         const selectedRepos = $(".repoCheckbox:checked").map(function() {
+            return $(this).val();
+         }).get();
+         const filteredSelectedRepos = selectedRepos.filter(Boolean);
+         $("#selectedReposField").val(JSON.stringify(filteredSelectedRepos));
+         this.submit();
+      });
    });
 </script>
 {% endblock %}
