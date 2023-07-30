@@ -57,8 +57,10 @@ def analyze_repository(repository_url, access_token):
     github_api = GitHubAPI(access_token)
     repo_name = repository_url.replace("https://github.com/", "").replace("/", "_")
     repo_directory = os.path.join(RESULTS_DIR, repo_name)
-    remove_all_files(repo_directory)
-    create_directory(repo_directory)
+    if os.path.exists(repo_directory):
+        remove_all_files(repo_directory)
+    else:
+        create_directory(repo_directory)
     try:
         ## Contributors Details
         contributors = retry_api(lambda: github_api.get_contributors(repository_url))
@@ -364,7 +366,6 @@ def analyze(request, scan_session, url_name):
                 "code_churn_data": code_churn_data,
                 "commit_activity_data": commit_activity_data,
             }
-            time.sleep(5)
             return render(request, "RepoAnalysisApp/results.html", context)
     return render(request, "RepoAnalysisApp/index.html")
 
