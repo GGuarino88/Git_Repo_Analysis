@@ -1,29 +1,26 @@
 {% extends "socialaccount/base.html" %}
 {% load i18n %}
-
 {% block head_title %}{% trans "Sign In" %}{% endblock %}
-
 {% block content %}
 <div class="col-12 col-md-8 col-lg-6 col-xl-5">
-  <div class="card shadow-2-strong">
-    <div class="card-body p-5 text-center">
-      {% if process == "connect" %}
-        <h3 class="mb-5 text-primary">{% blocktrans with provider.name as provider %}Connect {{ provider }}{% endblocktrans %}</h3>
-      {% else %}
-        <h3 class="mb-5 text-primary">{% blocktrans with provider.name as provider %}Sign In Via {{ provider }}{% endblocktrans %}</h3>
-      {% endif %}
-      
-      <form method="post">
-        {% csrf_token %}
-        <button class="btn btn-lg btn-block btn-primary" style="background-color: #333;" type="submit">
-          {% if process == "connect" %}
+   <div class="card shadow-2-strong">
+      <div class="card-body p-5 text-center">
+         {% if process == "connect" %}
+         <h3 class="mb-5 text-primary">{% blocktrans with provider.name as provider %}Connect {{ provider }}{% endblocktrans %}</h3>
+         {% else %}
+         <h3 class="mb-5 text-primary">{% blocktrans with provider.name as provider %}Sign In Via {{ provider }}{% endblocktrans %}</h3>
+         {% endif %}
+         <form method="post">
+            {% csrf_token %}
+            <button class="btn btn-lg btn-block btn-primary" style="background-color: #333;" type="submit">
+            {% if process == "connect" %}
             <i class="fab fa-github me-2"></i>{% trans "Connect" %}
-          {% else %}
+            {% else %}
             <i class="fab fa-github me-2"></i>{% trans "    Sign In" %}
-          {% endif %}
-        </button>
-      </form>
-    </div>
-  </div>
+            {% endif %}
+            </button>
+         </form>
+      </div>
+   </div>
 </div>
 {% endblock %}

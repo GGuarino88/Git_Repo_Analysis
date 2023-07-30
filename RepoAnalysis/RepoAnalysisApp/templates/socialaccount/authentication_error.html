@@ -1,63 +1,49 @@
 {% extends "socialaccount/base.html" %}
-
 {% load i18n %}
-
 {% block head_title %}{% trans "Social Network Login Failure" %}{% endblock %}
-
 {% block content %}
 <!doctype html>
 <html lang="en">
-<head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-
-    <!-- CSS -->
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            height: 100vh;
-            background: linear-gradient(90deg,#535cd5, #7a41b7, #683bc7);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .card {
-            border-radius: 15px;
-            box-shadow: 0px 10px 30px -5px rgba(0, 0, 0, 0.3);
-        }
-        .card-header {
-            font-weight: 600;
-            font-size: 20px;
-            color: white;
-            background: rgb(252, 0, 0);
-        }
-        .card-body {
-            padding: 1.5rem;
-        }
-    </style>
-
-    <title>Social Network Login Failure</title>
-</head>
-<body>
-    <div class="card text-center w-50">
-        <div class="card-header">
+   <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+      <style>
+         body {
+         font-family: 'Poppins', sans-serif;
+         height: 100vh;
+         background: linear-gradient(90deg,#535cd5, #7a41b7, #683bc7);
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         }
+         .card {
+         border-radius: 15px;
+         box-shadow: 0px 10px 30px -5px rgba(0, 0, 0, 0.3);
+         }
+         .card-header {
+         font-weight: 600;
+         font-size: 20px;
+         color: white;
+         background: rgb(252, 0, 0);
+         }
+         .card-body {
+         padding: 1.5rem;
+         }
+      </style>
+      <title>Social Network Login Failure</title>
+   </head>
+   <body>
+      <div class="card text-center w-50">
+         <div class="card-header">
             Social Network Login Failure
-        </div>
-        <div class="card-body">
+         </div>
+         <div class="card-body">
             <p class="card-text">An error occurred while attempting to login via your social network account.</p>
-        </div>
-    </div>
-
-    <!-- jQuery, Bootstrap Bundle JS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.bundle.min.js"></script>
-</body>
+         </div>
+      </div>
+      <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.bundle.min.js"></script>
+   </body>
 </html>
-
-
-  
 {% endblock %}
