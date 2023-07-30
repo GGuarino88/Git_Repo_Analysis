@@ -110,11 +110,6 @@ def analyze_repository(repository_url, access_token):
         if pull_requests:
             pull_requests_json_file = os.path.join(repo_directory, "pull_requests.json")
             save_json_file(pull_requests, pull_requests_json_file)
-        ## Issues
-        issues = retry_api(lambda: github_api.get_issues(repository_url))
-        if issues:
-            issues_json_file = os.path.join(repo_directory, "issues.json")
-            save_json_file(issues, issues_json_file)
         ## Languages
         languages = retry_api(lambda: github_api.get_languages(repository_url))
         if languages:
@@ -336,29 +331,27 @@ repo_delete = RepoDeleteView.as_view()
 def about(request):
     context = {}
     return render(request, "RepoAnalysisApp/about.html", context)
+
+def load_json_data(repo_name, file_name):
+    file_path = os.path.join("RepoAnalysisApp/static/results/", repo_name, file_name)
+    try:
+        with open(file_path, "r") as f:
+            return json.load(f)
+    except FileNotFoundError:
+        print(f"File not found: {file_path}")
+        return {}
+
 @login_required
 def analyze(request, scan_session, url_name):
     if request.method == "POST":
         input_method = request.POST.get("input_method")
         if input_method == "repository":
             repository_url = request.POST.get("repository_url")
-            analyze_repository(
-                repository_url, SocialAccountDATA(request).get_access_token()
-            )
-            repo_name = repository_url.replace("https://github.com/", "").replace(
-                "/", "_"
-            )
-            def load_json_data(file_name):
-                file_path = os.path.join(RESULTS_DIR, repo_name, file_name)
-                try:
-                    with open(file_path, "r") as f:
-                        return json.load(f)
-                except FileNotFoundError:
-                    print(f"File not found: {file_path}")
-                    return {}
-            contributors_data = load_json_data("contributors_graph.json")
-            code_churn_data = load_json_data("code_churn_over_time.json")
-            commit_activity_data = load_json_data("commit_activity.json")
+            analyze_repository(repository_url, SocialAccountDATA(request).get_access_token())
+            repo_name = repository_url.replace("https://github.com/", "").replace("/", "_")
+            contributors_data = load_json_data(repo_name, "contributors_graph.json")
+            code_churn_data = load_json_data(repo_name, "code_churn_over_time.json")
+            commit_activity_data = load_json_data(repo_name, "commit_activity.json")
             context = {
                 "repository_url": repository_url,
                 "repo_name": repo_name,
@@ -376,21 +369,26 @@ def generate_all_reports(request, scan_session):
         if selected_repos:
             repo_ids = []
             for url in selected_repos:
-                user_scan = User_Scans.objects.filter(
-                    scan_id__title=scan_session, url_name=url
-                ).first()
+                user_scan = User_Scans.objects.filter(scan_id__title=scan_session, url_name=url).first()
                 if user_scan:
                     repo_ids.append(user_scan.id)
             access_token = SocialAccountDATA(request).get_access_token()
             for repository_url in selected_repos:
                 analyze_repository(repository_url, access_token)
-            return JsonResponse({"message": "All reports generated successfully."})
+            context = {
+                "repository_urls": selected_repos,
+                "repo_names": [repo_url.replace("https://github.com/", "").replace("/", "_") for repo_url in selected_repos]
+            }
+            for repo_name in context["repo_names"]:
+                contributors_data = load_json_data(repo_name, "contributors_graph.json")
+                code_churn_data = load_json_data(repo_name, "code_churn_over_time.json")
+                commit_activity_data = load_json_data(repo_name, "commit_activity.json")
+                context[f"{repo_name}_contributors_data"] = contributors_data
+                context[f"{repo_name}_code_churn_data"] = code_churn_data
+                context[f"{repo_name}_commit_activity_data"] = commit_activity_data
+            return render(request, "RepoAnalysisApp/results_base.html", context)
         else:
-            return JsonResponse(
-                {
-                    "error": "Please select at least one repository to generate reports for."
-                }
-            )
+            return render(request, "RepoAnalysisApp/index.html")
     return redirect("scan", scan_session=scan_session)
 
 class RepoAnalysisLogin(LoginView):
