@@ -193,6 +193,8 @@ def scan(request, scan_session):
     context = {}
     scan_session_id = Scan.objects.filter(title=scan_session).filter(author_id=request.user.id).values()[0]['id']
     user_scanned_repos = User_Scans.objects.filter(scan_id=scan_session_id).values()
+    user_all_repo_name_url = user_scanned_repos.values('repo_name', 'url_name')
+    print(user_all_repo_name_url)
     context = {'scan_session' : scan_session, 'user_scanned_repos': user_scanned_repos}
     return render(request,"RepoAnalysisApp/scan.html", context)
 
