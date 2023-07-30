@@ -77,7 +77,6 @@ footer {
     background: #fff;
     border-radius: 10px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    
 }
 .form-check-inline {
     display: flex;
@@ -110,8 +109,7 @@ footer {
 .table tr {
     border-bottom: 1px solid #ccc;
 }
-.table td,
-.table th {
+.table td, .table th {
     padding: 10px;
 }
 .btn-sm {
@@ -130,9 +128,7 @@ footer {
     background: #dc3545;
     color: #fff;
 }
-.btn-primary:hover,
-.btn-warning:hover,
-.btn-danger:hover {
+.btn-primary:hover, .btn-warning:hover, .btn-danger:hover {
     opacity: 0.8;
 }
 .card {
@@ -194,13 +190,13 @@ footer {
 }
 .actions-header, .actions-cell {
     text-align: right;
-    padding-right: 77px !important; 
+    padding-right: 77px !important;
 }
 .header {
     position: fixed !important;
     top: 0 !important;
     width: 100% !important;
-    z-index: 999 !important; 
+    z-index: 999 !important;
 }
 .footer {
     position: fixed;
@@ -232,11 +228,10 @@ body {
     flex: 1;
     overflow: auto;
 }
-
 .header {
     position: sticky;
     top: 0;
-} 
+}
 .content-body {
     flex-grow: 1;
     overflow: auto;

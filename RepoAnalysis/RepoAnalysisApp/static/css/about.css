@@ -53,10 +53,10 @@ footer {
     align-items: center;
     justify-content: center;
     text-align: center;
-  }
+}
 .member {
     flex: 0 0 auto;
-    width: 200px; /* adjust as needed */
+    width: 200px;
     margin: 10px;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     text-align: center;
