@@ -1,5 +1,5 @@
 ## Modules Initialization
-import os, time, json
+import os, json
 from django.contrib import messages
 from django.http import JsonResponse
 from .models import Scan, User_Scans
