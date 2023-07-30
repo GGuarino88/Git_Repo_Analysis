@@ -3,7 +3,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth import views as auth_views
 from allauth.socialaccount.providers.github import views as github_view
-urlpatterns = [    
+urlpatterns = [
     # admin view url
     path('admin/', admin.site.urls, name='admin'),
     
@@ -25,5 +25,6 @@ urlpatterns = [
     path('index/<str:scan_session>/repo-delete/<int:pk>', views.repo_delete, name='repo-delete'),
     path('index/<str:scan_session>', views.scan, name='scan'),
     path('index/<str:scan_session>/<str:url_name>/analyze',views.analyze,name='analyze'),
+    path('scan/<str:scan_session>/generate-all-reports/', views.generate_all_reports, name='generate-all-reports'),
     path('about', views.about, name='about'),
 ]
