@@ -172,54 +172,77 @@
       }
       Plotly.newPlot(commit, [plot_data])
    }
-   async function plot_pr(url,repoName) {
-      const path = url + "pull_requests.json"
-      var data = await get_data(path)
-      const pull = document.getElementById(`pull-${repoName}`)
-      const pr_data = _.countBy(data, 'user.login')
-      var plot_data = {
-         x: Object.keys(pr_data),
-         y: Object.values(pr_data),
-         type: 'bar'
+   async function plot_pr(url, repoName) {
+      const path = url + "pull_requests.json";
+      var data = await get_data(path);
+      const pull = document.getElementById(`pull-${repoName}`);
+      
+      if (!data || data.length === 0) {
+        const noPRMessage = document.createElement("h3");
+        noPRMessage.textContent = "No PR's are made to this repository.";
+        pull.appendChild(noPRMessage);
+        return;
       }
-      Plotly.newPlot(pull, [plot_data])
-   }
-   async function plot_releases(url, repoName) {
+    
+      const pr_data = _.countBy(data, 'user.login');
+      var plot_data = {
+        x: Object.keys(pr_data),
+        y: Object.values(pr_data),
+        type: 'bar'
+      };
+    
+      Plotly.newPlot(pull, [plot_data]);
+    }    
+   async function plot_releases(url) {
       const path = url + "releases.json";
       var data = await get_data(path);
-      const releasesTableBody = document.getElementById(`releasesTableBody-${repoName}`);
-      releasesTableBody.innerHTML = "";
+      const releasesContainer = document.getElementById(`releasesContainer-${repoName}`);
+      releasesContainer.innerHTML = "";
 
-      if (data.length === 0) {
-         const row = document.createElement("tr");
-         const noReleasesCell = document.createElement("td");
-         noReleasesCell.textContent = "No releases available for this repository.";
-         noReleasesCell.colSpan = 4;
-         row.appendChild(noReleasesCell);
-         releasesTableBody.appendChild(row);
-         return;
+      if (!data || data.length === 0) {
+          const noReleasesMessage = document.createElement("h3");
+          noReleasesMessage.textContent = "No releases are created on this repository.";
+          releasesContainer.appendChild(noReleasesMessage);
+          return;
       }
-
-      data.forEach(release => {
-         const row = document.createElement("tr");
-         const createdAtCell = document.createElement("td");
-         const nameCell = document.createElement("td");
-         const tagNameCell = document.createElement("td");
-         const bodyCell = document.createElement("td");
-
-         createdAtCell.textContent = release.created_at;
-         nameCell.textContent = release.name;
-         tagNameCell.textContent = release.tag_name;
-         bodyCell.textContent = release.body;
-
-         row.appendChild(createdAtCell);
-         row.appendChild(nameCell);
-         row.appendChild(tagNameCell);
-         row.appendChild(bodyCell);
-         releasesTableBody.appendChild(row);
+      
+      const table = document.createElement("table");
+      table.className = "table";
+      const thead = document.createElement("thead");
+      const tr = document.createElement("tr");
+      const headers = ["Created At", "Name", "Tag Name", "Message"];
+      headers.forEach(header => {
+          const th = document.createElement("th");
+          th.textContent = header;
+          tr.appendChild(th);
       });
-   }
-   async function plot_views(url, repoName) {
+      thead.appendChild(tr);
+      table.appendChild(thead);
+      const tbody = document.createElement("tbody");
+      tbody.id = "releasesTableBody";
+      table.appendChild(tbody);
+      data.forEach(release => {
+          const row = document.createElement("tr");
+          const createdAtCell = document.createElement("td");
+          const nameCell = document.createElement("td");
+          const tagNameCell = document.createElement("td");
+          const bodyCell = document.createElement("td");
+  
+          createdAtCell.textContent = release.created_at;
+          nameCell.textContent = release.name;
+          tagNameCell.textContent = release.tag_name;
+          bodyCell.textContent = release.body;
+  
+          row.appendChild(createdAtCell);
+          row.appendChild(nameCell);
+          row.appendChild(tagNameCell);
+          row.appendChild(bodyCell);
+          tbody.appendChild(row);
+      });
+  
+      releasesContainer.appendChild(table);
+  } 
+   async function plot_views(url) {
       const path = url + "traffic_views.json"
       var data = await get_data(path)
       const views = document.getElementById(`views-${repoName}`)
