@@ -328,10 +328,11 @@ def generate_all_reports(request, scan_session):
     if request.method == "POST":
         selected_repos_json = request.POST.get("selected_repos")
         selected_repos = json.loads(selected_repos_json)
+        scan_id = Scan.objects.filter(title=scan_session).filter(author_id=request.user.id).first().id
         if selected_repos:
             repo_ids = []
             for url in selected_repos:
-                user_scan = User_Scans.objects.filter(scan_id__title=scan_session, url_name=url).first()
+                user_scan = User_Scans.objects.filter(scan_id=scan_id, url_name=url).first()
                 if user_scan:
                     repo_ids.append(user_scan.id)
             access_token = SocialAccountDATA(request).get_access_token()
