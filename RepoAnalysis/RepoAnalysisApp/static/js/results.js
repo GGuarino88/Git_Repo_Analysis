@@ -193,7 +193,7 @@
     
       Plotly.newPlot(pull, [plot_data]);
     }    
-   async function plot_releases(url) {
+   async function plot_releases(url, repoName) {
       const path = url + "releases.json";
       var data = await get_data(path);
       const releasesContainer = document.getElementById(`releasesContainer-${repoName}`);
@@ -219,7 +219,7 @@
       thead.appendChild(tr);
       table.appendChild(thead);
       const tbody = document.createElement("tbody");
-      tbody.id = "releasesTableBody";
+      tbody.id = `releasesTableBody-${repoName}`;
       table.appendChild(tbody);
       data.forEach(release => {
           const row = document.createElement("tr");
@@ -242,7 +242,7 @@
   
       releasesContainer.appendChild(table);
   } 
-   async function plot_views(url) {
+   async function plot_views(url, repoName) {
       const path = url + "traffic_views.json"
       var data = await get_data(path)
       const views = document.getElementById(`views-${repoName}`)
