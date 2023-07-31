@@ -1,3 +1,5 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 {% extends "socialaccount/base.html" %}
 {% load i18n %}
 {% block head_title %}{% trans "Sign In" %}{% endblock %}
@@ -16,7 +18,7 @@
             {% if process == "connect" %}
             <i class="fab fa-github me-2"></i>{% trans "Connect" %}
             {% else %}
-            <i class="fab fa-github me-2"></i>{% trans "    Sign In" %}
+            <i class="fab fa-github me-2"></i>{% trans "Sign In" %}
             {% endif %}
             </button>
          </form>
