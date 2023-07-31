@@ -337,15 +337,9 @@ def analyze(request, scan_session, url_name):
             repository_url = request.POST.get("repository_url")
             analyze_repository(repository_url, SocialAccountDATA(request).get_access_token())
             repo_name = repository_url.replace("https://github.com/", "").replace("/", "_")
-            contributors_data = load_json_data(repo_name, "contributors_graph.json")
-            code_churn_data = load_json_data(repo_name, "code_churn_over_time.json")
-            commit_activity_data = load_json_data(repo_name, "commit_activity.json")
             context = {
                 "repository_url": repository_url,
                 "repo_name": repo_name,
-                "contributors_data": contributors_data,
-                "code_churn_data": code_churn_data,
-                "commit_activity_data": commit_activity_data,
             }
             return render(request, "RepoAnalysisApp/results.html", context)
     return render(request, "RepoAnalysisApp/index.html")
