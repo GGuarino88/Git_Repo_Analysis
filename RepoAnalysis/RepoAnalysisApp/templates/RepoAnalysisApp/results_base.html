@@ -7,10 +7,12 @@
       <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
       <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
       <link href="{% static 'css/results.css'%}" rel="stylesheet">
-      <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.min.js"></script>
+      <script src="{% static 'js/results.js' %}"></script>
       <script src="https://cdn.plot.ly/plotly-2.24.1.min.js" charset="utf-8"></script>
       <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
    </head>
    <body>
       <div class="header">
@@ -20,10 +22,48 @@
          <a href="{% url 'logout'%}">Logout</a>
       </div>
       <div class="container">
-         <h1>Analysis Results</h1>
-         {% for repository_url, repo_name in repository_data %}
-         <div style="text-align: center;">
-            <a class="lead" href="{{ repository_url }}">Repository URL: {{ repository_url }}</a>
+         <h2>Repository Information</h2>
+         <div class="result-card">
+            <div style="text-align: center;">
+               <table class="table" id="repoInfoTable">
+                  <tbody>
+                     <tr>
+                        <td><strong>ID:</strong></td>
+                        <td id="repoId"></td>
+                     </tr>
+                     <tr>
+                        <td><strong>Name:</strong></td>
+                        <td id="repoName"></td>
+                     </tr>
+                     <tr>
+                        <td><strong>Private Repository:</strong></td>
+                        <td id="privateRepo"></td>
+                     </tr>
+                     <tr>
+                        <td><strong>Repository URL:</strong></td>
+                        <td id="repoURL">
+                           <a id="repoLink" href="" target="_blank"></a>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td><strong>Size:</strong></td>
+                        <td id="repoSize"></td>
+                     </tr>
+                     <tr>
+                        <td><strong>Created At:</strong></td>
+                        <td id="created_at"></td>
+                     </tr>
+                     <tr>
+                        <td><strong>Updated At:</strong></td>
+                        <td id="updated_at"></td>
+                     </tr>
+                     <tr>
+                        <td><strong>Pushed At:</strong></td>
+                        <td id="pushed_at"></td>
+                     </tr>
+                  </tbody>
+               </table>
+            </div>
          </div>
          <div id="myModal" class="modal">
             <span class="close">&times;</span>
@@ -36,66 +76,68 @@
             <div class="col-md-6 equal-height">
                <div class="result-card">
                   <h3 class="underlined">Graph</h3>
-                  <div>The graph provides a visual representation of the commits made by contributors to the repository. On the x-axis, we have the contributors' names. On the y-axis, we have the number of commits made, representing the volume of contributions. </div>
-                  <div id="contributors{{ forloop.counter }}"></div>
+                  <div>
+                     <strong>The graph visually shows contributors' commits in the repository:</strong>
+                     <ul>
+                        <li>X-axis: Contributors' names are displayed</li>
+                        <li>Y-axis: Number of commits made by contributors</li>
+                     </ul>
+                  </div>
+                  <div id="contributors"></div>
                </div>
             </div>
             <div class="col-md-6 equal-height">
                <div class="result-card">
                   <h3 class="underlined">Details</h3>
-                  <table id="table-contributors{{ forloop.counter }}" class="table">
+                  <table class="table">
                      <thead>
                         <tr>
                            <th>Contributor</th>
                            <th>Number of Commits</th>
                         </tr>
                      </thead>
-                     <tbody>
-                        {% for contributor in contributors_data %}
-                        <tr>
-                           <td>{{ contributor.login }}</td>
-                           <td>{{ contributor.contributions }}</td>
-                        </tr>
-                        {% endfor %}
-                     </tbody>
+                     <tbody id="contributorsTableBody"></tbody>
                   </table>
                </div>
             </div>
          </div>
-         <script>
-            const url{{ forloop.counter }} = "{% static 'results/' %}{{ repo_name }}/";
-            async function get_data(path) {
-                try {
-                    let response = await fetch(path);
-                    return await response.json();
-                } catch (error) {
-                    console.log(error);
-                }
-            }
-            async function plot_contributors(url) {
-                const path = url + "contributors_graph.json";
-                let data = await get_data(path);
-                const x = data.map(ob => ob.login);
-                const y = data.map(ob => ob.contributions);
-                let plot_data = {
-                    x: x,
-                    y: y,
-                    type: 'bar'
-                };
-                let layout = {
-                    yaxis: {
-                        title: {
-                            text: 'Contributions'
-                        }
-                    }
-                };
-                const contributions = document.getElementById("contributors{{ forloop.counter }}");
-                Plotly.newPlot(contributions, [plot_data], layout);
-            }
-            plot_contributors(url{{ forloop.counter }});
-         </script>
-         {% endfor %}
+         <div class="row full-height">
+            <div class="col-md-12">
+               <h2>Code Churn Over Time</h2>
+            </div>
+            <div class="col-md-6 equal-height">
+               <div class="result-card">
+                  <h3 class="underlined">Graph</h3>
+                  <div>
+                     <strong>Illustrates code churn over time, showing code changes</strong><br>
+                     <strong>(additions, deletions, commits)</strong>
+                     <div id="code"></div>
+                  </div>
+               </div>
+            </div>
+            <div class="col-md-6 equal-height">
+               <div class="result-card">
+                  <h3 class="underlined">Details</h3>
+                  <table class="table">
+                     <thead>
+                        <tr>
+                           <th>Date</th>
+                           <th>Additions</th>
+                           <th>Deletions</th>
+                           <th>Modifications</th>
+                        </tr>
+                     </thead>
+                     <tbody id="codeChurnTableBody"></tbody>
+                  </table>
+               </div>
+            </div>
+         </div>
+         <div id="path" url="{% static "results/" %}{{ repo_name }}/" style="display: none;">
+      </div>
       </div>
       <footer>© 2023 GitHub Repository Analyzer. All rights reserved by BU MET CS673 Summer 2023 Team 1.</footer>
    </body>
+   <script>
+      var repoName = "{{ repo_name }}";
+    </script>
 </html>

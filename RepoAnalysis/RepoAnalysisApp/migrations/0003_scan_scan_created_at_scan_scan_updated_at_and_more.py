@@ -1,7 +1,7 @@
 from django.db import migrations, models
 import django.utils.timezone
-class Migration(migrations.Migration):
 
+class Migration(migrations.Migration):
     dependencies = [
         ('RepoAnalysisApp', '0002_remove_scan_description_alter_scan_title'),
     ]

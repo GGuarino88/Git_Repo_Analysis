@@ -1,4 +1,5 @@
 from django.db import migrations, models
+
 class Migration(migrations.Migration):
     dependencies = [
         ('RepoAnalysisApp', '0004_scan_author_title_constraint_and_more'),
