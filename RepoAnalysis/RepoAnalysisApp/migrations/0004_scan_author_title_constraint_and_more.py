@@ -1,4 +1,5 @@
 from django.db import migrations, models
+
 class Migration(migrations.Migration):
     dependencies = [
         ('RepoAnalysisApp', '0003_scan_scan_created_at_scan_scan_updated_at_and_more'),

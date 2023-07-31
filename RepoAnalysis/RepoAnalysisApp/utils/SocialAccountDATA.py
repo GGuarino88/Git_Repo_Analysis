@@ -16,6 +16,7 @@ class SocialAccountDATA:
             try:
                 social_token = SocialToken.objects.get(account__user=self.__request.user, account__provider='github')
                 return social_token.token
+            
             except SocialToken.DoesNotExist:
                 print("Social token for the user does not exist.")
         return None

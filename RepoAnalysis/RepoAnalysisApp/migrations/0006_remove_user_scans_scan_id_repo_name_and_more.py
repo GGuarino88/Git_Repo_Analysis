@@ -1,4 +1,5 @@
 from django.db import migrations, models
+
 class Migration(migrations.Migration):
     dependencies = [
         ('RepoAnalysisApp', '0005_remove_user_scans_scan_session_repo_constraint_and_more'),
