@@ -20,6 +20,12 @@ class GitHubAPI:
         endpoint = f"repos/{owner}/{repo}"
         repo_info = self.make_authenticated_request(endpoint)
         return repo_info
+    
+    def get_collaborators(self, repository_url):
+        owner, repo = self.parse_repository_url(repository_url)
+        endpoint = f"repos/{owner}/{repo}/collaborators"
+        collaborators = self.make_authenticated_request(endpoint)
+        return collaborators
 
     def get_contributors(self, repository_url):
         owner, repo = self.parse_repository_url(repository_url)

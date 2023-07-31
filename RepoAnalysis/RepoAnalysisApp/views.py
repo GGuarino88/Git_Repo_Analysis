@@ -68,6 +68,14 @@ def analyze_repository(repository_url, access_token):
             contributors_data = [{"login": contributor["login"],"contributions": contributor["contributions"],} for contributor in contributors]
             contributors_json_file = os.path.join(repo_directory, "contributors_graph.json")
             save_json_file(contributors_data, contributors_json_file)
+            
+        ## Collaborators Details
+        collaborators = retry_api(lambda: github_api.get_collaborators(repository_url))
+        print(collaborators)
+        if collaborators:
+            collaborators_data = [{"login": collaborator["login"],} for collaborator in collaborators]
+            collaborators_json_file = os.path.join(repo_directory, "collaborators.json")
+            save_json_file(collaborators_data, collaborators_json_file)
 
         ## Code CRUD Details
         code_churn = retry_api(lambda: github_api.get_code_churn(repository_url))
