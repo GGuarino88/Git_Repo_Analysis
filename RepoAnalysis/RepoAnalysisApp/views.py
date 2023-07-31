@@ -291,6 +291,7 @@ class RepoEditView(UpdateView):
                     )
             return edited_repo
         except IntegrityError as integrity_exc:
+            print(integrity_exc)
             if (
                 str(integrity_exc)
                 == "UNIQUE constraint failed: user_scaned_repo.scan_id_id, user_scaned_repo.repo_name"
