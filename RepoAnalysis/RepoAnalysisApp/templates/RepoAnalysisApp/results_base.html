@@ -9,9 +9,6 @@
       <link href="{% static 'css/results.css'%}" rel="stylesheet">
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.min.js"></script>
-      <script src="{% static 'js/results.js' %}"></script>
-      <script src="https://cdn.plot.ly/plotly-2.24.1.min.js" charset="utf-8"></script>
-      <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
       <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
    </head>
    <body>
@@ -25,49 +22,49 @@
          <h2>Repository Information</h2>
          <div class="result-card">
             <div style="text-align: center;">
-               <table class="table" id="repoInfoTable">
+               <table class="table" id="repoInfoTable-{{ repo_name }}">
                   <tbody>
                      <tr>
                         <td><strong>ID:</strong></td>
-                        <td id="repoId"></td>
+                        <td id="repoId-{{ repo_name }}"></td>
                      </tr>
                      <tr>
                         <td><strong>Name:</strong></td>
-                        <td id="repoName"></td>
+                        <td id="repoName-{{ repo_name }}"></td>
                      </tr>
                      <tr>
                         <td><strong>Private Repository:</strong></td>
-                        <td id="privateRepo"></td>
+                        <td id="privateRepo-{{ repo_name }}"></td>
                      </tr>
                      <tr>
                         <td><strong>Repository URL:</strong></td>
-                        <td id="repoURL">
-                           <a id="repoLink" href="" target="_blank"></a>
+                        <td id="repoURL-{{ repo_name }}">
+                           <a id="repoLink-{{ repo_name }}" href="" target="_blank"></a>
                         </td>
                      </tr>
                      <tr>
                         <td><strong>Size:</strong></td>
-                        <td id="repoSize"></td>
+                        <td id="repoSize-{{ repo_name }}"></td>
                      </tr>
                      <tr>
                         <td><strong>Created At:</strong></td>
-                        <td id="created_at"></td>
+                        <td id="created_at-{{ repo_name }}"></td>
                      </tr>
                      <tr>
                         <td><strong>Updated At:</strong></td>
-                        <td id="updated_at"></td>
+                        <td id="updated_at-{{ repo_name }}"></td>
                      </tr>
                      <tr>
                         <td><strong>Pushed At:</strong></td>
-                        <td id="pushed_at"></td>
+                        <td id="pushed_at-{{ repo_name }}"></td>
                      </tr>
                   </tbody>
                </table>
             </div>
          </div>
-         <div id="myModal" class="modal">
+         <div id="myModal-{{ repo_name }}" class="modal">
             <span class="close">&times;</span>
-            <img class="modal-content" id="img01">
+            <img class="modal-content" id="img01-{{ repo_name }}">
          </div>
          <div class="row full-height">
             <div class="col-md-12">
@@ -83,7 +80,7 @@
                         <li>Y-axis: Number of commits made by contributors</li>
                      </ul>
                   </div>
-                  <div id="contributors"></div>
+                  <div id="contributors-{{ repo_name }}"></div>
                </div>
             </div>
             <div class="col-md-6 equal-height">
@@ -96,7 +93,7 @@
                            <th>Number of Commits</th>
                         </tr>
                      </thead>
-                     <tbody id="contributorsTableBody"></tbody>
+                     <tbody id="contributorsTableBody-{{ repo_name }}"></tbody>
                   </table>
                </div>
             </div>
@@ -111,7 +108,7 @@
                   <div>
                      <strong>Illustrates code churn over time, showing code changes</strong><br>
                      <strong>(additions, deletions, commits)</strong>
-                     <div id="code"></div>
+                     <div id="code-{{ repo_name }}"></div>
                   </div>
                </div>
             </div>
@@ -127,17 +124,21 @@
                            <th>Modifications</th>
                         </tr>
                      </thead>
-                     <tbody id="codeChurnTableBody"></tbody>
+                     <tbody id="codeChurnTableBody-{{ repo_name }}"></tbody>
                   </table>
                </div>
             </div>
          </div>
-         <div id="path" url="{% static "results/" %}{{ repo_name }}/" style="display: none;">
+         <div class="repo-info" name="{{ repo_name }}">
+            <!-- Your content here -->
+        </div>
+         <div id="path-{{ repo_name }}" name="{{ repo_name }}" url="{% static "results/" %}{{ repo_name }}/" style="display: none;">
       </div>
       </div>
       <footer>© 2023 GitHub Repository Analyzer. All rights reserved by BU MET CS673 Summer 2023 Team 1.</footer>
    </body>
    <script>
-      var repoName = "{{ repo_name }}";
+      //var repoElements = document.querySelectorAll(".repo-info");
+      //var repoName = repoElements[repoElements.length - 1].getAttribute("name");
     </script>
 </html>
