@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 
-class Scan(models.Model):    
+class ScanSession(models.Model):    
     author = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     title = models.CharField(max_length = 200)
     scan_created_at = models.DateTimeField(auto_now_add=True)
@@ -13,8 +13,8 @@ class Scan(models.Model):
     def __str__(self):
         return f"{self.title} {self.author}"
     
-class User_Scans(models.Model):
-    scan_id = models.ForeignKey(Scan, on_delete=models.CASCADE)
+class SingleURLRepo(models.Model):
+    scan_id = models.ForeignKey(ScanSession, on_delete=models.CASCADE)
     repo_name = models.CharField(max_length = 200)
     url_name = models.URLField(max_length = 200)
     user_scan_created_at = models.DateTimeField(auto_now_add=True)
