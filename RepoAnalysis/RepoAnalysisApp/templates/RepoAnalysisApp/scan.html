@@ -1,4 +1,5 @@
 {% extends 'RepoAnalysisApp/index.html' %}
+{% load static %}
 {% block content %}
 <div class="header" style="position: sticky; top: 0; left: 0; width: 100%; z-index: 1000;">
    <a href="{% url 'index'%}" class="back-button" style="font-size: 20px; text-decoration: none; display: inline-block; padding: 10px; color: #fff; background-color: #3F51B5; border: none; border-radius: 5px;">&#8249; back</a>
@@ -59,28 +60,5 @@
    </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-   $(document).ready(function() {
-      $("#selectAllCheckbox").change(function() {
-         $(".repoCheckbox").prop("checked", this.checked);
-         updateGenerateAllReportsButtonState();
-      });
-      $(".repoCheckbox").change(function() {
-         updateGenerateAllReportsButtonState();
-      });
-      function updateGenerateAllReportsButtonState() {
-         const atLeastOneCheckboxChecked = $(".repoCheckbox:checked").length > 0;
-         $("#generateAllReportsBtn").prop("disabled", !atLeastOneCheckboxChecked);
-      }
-      $("#generateAllReportsForm").on("submit", function(e) {
-         e.preventDefault();
-         const selectedRepos = $(".repoCheckbox:checked").map(function() {
-            return $(this).val();
-         }).get();
-         const filteredSelectedRepos = selectedRepos.filter(Boolean);
-         $("#selectedReposField").val(JSON.stringify(filteredSelectedRepos));
-         this.submit();
-      });
-   });
-</script>
+<script src="{% static 'js/scan.js' %}"></script>
 {% endblock %}
