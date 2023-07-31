@@ -7,9 +7,7 @@ class Scan(models.Model):
     scan_updated_at = models.DateTimeField(auto_now=True)
     class Meta():
         db_table = "user_scan"
-        constraints = [
-            models.UniqueConstraint(fields=['author', 'title'], name='author title constraint')
-        ]
+        constraints = [models.UniqueConstraint(fields=['author', 'title'], name='author title constraint')]
     def __str__(self):
         return f"{self.title} {self.author}"
 class User_Scans(models.Model):

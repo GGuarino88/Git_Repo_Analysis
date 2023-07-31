@@ -7,24 +7,29 @@ async function get_data(path) {
     }
 }
 async function plot_contributors(url) {
-    const path = url + "contributors_graph.json"
-    let data = await get_data(path)
-    const x = data.map(ob => ob.login)
-    const y = data.map(ob => ob.contributions)
+    const path = url + "contributors_graph.json";
+    let data = await get_data(path);
+    const x = data.map(ob => ob.login);
+    const y = data.map(ob => ob.contributions);
     let plot_data = {
         x: x,
         y: y,
         type: 'bar'
-    }
+    };
     let layout = {
+        xaxis: {
+            title: {
+                text: 'Contributors'
+            }
+        },
         yaxis: {
             title: {
-                text: 'contributions'
+                text: 'No. of Contributions'
             }
         }
-    }
-    const contributions = document.getElementById("contributors")
-    Plotly.newPlot(contributions, [plot_data], layout)
+    };
+    const contributions = document.getElementById("contributors");
+    Plotly.newPlot(contributions, [plot_data], layout);
 }
 const formatDate = (timestamp) => {
     const date = new Date(timestamp)
@@ -34,13 +39,13 @@ const formatDate = (timestamp) => {
     return `${year}-${month}-${day}`
 }
 async function plot_code_churn(url) {
-    const path = url + "code_churn_over_time.json"
-    let data = await get_data(path)
-    const code = document.getElementById("code")
-    const week = data.map(ob => formatDate(ob.additions * 1000))
-    const additions = data.map(ob => ob.deletions)
-    const deletions = data.map(ob => -ob.commits)
-    const modifications = additions.map((val, ind) => val + deletions[ind])
+    const path = url + "code_churn_over_time.json";
+    let data = await get_data(path);
+    const code = document.getElementById("code");
+    const week = data.map(ob => formatDate(ob.additions * 1000));
+    const additions = data.map(ob => ob.deletions);
+    const deletions = data.map(ob => -ob.commits);
+    const modifications = additions.map((val, ind) => val + deletions[ind]);
     let addtion_trace = {
         x: week,
         y: additions,
@@ -57,6 +62,11 @@ async function plot_code_churn(url) {
         name: "modifications"
     }
     let layout = {
+        xaxis: {
+            title: {
+                text: 'Date'
+            }
+        },
         yaxis: {
             title: {
                 text: 'lines of code'

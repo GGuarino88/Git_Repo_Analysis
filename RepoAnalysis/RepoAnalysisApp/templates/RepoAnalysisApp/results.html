@@ -22,7 +22,6 @@
       <div class="container">
          <h1>Analysis Results</h1>
          <div class="result-card">
-
          <div style="text-align: center;">
             <h3>Repository URL</h3>
             <a class="lead" href="{{ repository_url }}" target="_blank"> {{ repository_url }}</a></div>
@@ -38,7 +37,13 @@
             <div class="col-md-6 equal-height">
                <div class="result-card">
                   <h3 class="underlined">Graph</h3>
-                  <div>The graph provides a visual representation of the commits made by contributors to repository. On the x-axis, we have the contributors' names. On the y-axis, we have the number of commits made, representing the volume of contributions. </div>
+                  <div>
+                     <strong>The graph visually shows contributors' commits in the repository:</strong>
+                     <ul>
+                       <li>X-axis: Contributors' names are displayed</li>
+                       <li>Y-axis: Number of commits made by contributors</li>
+                     </ul>
+                   </div>                                    
                   <div id="contributors"></div>
                </div>
             </div>
@@ -72,9 +77,10 @@
                <div class="result-card">
                   <h3 class="underlined">Graph</h3>
                   <div>
-                     The graph represents the fluctuation in code churn over time, illustrating the quantity of code additions, deletions, and commits at various time points. </div>
-
-                  <div id="code"></div>
+                     <strong>Illustrates code churn over time, showing code changes</strong><br>
+                     <strong>(additions, deletions, commits)</strong>
+                     <div id="code"></div>
+                  </div>
                </div>
             </div>
             <div class="col-md-6 equal-height">
@@ -97,11 +103,6 @@
             <h2>Pull Requests</h2>
             <div style="padding-top: 15px;">The graph represents the number and frequency of pull requests made by users in a repository.</div>
             <div id="pull"></div>
-         </div>
-         <div class="result-card">
-            <h2>Issues</h2>
-            <div id="issues"></div>
-            <div style="padding-top: 15px;">The graph provides a visual representation of the various issues faced by users in the repository, demonstrating the frequency and types of issues.</div>
          </div>
          <div class="result-card">
             <h2>Languages</h2>
