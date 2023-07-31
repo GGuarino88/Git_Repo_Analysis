@@ -21,7 +21,12 @@
       </div>
       <div class="container">
          <h1>Analysis Results</h1>
-         <div style="text-align: center;"><a class="lead" href="{{ repository_url }}">Repository URL: {{ repository_url }}</a></div>
+         <div class="result-card">
+
+         <div style="text-align: center;">
+            <h3>Repository URL</h3>
+            <a class="lead" href="{{ repository_url }}" target="_blank"> {{ repository_url }}</a></div>
+         </div>
          <div id="myModal" class="modal">
             <span class="close">&times;</span>
             <img class="modal-content" id="img01">
@@ -90,7 +95,13 @@
          </div>
          <div class="result-card">
             <h2>Pull Requests</h2>
+            <div style="padding-top: 15px;">The graph represents the number and frequency of pull requests made by users in a repository.</div>
             <div id="pull"></div>
+         </div>
+         <div class="result-card">
+            <h2>Issues</h2>
+            <div id="issues"></div>
+            <div style="padding-top: 15px;">The graph provides a visual representation of the various issues faced by users in the repository, demonstrating the frequency and types of issues.</div>
          </div>
          <div class="result-card">
             <h2>Languages</h2>
