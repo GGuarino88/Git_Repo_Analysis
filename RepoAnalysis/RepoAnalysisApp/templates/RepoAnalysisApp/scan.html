@@ -22,8 +22,9 @@
                   <th scope="col">
                      <input type="checkbox" id="selectAllCheckbox">
                   </th>
-                  <th scope="col">Name</th>
-                  <th scope="col">URL</th>
+                  <th scope="col">Team</th>
+                  <th scope="col">Project Name</th>
+                  <th scope="col">GitHub URL</th>
                   <th scope="col">Action</th>
                </tr>
             </thead>
@@ -31,6 +32,7 @@
                {% for repo in user_semester_projects %}
                <tr>
                   <td><input type="checkbox" class="repoCheckbox" name="selected_repos" value="{{ repo.url_name }}"></td>
+                  <td>{{ repo.team_name }}
                   <td>{{ repo.repo_name }}</td>
                   <td>{{ repo.url_name }}</td>
                   <td>

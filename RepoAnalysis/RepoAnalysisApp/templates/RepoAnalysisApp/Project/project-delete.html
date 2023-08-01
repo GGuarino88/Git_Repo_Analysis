@@ -5,6 +5,6 @@
    {% csrf_token %}
    <p>Delete <strong>{{ object.repo_name }} </strong> from list? </p>
    <button type="submit" class="btn btn-danger">Delete</button>
-   <a type="button" class="btn btn-success" href="{%url 'scan' scan_session %}">Cancel</a>
+   <a type="button" class="btn btn-success" href="{%url 'scan' semester %}">Cancel</a>
 </form>
 {% endblock %}

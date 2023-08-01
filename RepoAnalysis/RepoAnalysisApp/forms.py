@@ -15,6 +15,15 @@ class SemesterForm(ModelForm):
         fields = ['title', ]
 
 class ProjectForm(ModelForm):
+    
+    team_name = forms.CharField(widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        'id' : 'team_name',
+        'type': 'text',
+        'placeholder': 'Enter Team Name',
+        'size' : 50
+    }))
+    
     repo_name = forms.CharField(widget=forms.TextInput(attrs={
         'class': 'form-control',
         'id' : 'repo_name',
@@ -30,7 +39,7 @@ class ProjectForm(ModelForm):
         'placeholder': 'Enter Repository URL',
         'size' : 50
     }))
-
+    
     class Meta:
         model = SemesterProject
-        fields = ['repo_name', 'url_name']
+        fields = ['team_name', 'repo_name', 'url_name']

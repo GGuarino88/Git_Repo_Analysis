@@ -7,13 +7,16 @@
    {{ form.title }}
    <div class="form-group">
       <div class="form-group">
+         {{ form.team_name}}
+      </div>
+      <div class="form-group">
          {{ form.repo_name}}
       </div>
       <div class="form-group">
          {{ form.url_name}}
       </div>
    </div>
-   <a type="button" class="btn btn-danger" href="{% url 'scan' scan_session %}">Cancel</a>
+   <a type="button" class="btn btn-danger" href="{% url 'scan' semester %}">Cancel</a>
    <input type="submit" class="btn btn-success" name="submit" id="generateReportBtn" value="Validate" {% if form.url_name.value %}enabled{% else %}disabled{% endif %}>
 </form>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
