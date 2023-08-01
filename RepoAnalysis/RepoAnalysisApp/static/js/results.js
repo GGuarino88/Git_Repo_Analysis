@@ -20,13 +20,16 @@
       const pushedAtCell = document.getElementById(`pushed_at-${repoName}`);
       repoIdCell.textContent = data.id;
       repoNameCell.textContent = data.full_name;
-      privateRepoCell.textContent = data.private;
+      privateRepoCell.textContent = data.private ? "No" : "Yes";
       repoURLCell.href = data.html_url;
       repoURLCell.textContent = data.html_url;
       repoSizeCell.textContent = data.size;
       createdAtCell.textContent = data.created_at;
       updatedAtCell.textContent = data.updated_at;
       pushedAtCell.textContent = data.pushed_at;
+      createdAtCell.textContent = data.created_at.slice(0, -1);
+      updatedAtCell.textContent = data.updated_at.slice(0, -1);
+      pushedAtCell.textContent = data.pushed_at.slice(0, -1);
    }
    async function plot_contributors(url,repoName) {
       const path = url + "contributors_graph.json";

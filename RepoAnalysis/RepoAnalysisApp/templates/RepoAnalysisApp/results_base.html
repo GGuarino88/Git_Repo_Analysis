@@ -25,15 +25,15 @@
                <table class="table" id="repoInfoTable-{{ repo_name }}">
                   <tbody>
                      <tr>
-                        <td><strong>ID:</strong></td>
+                        <td><strong>ID</strong></td>
                         <td id="repoId-{{ repo_name }}"></td>
                      </tr>
                      <tr>
-                        <td><strong>Name:</strong></td>
+                        <td><strong>Name</strong></td>
                         <td id="repoName-{{ repo_name }}"></td>
                      </tr>
                      <tr>
-                        <td><strong>Private Repository:</strong></td>
+                        <td><strong>Public Repository:</strong></td>
                         <td id="privateRepo-{{ repo_name }}"></td>
                      </tr>
                      <tr>
@@ -43,19 +43,19 @@
                         </td>
                      </tr>
                      <tr>
-                        <td><strong>Size:</strong></td>
+                        <td><strong>Size</strong></td>
                         <td id="repoSize-{{ repo_name }}"></td>
                      </tr>
                      <tr>
-                        <td><strong>Created At:</strong></td>
+                        <td><strong>Created At</strong></td>
                         <td id="created_at-{{ repo_name }}"></td>
                      </tr>
                      <tr>
-                        <td><strong>Updated At:</strong></td>
+                        <td><strong>Updated At</strong></td>
                         <td id="updated_at-{{ repo_name }}"></td>
                      </tr>
                      <tr>
-                        <td><strong>Pushed At:</strong></td>
+                        <td><strong>Pushed At</strong></td>
                         <td id="pushed_at-{{ repo_name }}"></td>
                      </tr>
                   </tbody>
@@ -85,16 +85,18 @@
             </div>
             <div class="col-md-6 equal-height">
                <div class="result-card">
-                  <h3 class="underlined">Details</h3>
-                  <table class="table">
-                     <thead>
-                        <tr>
-                           <th>Contributor</th>
-                           <th>Number of Commits</th>
-                        </tr>
-                     </thead>
-                     <tbody id="contributorsTableBody-{{ repo_name }}"></tbody>
-                  </table>
+                  <h3 class="underlined">Contributors</h3>
+                  <div style="max-height: 500px; overflow-y: auto;">
+                     <table class="table">
+                        <thead>
+                           <tr>
+                              <th>Contributor</th>
+                              <th>Number of Commits</th>
+                           </tr>
+                        </thead>
+                        <tbody id="contributorsTableBody-{{ repo_name }}"></tbody>
+                     </table>
+                  </div>
                </div>
             </div>
          </div>
@@ -115,30 +117,27 @@
             <div class="col-md-6 equal-height">
                <div class="result-card">
                   <h3 class="underlined">Details</h3>
-                  <table class="table">
-                     <thead>
-                        <tr>
-                           <th>Date</th>
-                           <th>Additions</th>
-                           <th>Deletions</th>
-                           <th>Modifications</th>
-                        </tr>
-                     </thead>
-                     <tbody id="codeChurnTableBody-{{ repo_name }}"></tbody>
-                  </table>
+                  <div style="max-height: 500px; overflow-y: auto;">
+                     <table class="table">
+                        <thead>
+                           <tr>
+                              <th>Date</th>
+                              <th>Additions</th>
+                              <th>Deletions</th>
+                              <th>Modifications</th>
+                           </tr>
+                        </thead>
+                        <tbody id="codeChurnTableBody-{{ repo_name }}"></tbody>
+                     </table>
+                  </div>
                </div>
             </div>
          </div>
          <div class="repo-info" name="{{ repo_name }}">
-            <!-- Your content here -->
         </div>
          <div id="path-{{ repo_name }}" name="{{ repo_name }}" url="{% static "results/" %}{{ repo_name }}/" style="display: none;">
       </div>
       </div>
       <footer>© 2023 GitHub Repository Analyzer. All rights reserved by BU MET CS673 Summer 2023 Team 1.</footer>
    </body>
-   <script>
-      //var repoElements = document.querySelectorAll(".repo-info");
-      //var repoName = repoElements[repoElements.length - 1].getAttribute("name");
-    </script>
 </html>
