@@ -22,8 +22,8 @@
                   <th scope="col">
                      <input type="checkbox" id="selectAllCheckbox">
                   </th>
-                  <th scope="col">Name</th>
-                  <th scope="col">URL</th>
+                  <th scope="col">Team Name</th>
+                  <th scope="col">Repository URL</th>
                   <th scope="col">Action</th>
                </tr>
             </thead>
@@ -32,7 +32,7 @@
                <tr>
                   <td><input type="checkbox" class="repoCheckbox" name="selected_repos" value="{{ repo.url_name }}"></td>
                   <td>{{ repo.repo_name }}</td>
-                  <td>{{ repo.url_name }}</td>
+                  <td><a href="{{ repo.url_name }}" target="_blank">{{ repo.url_name }}</a></td>
                   <td>
                      <form action="{% url 'analyze' scan_session repo.repo_name %}" method="POST">
                         {% csrf_token %}

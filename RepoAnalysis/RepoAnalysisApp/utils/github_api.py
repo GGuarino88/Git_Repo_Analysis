@@ -33,12 +33,6 @@ class GitHubAPI:
         pull_requests = self.make_authenticated_request(endpoint)
         return pull_requests
 
-    def get_commit_details(self, repository_url, sha):
-        owner, repo = self.parse_repository_url(repository_url)
-        endpoint = f"repos/{owner}/{repo}/commits/{sha}"
-        commit = self.make_authenticated_request(endpoint)
-        return commit
-
     def get_languages(self, repository_url):
         owner, repo = self.parse_repository_url(repository_url)
         endpoint = f"repos/{owner}/{repo}/languages"

@@ -2,13 +2,11 @@
 {% load static %}
 <html>
    <head>
-      <title>Analysis Results</title>
       <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
       <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
       <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
       <link href="{% static 'css/results.css'%}" rel="stylesheet">
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-      <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.min.js"></script>
       <script src="{% static 'js/results.js' %}"></script>
       <script src="https://cdn.plot.ly/plotly-2.24.1.min.js" charset="utf-8"></script>
       <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
@@ -22,7 +20,6 @@
          <a href="{% url 'logout'%}">Logout</a>
       </div>
       <div class="container">
-         <h1>Analysis Results</h1>
          <h2>Repository Information</h2>
          <div class="result-card info">
             <div style="text-align: center;">
@@ -89,16 +86,18 @@
             </div>
             <div class="col-md-6 equal-height">
                <div class="result-card">
-                  <h3 class="underlined">Details</h3>
-                  <table class="table">
-                     <thead>
-                        <tr>
-                           <th>Contributor</th>
-                           <th>Number of Commits</th>
-                        </tr>
-                     </thead>
-                     <tbody id="contributorsTableBody-{{ repo_name }}"></tbody>
-                  </table>
+                  <h3 class="underlined">Contributors</h3>
+                  <div style="max-height: 500px; overflow-y: auto;">
+                     <table class="table">
+                        <thead>
+                           <tr>
+                              <th>Contributor</th>
+                              <th>Number of Commits</th>
+                           </tr>
+                        </thead>
+                        <tbody id="contributorsTableBody-{{ repo_name }}"></tbody>
+                     </table>
+                  </div>
                </div>
             </div>
          </div>
@@ -119,17 +118,19 @@
             <div class="col-md-6 equal-height">
                <div class="result-card">
                   <h3 class="underlined">Details</h3>
-                  <table class="table">
-                     <thead>
-                        <tr>
-                           <th>Date</th>
-                           <th>Additions</th>
-                           <th>Deletions</th>
-                           <th>Modifications</th>
-                        </tr>
-                     </thead>
-                     <tbody id="codeChurnTableBody-{{ repo_name }}"></tbody>
-                  </table>
+                  <div style="max-height: 500px; overflow-y: auto;">
+                     <table class="table">
+                        <thead>
+                           <tr>
+                              <th>Date</th>
+                              <th>Additions</th>
+                              <th>Deletions</th>
+                              <th>Modifications</th>
+                           </tr>
+                        </thead>
+                        <tbody id="codeChurnTableBody-{{ repo_name }}"></tbody>
+                     </table>
+                  </div>
                </div>
             </div>
          </div>
@@ -155,24 +156,27 @@
             </div>
             <div class="col-md-6 equal-height">
                <div class="result-card">
-                  <h3 class="underlined">Details</h3>
-                  <table class="table">
-                     <thead>
-                        <tr>
-                           <th>Language</th>
-                           <th>Total bytes</th>
-                        </tr>
-                     </thead>
-                     <tbody id="languagesTableBody-{{ repo_name }}"></tbody>
-                  </table>
+                  <h3 class="underlined">Languages</h3>
+                  <div style="max-height: 500px; overflow-y: auto;">
+                     <table class="table">
+                        <thead>
+                           <tr>
+                              <th>Language</th>
+                              <th>Total bytes</th>
+                           </tr>
+                        </thead>
+                        <tbody id="languagesTableBody-{{ repo_name }}"></tbody>
+                     </table>
+                  </div>
                </div>
             </div>
          </div>
-         <div class="result-card">
-            <h3 class="underlined">Releases</h3>
-            <div id="releasesContainer-{{ repo_name }}">
+         <div class="col-md-12">
+            <div class="result-card">
+               <h3 class="underlined">Releases</h3>
+               <div style="max-height: 500px; overflow-y: auto;" id="releasesContainer-{{ repo_name }}"></div>
             </div>
-        </div>        
+         </div>
          <div class="result-card">
             <h2>Traffic Views</h2>
             <div id="views-{{ repo_name }}"></div>
