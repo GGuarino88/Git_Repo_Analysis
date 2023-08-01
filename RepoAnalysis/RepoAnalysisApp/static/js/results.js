@@ -163,8 +163,9 @@
       const path = url + "commit_activity.json"
       var data = await get_data(path)
       const commit = document.getElementById("commit")
-      const week = data.map(ob => formatDate(ob.week * 1000))
-      const total = data.map(ob => ob.total)
+      const index = _.findIndex(data, (ob) => ob.total > 0)
+      const week = data.slice(index).map(ob => formatDate(ob.week * 1000))
+      const total = data.slice(index).map(ob => ob.total)
       var plot_data = {
          x: week,
          y: total,
