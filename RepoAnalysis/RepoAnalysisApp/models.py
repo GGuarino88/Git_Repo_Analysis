@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 
-class Scan(models.Model):    
+class ScanSession(models.Model):    
     author = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     title = models.CharField(max_length = 200)
     scan_created_at = models.DateTimeField(auto_now_add=True)
@@ -11,10 +11,10 @@ class Scan(models.Model):
         db_table = "user_scan"
         constraints = [models.UniqueConstraint(fields=['author', 'title'], name='author title constraint')]
     def __str__(self):
-        return f"{self.title} {self.author}"
+        return f"Scan Session:{self.title} - Author:{self.author}"
     
-class User_Scans(models.Model):
-    scan_id = models.ForeignKey(Scan, on_delete=models.CASCADE)
+class SingleURLRepo(models.Model):
+    scan_id = models.ForeignKey(ScanSession, on_delete=models.CASCADE)
     repo_name = models.CharField(max_length = 200)
     url_name = models.URLField(max_length = 200)
     user_scan_created_at = models.DateTimeField(auto_now_add=True)
@@ -27,4 +27,5 @@ class User_Scans(models.Model):
             models.UniqueConstraint(fields=['scan_id', 'url_name'], name='repo_name_url_name')
         ]
     def __str__(self):
-        return f"{self.repo_name}"
+        print(self.scan_id.__str__())
+        return f"Repo:{self.repo_name} - {self.scan_id.__str__()} "
