@@ -193,11 +193,11 @@ class SemesterDeleteView(DeleteView):
     
 semester_delete = SemesterDeleteView.as_view()
 
-def scan(request, scan_session):
+def scan(request, semester):
     context = {}
-    semester_id = (Semester.objects.filter(title=scan_session).filter(author_id=request.user.id).values()[0]["id"])
-    user_projects = SemesterProject.objects.filter(scan_id=semester_id).values()
-    context = {"scan_session": scan_session, "user_scanned_repos": user_projects}
+    semester_id = (Semester.objects.filter(title=semester).filter(author_id=request.user.id).values()[0]["id"])
+    user_semester_projects = SemesterProject.objects.filter(scan_id=semester_id).values()
+    context = {"semester": semester, "user_semester_projects": user_semester_projects}
     return render(request, "RepoAnalysisApp/scan.html", context)
 
 @method_decorator(login_required, name="dispatch")
@@ -208,11 +208,11 @@ class ProjectCreateView(CreateView):
     template_name = "RepoAnalysisApp/Project/project-create.html"
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        semester = {"scan_session": self.kwargs["scan_session"]}
+        semester = {"semester": self.kwargs["semester"]}
         context.update(semester)
         return context
     def form_valid(self, form):
-        semester = self.kwargs["scan_session"]
+        semester = self.kwargs["semester"]
         repo_name = form.cleaned_data.get("repo_name")
         repo_url = form.cleaned_data.get("url_name")
         form.instance.scan_id = Semester.objects.filter(title=semester).filter(author_id=self.request.user.id)[0]
@@ -229,8 +229,8 @@ class ProjectCreateView(CreateView):
             return self.form_invalid(form)
         
     def get_success_url(self):
-        semester = self.kwargs["scan_session"]
-        return reverse_lazy("scan", kwargs={"scan_session": semester})
+        semester = self.kwargs["semester"]
+        return reverse_lazy("scan", kwargs={"semester": semester})
     
 project_create = ProjectCreateView.as_view()
 
@@ -241,12 +241,12 @@ class ProjectEditView(UpdateView):
     template_name = "RepoAnalysisApp/Project/project-edit.html"
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        semester = {"scan_session": self.kwargs["scan_session"]}
+        semester = {"semester": self.kwargs["semester"]}
         context.update(semester)
         return context
     
     def form_valid(self, form):
-        semester = self.kwargs["scan_session"]
+        semester = self.kwargs["semester"]
         repo_name = form.initial.get("repo_name")
         repo_url = form.initial.get("url_name")
         new_repo_name = form.cleaned_data.get("repo_name")
@@ -270,8 +270,8 @@ class ProjectEditView(UpdateView):
             return self.form_invalid(form)
         
     def get_success_url(self):
-        semester = self.kwargs["scan_session"]
-        return reverse_lazy("scan", kwargs={"scan_session": semester})
+        semester = self.kwargs["semester"]
+        return reverse_lazy("scan", kwargs={"semester": semester})
     
 project_edit = ProjectEditView.as_view()
 
@@ -282,15 +282,15 @@ class ProjectDeleteView(DeleteView):
     success_url = reverse_lazy("index")
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        semester = {"scan_session": self.kwargs["scan_session"]}
+        semester = {"semester": self.kwargs["semester"]}
         context.update(semester)
         return context
     
     def get_success_url(self):
-        semester = self.kwargs["scan_session"]
+        semester = self.kwargs["semester"]
         deleted_repo = self.get_object().__dict__["repo_name"]
         messages.success(self.request, f'Repository: "{deleted_repo}" Deleted')
-        return reverse_lazy("scan", kwargs={"scan_session": semester})
+        return reverse_lazy("scan", kwargs={"semester": semester})
     
 project_delete = ProjectDeleteView.as_view()
 
@@ -308,7 +308,7 @@ def load_json_data(repo_name, file_name):
         return {}
 
 @login_required
-def analyze(request, scan_session, url_name):
+def analyze(request, semester, url_name):
     if request.method == "POST":
         input_method = request.POST.get("input_method")
         if input_method == "repository":
@@ -319,16 +319,16 @@ def analyze(request, scan_session, url_name):
             return render(request, "RepoAnalysisApp/results.html", context)
     return render(request, "RepoAnalysisApp/index.html")
 
-def generate_all_reports(request, scan_session):
+def generate_all_reports(request, semester):
     if request.method == "POST":
         selected_repos_json = request.POST.get("selected_repos")
         selected_repos = json.loads(selected_repos_json)
         if selected_repos:
             repo_ids = []
             for url in selected_repos:
-                user_scan = SemesterProject.objects.filter(scan_id__title=scan_session, url_name=url).first()
-                if user_scan:
-                    repo_ids.append(user_scan.id)
+                user_semester_projects = SemesterProject.objects.filter(scan_id__title=semester, url_name=url).first()
+                if user_semester_projects:
+                    repo_ids.append(user_semester_projects.id)
             access_token = SocialAccountDATA(request).get_access_token()
             for repository_url in selected_repos:
                 analyze_repository(repository_url, access_token)
@@ -340,7 +340,7 @@ def generate_all_reports(request, scan_session):
         else:
             return render(request, "RepoAnalysisApp/index.html")
         
-    return redirect("scan", scan_session=scan_session)
+    return redirect("scan", semester=semester)
 
 class RepoAnalysisLogin(LoginView):
     template_name = "account/login.html"

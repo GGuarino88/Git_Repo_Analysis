@@ -1,6 +1,6 @@
 {% extends "RepoAnalysisApp/Semester/base.html" %}
 {% block card_title %}
-<h1 style="text-align: center; color: #4B0082;">Add a new Repository for {{ scan_session }}</h1>
+<h1 style="text-align: center; color: #4B0082;">Add a new Project for {{ semester }}</h1>
 {% endblock %}
 {% load static %}
 {% block content %}
@@ -19,7 +19,7 @@
          {{ form.url_name}}
       </div>
    </div>
-   <a type="button" class="btn btn-danger" href="{% url 'scan' scan_session %}">Cancel</a>
+   <a type="button" class="btn btn-danger" href="{% url 'scan' semester %}">Cancel</a>
    <input type="submit" class="btn btn-success" name="submit" id="generateReportBtn" value="Validate" disabled>
 </form>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
