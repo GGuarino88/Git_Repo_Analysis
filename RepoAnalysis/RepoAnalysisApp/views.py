@@ -146,14 +146,14 @@ class SemesterCreateView(CreateView):
     success_url = reverse_lazy("index")
     def form_valid(self, form):
         form.instance.author = self.request.user
-        scan_session_title = form.cleaned_data.get("title")
+        semester_title = form.cleaned_data.get("title")
         try:
-            new_scan_session = super().form_valid(form)
-            messages.success(self.request, f'Session: "{ scan_session_title }" Created')
-            return new_scan_session
+            new_semester = super().form_valid(form)
+            messages.success(self.request, f'Semester: "{ semester_title }" Created')
+            return new_semester
 
         except IntegrityError:
-            form.add_error(None, f'"{scan_session_title}" already exists')
+            form.add_error(None, f'"{semester_title}" already exists')
             return self.form_invalid(form)
         
 semester_create = SemesterCreateView.as_view()
@@ -166,21 +166,18 @@ class SemesterEditView(UpdateView):
     success_url = reverse_lazy("index")
     def form_valid(self, form):
         form.instance.author = self.request.user
-        scan_session_title = form.initial.get("title")
-        new_scan_session_title = form.cleaned_data.get("title")
+        semester_title = form.initial.get("title")
+        new_semester_title = form.cleaned_data.get("title")
         try:
-            new_scan_session = super().form_valid(form)
-            if scan_session_title == new_scan_session_title:
-                messages.success(self.request, f'No changes to: "{scan_session_title}"')
+            new_semester_session = super().form_valid(form)
+            if semester_title == new_semester_title:
+                messages.success(self.request, f'No changes to: "{semester_title}"')
             else:
-                messages.info(
-                    self.request,
-                    f'Session: "{scan_session_title}" Changed to: "{new_scan_session_title}"',
-                )
-            return new_scan_session
+                messages.info(self.request, f'Semester: "{semester_title}" Changed to: "{new_semester_title}"')
+            return new_semester_session
         
         except IntegrityError:
-            form.add_error(None, f'"{scan_session_title}" already exists')
+            form.add_error(None, f'"{semester_title}" already exists')
             return self.form_invalid(form)
 
 semester_edit = SemesterEditView.as_view()
@@ -190,17 +187,17 @@ class SemesterDeleteView(DeleteView):
     model = Semester
     template_name = "RepoAnalysisApp/ScanSession/scan-delete.html"
     def get_success_url(self):
-        deleted_scan_session_title = self.get_object().__dict__["title"]
-        messages.success(self.request, f'Session: "{deleted_scan_session_title}" Deleted')
+        deleted_semester = self.get_object().__dict__["title"]
+        messages.success(self.request, f'Semester: "{deleted_semester}" Deleted')
         return reverse_lazy("index")
     
 semester_delete = SemesterDeleteView.as_view()
 
 def scan(request, scan_session):
     context = {}
-    scan_session_id = (Semester.objects.filter(title=scan_session).filter(author_id=request.user.id).values()[0]["id"])
-    user_scanned_repos = SemesterProject.objects.filter(scan_id=scan_session_id).values()
-    context = {"scan_session": scan_session, "user_scanned_repos": user_scanned_repos}
+    semester_id = (Semester.objects.filter(title=scan_session).filter(author_id=request.user.id).values()[0]["id"])
+    user_projects = SemesterProject.objects.filter(scan_id=semester_id).values()
+    context = {"scan_session": scan_session, "user_scanned_repos": user_projects}
     return render(request, "RepoAnalysisApp/scan.html", context)
 
 @method_decorator(login_required, name="dispatch")
@@ -211,14 +208,14 @@ class ProjectCreateView(CreateView):
     template_name = "RepoAnalysisApp/RepoScanned/repo-create.html"
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        scan_session = {"scan_session": self.kwargs["scan_session"]}
-        context.update(scan_session)
+        semester = {"scan_session": self.kwargs["scan_session"]}
+        context.update(semester)
         return context
     def form_valid(self, form):
-        scan_session = self.kwargs["scan_session"]
+        semester = self.kwargs["scan_session"]
         repo_name = form.cleaned_data.get("repo_name")
         repo_url = form.cleaned_data.get("url_name")
-        form.instance.scan_id = Semester.objects.filter(title=scan_session).filter(author_id=self.request.user.id)[0]
+        form.instance.scan_id = Semester.objects.filter(title=semester).filter(author_id=self.request.user.id)[0]
         try:
             new_repo = super().form_valid(form)
             messages.success(self.request, f'Repository: "{ repo_name }" Created')
@@ -226,14 +223,14 @@ class ProjectCreateView(CreateView):
 
         except IntegrityError as integrity_exc:
             if (str(integrity_exc) == "UNIQUE constraint failed: user_semester_projects.scan_id_id, user_semester_projects.repo_name"):
-                form.add_error(None, f'Repository Name: "{repo_name}" already exists in {scan_session}',)
+                form.add_error(None, f'Repository Name: "{repo_name}" already exists in {semester}',)
             elif (str(integrity_exc) == "UNIQUE constraint failed: user_semester_projects.scan_id_id, user_semester_projects.url_name"):
-                form.add_error(None, f'Repository URL: "{repo_url}" already exists in {scan_session}',)
+                form.add_error(None, f'Repository URL: "{repo_url}" already exists in {semester}',)
             return self.form_invalid(form)
         
     def get_success_url(self):
-        scan_session = self.kwargs["scan_session"]
-        return reverse_lazy("scan", kwargs={"scan_session": scan_session})
+        semester = self.kwargs["scan_session"]
+        return reverse_lazy("scan", kwargs={"scan_session": semester})
     
 project_create = ProjectCreateView.as_view()
 
@@ -244,17 +241,17 @@ class ProjectEditView(UpdateView):
     template_name = "RepoAnalysisApp/RepoScanned/repo-edit.html"
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        scan_session = {"scan_session": self.kwargs["scan_session"]}
-        context.update(scan_session)
+        semester = {"scan_session": self.kwargs["scan_session"]}
+        context.update(semester)
         return context
     
     def form_valid(self, form):
-        scan_session = self.kwargs["scan_session"]
+        semester = self.kwargs["scan_session"]
         repo_name = form.initial.get("repo_name")
         repo_url = form.initial.get("url_name")
         new_repo_name = form.cleaned_data.get("repo_name")
         new_repo_url = form.cleaned_data.get("url_name")
-        form.instance.scan_id = Semester.objects.filter(title=scan_session).filter(author_id=self.request.user.id)[0]
+        form.instance.scan_id = Semester.objects.filter(title=semester).filter(author_id=self.request.user.id)[0]
         try:
             edited_repo = super().form_valid(form)
             repo_data_changed = [key for key, value in form.cleaned_data.items() if form.initial.get(key) != value]
@@ -267,14 +264,14 @@ class ProjectEditView(UpdateView):
         
         except IntegrityError as integrity_exc:
             if (str(integrity_exc) == "UNIQUE constraint failed: user_semester_projects.scan_id_id, user_semester_projects.repo_name"):
-                form.add_error(None, f'Repository Name: "{repo_name}" already exists in {scan_session}',)
+                form.add_error(None, f'Repository Name: "{repo_name}" already exists in {semester}',)
             elif (str(integrity_exc) == "UNIQUE constraint failed: user_semester_projects.scan_id_id, user_semester_projects.url_name"):
-                form.add_error(None, f'Repository URL: "{repo_url}" already exists in {scan_session}',)
+                form.add_error(None, f'Repository URL: "{repo_url}" already exists in {semester}',)
             return self.form_invalid(form)
         
     def get_success_url(self):
-        scan_session = self.kwargs["scan_session"]
-        return reverse_lazy("scan", kwargs={"scan_session": scan_session})
+        semester = self.kwargs["scan_session"]
+        return reverse_lazy("scan", kwargs={"scan_session": semester})
     
 project_edit = ProjectEditView.as_view()
 
@@ -285,15 +282,15 @@ class ProjectDeleteView(DeleteView):
     success_url = reverse_lazy("index")
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        scan_session = {"scan_session": self.kwargs["scan_session"]}
-        context.update(scan_session)
+        semester = {"scan_session": self.kwargs["scan_session"]}
+        context.update(semester)
         return context
     
     def get_success_url(self):
-        scan_session = self.kwargs["scan_session"]
+        semester = self.kwargs["scan_session"]
         deleted_repo = self.get_object().__dict__["repo_name"]
         messages.success(self.request, f'Repository: "{deleted_repo}" Deleted')
-        return reverse_lazy("scan", kwargs={"scan_session": scan_session})
+        return reverse_lazy("scan", kwargs={"scan_session": semester})
     
 project_delete = ProjectDeleteView.as_view()
 
