@@ -17,19 +17,19 @@
       <div class="content-body" style="padding-top: 100px; padding-bottom: 100px; flex-grow: 1; overflow: auto; width: 100%;">
          <h1>GitHub Repository Analysis</h1>
          <h3>Welcome to your Scan Session! </h3>
-         <p> To get started, create a new session and add your desired repositories. 
-            Once you've added all of your repositories, navigate to the 'Generate Reports' 
+         <p> To get started, create a new Semester and add your desired Projects. 
+            Once you've added all of your Projects, navigate to the 'Generate Reports' 
             page linked in your session. 
          </p>
          <div class="card">
             <div class="card-body">
                <div class="d-flex justify-content-end">
-                  <a type="button" class="btn btn-success mb-3" href="{% url 'scan-create' %} ">Create New Session</a>
+                  <a type="button" class="btn btn-success mb-3" href="{% url 'semester-create' %} ">Create New Semester</a>
                </div>
                <table class="table">
                   <thead>
                      <tr>
-                        <th scope="col">Session</th>
+                        <th scope="col">Semester</th>
                         <th scope="col" class="actions-header">Actions</th>
                      </tr>
                   </thead>
@@ -42,8 +42,8 @@
                               {% csrf_token %}
                               <button type="submit" class="btn btn-primary btn-sm">Enter</button>
                            </form>
-                           <a class="btn btn-warning btn-sm" href="{% url 'scan-edit' data.id %}">Edit</a>
-                           <a class="btn btn-danger btn-sm" href="{% url 'scan-delete' data.id %}">Delete</a>
+                           <a class="btn btn-warning btn-sm" href="{% url 'semester-edit' data.id %}">Edit</a>
+                           <a class="btn btn-danger btn-sm" href="{% url 'semester-delete' data.id %}">Delete</a>
                         </td>
                      </tr>
                      {% endfor %}

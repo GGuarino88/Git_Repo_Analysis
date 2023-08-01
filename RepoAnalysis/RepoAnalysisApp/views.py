@@ -142,7 +142,7 @@ def index(request):
 class SemesterCreateView(CreateView):
     model = Semester
     form_class = SemesterForm
-    template_name = "RepoAnalysisApp/ScanSession/scan-create.html"
+    template_name = "RepoAnalysisApp/Semester/semester-create.html"
     success_url = reverse_lazy("index")
     def form_valid(self, form):
         form.instance.author = self.request.user
@@ -162,7 +162,7 @@ semester_create = SemesterCreateView.as_view()
 class SemesterEditView(UpdateView):
     model = Semester
     form_class = SemesterForm
-    template_name = "RepoAnalysisApp/ScanSession/scan-edit.html"
+    template_name = "RepoAnalysisApp/Semester/semester-edit.html"
     success_url = reverse_lazy("index")
     def form_valid(self, form):
         form.instance.author = self.request.user
@@ -185,7 +185,7 @@ semester_edit = SemesterEditView.as_view()
 @method_decorator(login_required, name="dispatch")
 class SemesterDeleteView(DeleteView):
     model = Semester
-    template_name = "RepoAnalysisApp/ScanSession/scan-delete.html"
+    template_name = "RepoAnalysisApp/Semester/semester-delete.html"
     def get_success_url(self):
         deleted_semester = self.get_object().__dict__["title"]
         messages.success(self.request, f'Semester: "{deleted_semester}" Deleted')
@@ -205,7 +205,7 @@ def scan(request, scan_session):
 class ProjectCreateView(CreateView):
     model = SemesterProject
     form_class = ProjectForm
-    template_name = "RepoAnalysisApp/RepoScanned/repo-create.html"
+    template_name = "RepoAnalysisApp/Project/project-create.html"
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         semester = {"scan_session": self.kwargs["scan_session"]}
@@ -238,7 +238,7 @@ project_create = ProjectCreateView.as_view()
 class ProjectEditView(UpdateView):
     model = SemesterProject
     form_class = ProjectForm
-    template_name = "RepoAnalysisApp/RepoScanned/repo-edit.html"
+    template_name = "RepoAnalysisApp/Project/project-edit.html"
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         semester = {"scan_session": self.kwargs["scan_session"]}
@@ -278,7 +278,7 @@ project_edit = ProjectEditView.as_view()
 @method_decorator(login_required, name="dispatch")
 class ProjectDeleteView(DeleteView):
     model = SemesterProject
-    template_name = "RepoAnalysisApp/RepoScanned/repo-delete.html"
+    template_name = "RepoAnalysisApp/Project/project-delete.html"
     success_url = reverse_lazy("index")
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

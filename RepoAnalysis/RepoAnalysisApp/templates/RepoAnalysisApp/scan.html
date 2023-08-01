@@ -9,12 +9,12 @@
 </div>
 <div class="content-body" style="padding-top: 80px; padding-bottom: 100px; flex-grow: 1; overflow: auto; width: 100%;">
    <h1>GitHub Repository Analysis</h1>
-   <p>On this page, you can add repositories and generate insightful reports.</p>
-   <h2>{{ scan_session }}</h2>
+   <p>On this page, you can add Projects and generate insightful reports.</p>
+   <h2>Semester: {{ scan_session }}</h2>
    <div style="margin-bottom: 50px; max-width: 70%;" class="card1">
       <div class="card-body">
          <div class="d-flex justify-content-end">
-            <a type="button" class="btn btn-success mb-3" href="{% url 'repo-create' scan_session %}">Add a new Repository</a>
+            <a type="button" class="btn btn-success mb-3" href="{% url 'project-create' scan_session %}">Add a new Project</a>
          </div>
          <table class="table">
             <thead>
@@ -42,8 +42,8 @@
                            <input type="hidden" name="input_method" value="repository">
                         </div>
                      </form>
-                     <a class="btn btn-warning btn-sm" href="{% url 'repo-edit' scan_session repo.id %}">Edit</a>
-                     <a class="btn btn-danger btn-sm" href="{% url 'repo-delete' scan_session repo.id %}">Delete</a>
+                     <a class="btn btn-warning btn-sm" href="{% url 'project-edit' scan_session repo.id %}">Edit</a>
+                     <a class="btn btn-danger btn-sm" href="{% url 'project-delete' scan_session repo.id %}">Delete</a>
                   </td>
                </tr>
                {% endfor %}
