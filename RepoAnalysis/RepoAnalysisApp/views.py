@@ -2,11 +2,9 @@
 import os, json
 from django.contrib import messages
 from django.http import JsonResponse
-#from .models import ScanSession, SingleURLRepo
 from .models import Semester, SemesterProject
 from django.db import IntegrityError
 from django.urls import reverse_lazy
-#from .forms import ScanSessionForm, SingleURLRepoForm
 from .forms import SemesterForm, ProjectForm
 from django.shortcuts import render, redirect
 from django.utils.decorators import method_decorator
@@ -141,7 +139,7 @@ def index(request):
     return render(request, "RepoAnalysisApp/index.html", {"mydata": mydata})
 
 @method_decorator(login_required, name="dispatch")
-class ScanCreateView(CreateView):
+class SemesterCreateView(CreateView):
     model = Semester
     form_class = SemesterForm
     template_name = "RepoAnalysisApp/ScanSession/scan-create.html"
@@ -158,10 +156,10 @@ class ScanCreateView(CreateView):
             form.add_error(None, f'"{scan_session_title}" already exists')
             return self.form_invalid(form)
         
-scan_create = ScanCreateView.as_view()
+semester_create = SemesterCreateView.as_view()
 
 @method_decorator(login_required, name="dispatch")
-class ScanEditView(UpdateView):
+class SemesterEditView(UpdateView):
     model = Semester
     form_class = SemesterForm
     template_name = "RepoAnalysisApp/ScanSession/scan-edit.html"
@@ -185,10 +183,10 @@ class ScanEditView(UpdateView):
             form.add_error(None, f'"{scan_session_title}" already exists')
             return self.form_invalid(form)
 
-scan_edit = ScanEditView.as_view()
+semester_edit = SemesterEditView.as_view()
 
 @method_decorator(login_required, name="dispatch")
-class ScanDeleteView(DeleteView):
+class SemesterDeleteView(DeleteView):
     model = Semester
     template_name = "RepoAnalysisApp/ScanSession/scan-delete.html"
     def get_success_url(self):
@@ -196,7 +194,7 @@ class ScanDeleteView(DeleteView):
         messages.success(self.request, f'Session: "{deleted_scan_session_title}" Deleted')
         return reverse_lazy("index")
     
-scan_delete = ScanDeleteView.as_view()
+semester_delete = SemesterDeleteView.as_view()
 
 def scan(request, scan_session):
     context = {}
@@ -207,7 +205,7 @@ def scan(request, scan_session):
 
 @method_decorator(login_required, name="dispatch")
 
-class RepoCreateView(CreateView):
+class ProjectCreateView(CreateView):
     model = SemesterProject
     form_class = ProjectForm
     template_name = "RepoAnalysisApp/RepoScanned/repo-create.html"
@@ -220,9 +218,7 @@ class RepoCreateView(CreateView):
         scan_session = self.kwargs["scan_session"]
         repo_name = form.cleaned_data.get("repo_name")
         repo_url = form.cleaned_data.get("url_name")
-        form.instance.scan_id = Semester.objects.filter(title=scan_session).filter(
-            author_id=self.request.user.id
-        )[0]
+        form.instance.scan_id = Semester.objects.filter(title=scan_session).filter(author_id=self.request.user.id)[0]
         try:
             new_repo = super().form_valid(form)
             messages.success(self.request, f'Repository: "{ repo_name }" Created')
@@ -239,10 +235,10 @@ class RepoCreateView(CreateView):
         scan_session = self.kwargs["scan_session"]
         return reverse_lazy("scan", kwargs={"scan_session": scan_session})
     
-repo_create = RepoCreateView.as_view()
+project_create = ProjectCreateView.as_view()
 
 @method_decorator(login_required, name="dispatch")
-class RepoEditView(UpdateView):
+class ProjectEditView(UpdateView):
     model = SemesterProject
     form_class = ProjectForm
     template_name = "RepoAnalysisApp/RepoScanned/repo-edit.html"
@@ -280,10 +276,10 @@ class RepoEditView(UpdateView):
         scan_session = self.kwargs["scan_session"]
         return reverse_lazy("scan", kwargs={"scan_session": scan_session})
     
-repo_edit = RepoEditView.as_view()
+project_edit = ProjectEditView.as_view()
 
 @method_decorator(login_required, name="dispatch")
-class RepoDeleteView(DeleteView):
+class ProjectDeleteView(DeleteView):
     model = SemesterProject
     template_name = "RepoAnalysisApp/RepoScanned/repo-delete.html"
     success_url = reverse_lazy("index")
@@ -299,7 +295,7 @@ class RepoDeleteView(DeleteView):
         messages.success(self.request, f'Repository: "{deleted_repo}" Deleted')
         return reverse_lazy("scan", kwargs={"scan_session": scan_session})
     
-repo_delete = RepoDeleteView.as_view()
+project_delete = ProjectDeleteView.as_view()
 
 def about(request):
     context = {}
