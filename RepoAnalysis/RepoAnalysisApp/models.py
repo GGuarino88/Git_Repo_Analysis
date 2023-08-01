@@ -11,7 +11,7 @@ class ScanSession(models.Model):
         db_table = "user_scan"
         constraints = [models.UniqueConstraint(fields=['author', 'title'], name='author title constraint')]
     def __str__(self):
-        return f"{self.title} {self.author}"
+        return f"Scan Session:{self.title} - Author:{self.author}"
     
 class SingleURLRepo(models.Model):
     scan_id = models.ForeignKey(ScanSession, on_delete=models.CASCADE)
@@ -27,4 +27,5 @@ class SingleURLRepo(models.Model):
             models.UniqueConstraint(fields=['scan_id', 'url_name'], name='repo_name_url_name')
         ]
     def __str__(self):
-        return f"{self.repo_name}"
+        print(self.scan_id.__str__())
+        return f"Repo:{self.repo_name} - {self.scan_id.__str__()} "
