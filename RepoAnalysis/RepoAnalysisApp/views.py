@@ -2,10 +2,10 @@
 import os, json
 from django.contrib import messages
 from django.http import JsonResponse
-from .models import Scan, User_Scans
+from .models import ScanSession, SingleURLRepo
 from django.db import IntegrityError
 from django.urls import reverse_lazy
-from .forms import ScanForm, UserScanForm
+from .forms import ScanSessionForm, SingleURLRepoForm
 from django.shortcuts import render, redirect
 from django.utils.decorators import method_decorator
 from RepoAnalysisApp.utils.github_api import GitHubAPI
@@ -135,13 +135,13 @@ def home(request):
 
 @login_required
 def index(request):
-    mydata = Scan.objects.filter(author=request.user).values()
+    mydata = ScanSession.objects.filter(author=request.user).values()
     return render(request, "RepoAnalysisApp/index.html", {"mydata": mydata})
 
 @method_decorator(login_required, name="dispatch")
 class ScanCreateView(CreateView):
-    model = Scan
-    form_class = ScanForm
+    model = ScanSession
+    form_class = ScanSessionForm
     template_name = "RepoAnalysisApp/ScanSession/scan-create.html"
     success_url = reverse_lazy("index")
     def form_valid(self, form):
@@ -160,8 +160,8 @@ scan_create = ScanCreateView.as_view()
 
 @method_decorator(login_required, name="dispatch")
 class ScanEditView(UpdateView):
-    model = Scan
-    form_class = ScanForm
+    model = ScanSession
+    form_class = ScanSessionForm
     template_name = "RepoAnalysisApp/ScanSession/scan-edit.html"
     success_url = reverse_lazy("index")
     def form_valid(self, form):
@@ -187,7 +187,7 @@ scan_edit = ScanEditView.as_view()
 
 @method_decorator(login_required, name="dispatch")
 class ScanDeleteView(DeleteView):
-    model = Scan
+    model = ScanSession
     template_name = "RepoAnalysisApp/ScanSession/scan-delete.html"
     def get_success_url(self):
         deleted_scan_session_title = self.get_object().__dict__["title"]
@@ -198,16 +198,16 @@ scan_delete = ScanDeleteView.as_view()
 
 def scan(request, scan_session):
     context = {}
-    scan_session_id = (Scan.objects.filter(title=scan_session).filter(author_id=request.user.id).values()[0]["id"])
-    user_scanned_repos = User_Scans.objects.filter(scan_id=scan_session_id).values()
+    scan_session_id = (ScanSession.objects.filter(title=scan_session).filter(author_id=request.user.id).values()[0]["id"])
+    user_scanned_repos = SingleURLRepo.objects.filter(scan_id=scan_session_id).values()
     context = {"scan_session": scan_session, "user_scanned_repos": user_scanned_repos}
     return render(request, "RepoAnalysisApp/scan.html", context)
 
 @method_decorator(login_required, name="dispatch")
 
 class RepoCreateView(CreateView):
-    model = User_Scans
-    form_class = UserScanForm
+    model = SingleURLRepo
+    form_class = SingleURLRepoForm
     template_name = "RepoAnalysisApp/RepoScanned/repo-create.html"
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -218,7 +218,7 @@ class RepoCreateView(CreateView):
         scan_session = self.kwargs["scan_session"]
         repo_name = form.cleaned_data.get("repo_name")
         repo_url = form.cleaned_data.get("url_name")
-        form.instance.scan_id = Scan.objects.filter(title=scan_session).filter(
+        form.instance.scan_id = ScanSession.objects.filter(title=scan_session).filter(
             author_id=self.request.user.id
         )[0]
         try:
@@ -241,8 +241,8 @@ repo_create = RepoCreateView.as_view()
 
 @method_decorator(login_required, name="dispatch")
 class RepoEditView(UpdateView):
-    model = User_Scans
-    form_class = UserScanForm
+    model = SingleURLRepo
+    form_class = SingleURLRepoForm
     template_name = "RepoAnalysisApp/RepoScanned/repo-edit.html"
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -256,7 +256,7 @@ class RepoEditView(UpdateView):
         repo_url = form.initial.get("url_name")
         new_repo_name = form.cleaned_data.get("repo_name")
         new_repo_url = form.cleaned_data.get("url_name")
-        form.instance.scan_id = Scan.objects.filter(title=scan_session).filter(author_id=self.request.user.id)[0]
+        form.instance.scan_id = ScanSession.objects.filter(title=scan_session).filter(author_id=self.request.user.id)[0]
         try:
             edited_repo = super().form_valid(form)
             repo_data_changed = [key for key, value in form.cleaned_data.items() if form.initial.get(key) != value]
@@ -282,7 +282,7 @@ repo_edit = RepoEditView.as_view()
 
 @method_decorator(login_required, name="dispatch")
 class RepoDeleteView(DeleteView):
-    model = User_Scans
+    model = SingleURLRepo
     template_name = "RepoAnalysisApp/RepoScanned/repo-delete.html"
     success_url = reverse_lazy("index")
     def get_context_data(self, **kwargs):
@@ -328,11 +328,10 @@ def generate_all_reports(request, scan_session):
     if request.method == "POST":
         selected_repos_json = request.POST.get("selected_repos")
         selected_repos = json.loads(selected_repos_json)
-        scan_id = Scan.objects.filter(title=scan_session).filter(author_id=request.user.id).first().id
         if selected_repos:
             repo_ids = []
             for url in selected_repos:
-                user_scan = User_Scans.objects.filter(scan_id=scan_id, url_name=url).first()
+                user_scan = SingleURLRepo.objects.filter(scan_id__title=scan_session, url_name=url).first()
                 if user_scan:
                     repo_ids.append(user_scan.id)
             access_token = SocialAccountDATA(request).get_access_token()

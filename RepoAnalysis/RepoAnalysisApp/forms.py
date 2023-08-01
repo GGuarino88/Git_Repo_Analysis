@@ -1,8 +1,8 @@
 from django import forms
 from django.forms import ModelForm
-from .models import Scan, User_Scans
+from .models import ScanSession, SingleURLRepo
 
-class ScanForm(ModelForm):
+class ScanSessionForm(ModelForm):
     title = forms.CharField(widget=forms.TextInput(attrs={
         'class': 'form-control',
         'id' : 'title',
@@ -11,10 +11,10 @@ class ScanForm(ModelForm):
         'size' : 50
     }))
     class Meta:
-        model = Scan
+        model = ScanSession
         fields = ['title', ]
 
-class UserScanForm(ModelForm):
+class SingleURLRepoForm(ModelForm):
     repo_name = forms.CharField(widget=forms.TextInput(attrs={
         'class': 'form-control',
         'id' : 'repo_name',
@@ -32,5 +32,5 @@ class UserScanForm(ModelForm):
     }))
 
     class Meta:
-        model = User_Scans
+        model = SingleURLRepo
         fields = ['repo_name', 'url_name']
