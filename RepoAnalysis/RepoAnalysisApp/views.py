@@ -213,6 +213,7 @@ class ProjectCreateView(CreateView):
         return context
     def form_valid(self, form):
         semester = self.kwargs["semester"]
+        team_name = form.cleaned_data.get("team_name")
         repo_name = form.cleaned_data.get("repo_name")
         repo_url = form.cleaned_data.get("url_name")
         form.instance.scan_id = Semester.objects.filter(title=semester).filter(author_id=self.request.user.id)[0]
@@ -222,10 +223,13 @@ class ProjectCreateView(CreateView):
             return new_repo
 
         except IntegrityError as integrity_exc:
-            if (str(integrity_exc) == "UNIQUE constraint failed: user_semester_projects.scan_id_id, user_semester_projects.repo_name"):
-                form.add_error(None, f'Repository Name: "{repo_name}" already exists in {semester}',)
+            print(integrity_exc)
+            if (str(integrity_exc) == "UNIQUE constraint failed: user_semester_projects.scan_id_id, user_semester_projects.team_name"):
+                form.add_error(None, f'Team: "{team_name}" already exists in {semester}',)
+            elif (str(integrity_exc) == "UNIQUE constraint failed: user_semester_projects.scan_id_id, user_semester_projects.repo_name"):
+                form.add_error(None, f'Project Name: "{repo_name}" already exists in {semester}',)
             elif (str(integrity_exc) == "UNIQUE constraint failed: user_semester_projects.scan_id_id, user_semester_projects.url_name"):
-                form.add_error(None, f'Repository URL: "{repo_url}" already exists in {semester}',)
+                form.add_error(None, f'GitHub URL: "{repo_url}" already exists in {semester}',)
             return self.form_invalid(form)
         
     def get_success_url(self):
@@ -247,8 +251,10 @@ class ProjectEditView(UpdateView):
     
     def form_valid(self, form):
         semester = self.kwargs["semester"]
+        team_name = form.initial.get("team_name")
         repo_name = form.initial.get("repo_name")
         repo_url = form.initial.get("url_name")
+        new_team_name = form.cleaned_data.get("team_name")
         new_repo_name = form.cleaned_data.get("repo_name")
         new_repo_url = form.cleaned_data.get("url_name")
         form.instance.scan_id = Semester.objects.filter(title=semester).filter(author_id=self.request.user.id)[0]
@@ -256,17 +262,22 @@ class ProjectEditView(UpdateView):
             edited_repo = super().form_valid(form)
             repo_data_changed = [key for key, value in form.cleaned_data.items() if form.initial.get(key) != value]
             if repo_data_changed:
-                if repo_data_changed[0] == "repo_name":
-                    messages.success(self.request, f'Repository name: "{repo_name}" changed to: "{new_repo_name}"',)
-                elif repo_data_changed[0] == "url_name":
+                if "team_name" in repo_data_changed:
+                    messages.success(self.request, f'"{team_name}" changed to: "{new_team_name}"',)
+                elif "repo_name" in repo_data_changed:
+                    messages.success(self.request, f'Project: "{repo_name}" changed to: "{new_repo_name}"',)
+                elif "url_name" in repo_data_changed:
                     messages.success(self.request, f'"{repo_name}" URL changed to: "{new_repo_url}"')
             return edited_repo
         
         except IntegrityError as integrity_exc:
-            if (str(integrity_exc) == "UNIQUE constraint failed: user_semester_projects.scan_id_id, user_semester_projects.repo_name"):
-                form.add_error(None, f'Repository Name: "{repo_name}" already exists in {semester}',)
+            print(integrity_exc)
+            if (str(integrity_exc) == "UNIQUE constraint failed: user_semester_projects.scan_id_id, user_semester_projects.team_name"):
+                form.add_error(None, f'Team: "{team_name}" already exists in {semester}',)
+            elif (str(integrity_exc) == "UNIQUE constraint failed: user_semester_projects.scan_id_id, user_semester_projects.repo_name"):
+                form.add_error(None, f'Project Name: "{repo_name}" already exists in {semester}',)
             elif (str(integrity_exc) == "UNIQUE constraint failed: user_semester_projects.scan_id_id, user_semester_projects.url_name"):
-                form.add_error(None, f'Repository URL: "{repo_url}" already exists in {semester}',)
+                form.add_error(None, f'GitHub URL: "{repo_url}" already exists in {semester}',)
             return self.form_invalid(form)
         
     def get_success_url(self):

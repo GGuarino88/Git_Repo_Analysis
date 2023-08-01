@@ -24,6 +24,7 @@ class SemesterProject(models.Model):
     class Meta():
         db_table = "user_semester_projects"
         constraints = [
+            models.UniqueConstraint(fields=['scan_id', 'team_name'], name='scan_id_team_name'),
             models.UniqueConstraint(fields=['scan_id', 'repo_name'], name='scan_id_repo_name'),
             models.UniqueConstraint(fields=['scan_id', 'url_name'], name='scan_id_url_name')
         ]
