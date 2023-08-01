@@ -48,7 +48,8 @@
             title: {
                text: 'No. of Contributions'
             }
-         }
+         },
+
       };
       const contributions = document.getElementById(`contributors-${repoName}`);
       Plotly.newPlot(contributions, [plot_data], layout);
@@ -246,6 +247,12 @@
       const path = url + "traffic_views.json"
       var data = await get_data(path)
       const views = document.getElementById(`views-${repoName}`)
+      if (!data || data.message) {
+         const noViewMessage = document.createElement("h3");
+         noViewMessage.textContent = data.message;
+         views.appendChild(noViewMessage);
+         return;
+       }
       const view_data = data.views
       const timestamps = view_data.map(view => view.timestamp.slice(0, 10))
       const count = view_data.map(view => view.count)
