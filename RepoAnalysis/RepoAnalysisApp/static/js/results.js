@@ -161,18 +161,29 @@
       Plotly.newPlot(code, [addtion_trace, deletion_trace, modification_trace], layout)
    }
    async function plot_commit(url, repoName) {
-      const path = url + "commit_activity.json"
-      var data = await get_data(path)
-      const commit = document.getElementById(`commit-${repoName}`)
-      const index = _.findIndex(data, (ob) => ob.total > 0)
-      const week = data.slice(index).map(ob => formatDate(ob.week * 1000))
-      const total = data.slice(index).map(ob => ob.total)
-      var plot_data = {
-         x: week,
-         y: total,
+      const path = url + "commit_activity.json";
+      var data = await get_data(path);
+      const commit = document.getElementById(`commit-${repoName}`);
+      const index = _.findIndex(data, (ob) => ob.total > 0);
+      const week = [];
+      const total = [];
+      const firstWeek = data[index].week;
+      const today = new Date().getTime();
+      for (let i = 0; i < index; i++) {
+          const missingWeek = firstWeek - (index - i) * 86400;
+          week.push(formatDate(missingWeek * 1000));
+          total.push(0);
       }
-      Plotly.newPlot(commit, [plot_data])
-   }
+      for (let i = index; i < data.length; i++) {
+          week.push(formatDate(data[i].week * 1000));
+          total.push(data[i].total);
+      }
+      var plot_data = {
+          x: week,
+          y: total,
+      };
+      Plotly.newPlot(commit, [plot_data]);
+  }
    async function plot_pr(url, repoName) {
       const path = url + "pull_requests.json";
       var data = await get_data(path);
