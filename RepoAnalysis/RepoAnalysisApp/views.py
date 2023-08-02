@@ -49,7 +49,6 @@ def remove_all_files(directory):
         file_path = os.path.join(directory, file)
         if os.path.isfile(file_path):
             os.remove(file_path)
-            print(f"Deleted file: {file_path}")
 
 def analyze_repository(repository_url, access_token):
     ## This is temporary API KEY, please use your gitHub KEY code while running locally
@@ -71,16 +70,14 @@ def analyze_repository(repository_url, access_token):
         ## Code CRUD Details
         code_churn = retry_api(lambda: github_api.get_code_generic(repository_url, "/stats/code_frequency"))
         if code_churn:
-            code_churn_data = [{"additions": entry[0], "deletions": entry[1], "commits": entry[2]} for entry in code_churn]
             code_churn_json_file = os.path.join(repo_directory, "code_churn_over_time.json")
-            save_json_file(code_churn_data, code_churn_json_file)
+            save_json_file(code_churn, code_churn_json_file)
 
         ## Commit Details
         commit_activity = retry_api(lambda: github_api.get_code_generic(repository_url, "/stats/commit_activity"))
         if commit_activity:
-            commit_activity_data = [{"week": data["week"], "total": data["total"]} for data in commit_activity]
             commit_activity_json_file = os.path.join(repo_directory, "commit_activity.json")
-            save_json_file(commit_activity_data, commit_activity_json_file)
+            save_json_file(commit_activity, commit_activity_json_file)
 
         ## Repository Info
         repo_info = retry_api(lambda: github_api.get_code_generic(repository_url, ""))
@@ -89,10 +86,21 @@ def analyze_repository(repository_url, access_token):
             save_json_file(repo_info, repo_info_json_file)
 
         ## Pull Requests
-        pull_requests = retry_api(lambda: github_api.get_code_generic(repository_url, "/pulls?state=all"))
+        pull_requests = retry_api(lambda: github_api.get_code_generic(repository_url, "/pulls?state=all&per_page=1000"))
         if pull_requests:
-            pull_requests_json_file = os.path.join(repo_directory, "pull_requests.json")
-            save_json_file(pull_requests, pull_requests_json_file)
+            filtered_pull_requests = []
+            for pr in pull_requests:
+                filtered_pr = {
+                    "url": pr["url"],
+                    "number": pr["number"],
+                    "title": pr["title"],
+                    "user": pr["user"]["login"],
+                    "merged_at": pr["merged_at"],
+                    "created_at": pr["created_at"]
+                }
+                filtered_pull_requests.append(filtered_pr)
+            filtered_pull_requests_json_file = os.path.join(repo_directory, "pull_requests.json")
+            save_json_file(filtered_pull_requests, filtered_pull_requests_json_file)
 
         ## Languages
         languages = retry_api(lambda: github_api.get_code_generic(repository_url, "/languages"))

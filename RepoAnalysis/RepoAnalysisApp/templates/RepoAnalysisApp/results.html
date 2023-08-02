@@ -141,7 +141,6 @@
                               <th>Date</th>
                               <th>Additions</th>
                               <th>Deletions</th>
-                              <th>Modifications</th>
                            </tr>
                         </thead>
                         <tbody id="codeChurnTableBody-{{ repo_name }}"></tbody>
@@ -152,17 +151,17 @@
          </div>
          <div class="result-card">
             <h2>Commit Activity</h2>
-            <div style="padding-top: 15px;">The graph represents the frequency and distribution of code commits over time, indicating the level of project activity and contributor engagement.</div>
+            <div style="padding-top: 15px;">Graph depicting code commit frequency and distribution over time, reflecting project activity and contributor engagement</div>
             <div id="commit-{{ repo_name }}"></div>
          </div>
          <div class="result-card">
             <h2>Pull Requests</h2>
-            <div style="padding-top: 15px;">The graph represents the number and frequency of pull requests made by users in a repository.</div>
+            <div style="padding-top: 15px;">Graph showing pull request count by users in the repository</div>
             <div id="pull-{{ repo_name }}"></div>
          </div>
          <div class="row full-height">
             <div class="col-md-12">
-               <h2>Languages used in this Repository</h2>
+               <h2>Languages used in the repository</h2>
             </div>
             <div class="col-md-6 equal-height">
                <div class="result-card">
@@ -187,10 +186,12 @@
                </div>
             </div>
          </div>
-         <div class="col-md-12">
-            <div class="result-card" style="max-height: 300px;">
-               <h3 class="underlined">Releases</h3>
-               <div style="max-height: 100%; overflow-y: auto;" id="releasesContainer-{{ repo_name }}"></div>
+         <div class="row full-height">
+            <div class="col-md-12">
+               <div class="result-card">
+                  <h3 class="underlined">Releases</h3>
+                  <div style="max-height: 100%; overflow-y: auto;" id="releasesContainer-{{ repo_name }}"></div>
+               </div>
             </div>
          </div>
          <div style="height: 100px;"></div>

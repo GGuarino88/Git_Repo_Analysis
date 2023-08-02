@@ -1,4 +1,4 @@
-import requests
+import time, requests
 class GitHubAPI:
     def __init__(self, token):
         self.base_url = "https://api.github.com"
@@ -7,7 +7,21 @@ class GitHubAPI:
     def make_authenticated_request(self, endpoint):
         url = f"{self.base_url}/{endpoint}"
         response = requests.get(url, headers=self.headers)
-        return response.json()
+        if response.status_code == 200:
+            return response.json()
+        elif response.status_code == 403 and 'rate limit exceeded' in response.text.lower():
+            print("API rate limit exceeded. Retrying in 1 second...")
+            time.sleep(1)
+            return self.make_authenticated_request(endpoint)
+        else:
+            return None
+
+    def make_retry_request(self, endpoint, max_retries=5, retry_delay=1, params=None):
+        for _ in range(max_retries):
+            response = self.make_authenticated_request(endpoint)
+            if response is not None:
+                return response
+        return None
 
     def parse_repository_url(self, repository_url):
         parts = repository_url.split("/")
@@ -39,15 +53,17 @@ class GitHubAPI:
             commit_count_per_branch[branch_name] = len(commits)
         return commit_count_per_branch
     
-    def get_pull_request_count_per_contributor(self, repository_url):
-        owner, repo = self.parse_repository_url(repository_url)
-        endpoint = f"repos/{owner}/{repo}/pulls?state=all"
-        pull_requests = self.make_authenticated_request(endpoint)
-        pull_request_count_per_contributor = {}
-        for pull_request in pull_requests:
-            contributor = pull_request['user']['login']
-            if contributor in pull_request_count_per_contributor:
-                pull_request_count_per_contributor[contributor] += 1
-            else:
-                pull_request_count_per_contributor[contributor] = 1
-        return pull_request_count_per_contributor
+    ## below code is very expensive ( loop over multiple times based on PR's count for Repository which takes so much of time to complete )
+    # def get_all_pull_requests(self, repository_url):
+    #     owner, repo = self.parse_repository_url(repository_url)
+    #     endpoint = f"repos/{owner}/{repo}/pulls"
+    #     all_pull_requests = []
+    #     page = 1
+    #     while True:
+    #         params = {"state": "all", "per_page": 100, "page": page}
+    #         pull_requests = self.make_retry_request(endpoint, params=params)
+    #         if not pull_requests:
+    #             break
+    #         all_pull_requests.extend(pull_requests)
+    #         page += 1
+    #     return all_pull_requests
