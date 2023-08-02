@@ -49,7 +49,7 @@
       var data = await get_data(path);
       const pathCommits = url + "commits_per_branch.json";
       var commitsData = await get_data(pathCommits);
-      const tableContainer = document.getElementById("tableContainer");
+      const tableContainer = document.getElementById(`tableContainer-${repoName}`);
       const table = document.createElement("table");
       table.classList.add("table");
       const headerRow = document.createElement("tr");
