@@ -28,7 +28,7 @@ class ProjectForm(ModelForm):
         'class': 'form-control',
         'id' : 'repo_name',
         'type': 'text',
-        'placeholder': 'Enter Repository Name',
+        'placeholder': 'Enter Project Title',
         'size' : 50
     }))
 

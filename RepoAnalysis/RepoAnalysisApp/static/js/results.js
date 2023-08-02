@@ -36,6 +36,8 @@
       var data1 = await get_data(path1);
       const path = url + "branches.json";
       var data = await get_data(path);
+      const pathCommits = url + "commits_per_branch.json";
+      var commitsData = await get_data(pathCommits);
       const tableContainer = document.getElementById("tableContainer");
       const table = document.createElement("table");
       table.classList.add("table");
@@ -43,6 +45,9 @@
       const branchNameHeader = document.createElement("th");
       branchNameHeader.textContent = "Branch Name";
       headerRow.appendChild(branchNameHeader);
+      const commitsCountHeader = document.createElement("th");
+      commitsCountHeader.textContent = "Commits Count";
+      headerRow.appendChild(commitsCountHeader);
       const protectedHeader = document.createElement("th");
       protectedHeader.textContent = "Protected";
       headerRow.appendChild(protectedHeader);
@@ -53,8 +58,12 @@
          const branchLink = document.createElement("a");
          branchLink.href = `${data1.html_url}/tree/${item.name}`;
          branchLink.textContent = item.name;
+         branchLink.target = "_blank";
          branchNameCell.appendChild(branchLink);
          row.appendChild(branchNameCell);
+         const commitsCountCell = document.createElement("td");
+         commitsCountCell.textContent = commitsData[item.name] || 0;
+         row.appendChild(commitsCountCell);
          const protectedCell = document.createElement("td");
          protectedCell.textContent = item.protected;
          row.appendChild(protectedCell);
@@ -96,10 +105,14 @@
       data.forEach(contributor => {
          const row = document.createElement("tr");
          const contributorCell = document.createElement("td");
-         const commitsCell = document.createElement("td");
-         contributorCell.textContent = contributor.login;
-         commitsCell.textContent = contributor.contributions;
+         const contributorLink = document.createElement("a");
+         contributorLink.href = "https://github.com/" + contributor.login;
+         contributorLink.textContent = contributor.login;
+         contributorLink.target = "_blank";
+         contributorCell.appendChild(contributorLink);
          row.appendChild(contributorCell);
+         const commitsCell = document.createElement("td");
+         commitsCell.textContent = contributor.contributions;
          row.appendChild(commitsCell);
          contributorsTableBody.appendChild(row);
       });
@@ -273,12 +286,10 @@
          const nameCell = document.createElement("td");
          const tagNameCell = document.createElement("td");
          const bodyCell = document.createElement("td");
-
-         createdAtCell.textContent = release.created_at;
+         createdAtCell.textContent = release.created_at.slice(0, -1).replace("T", " ");
          nameCell.textContent = release.name;
          tagNameCell.textContent = release.tag_name;
          bodyCell.textContent = release.body;
-
          row.appendChild(createdAtCell);
          row.appendChild(nameCell);
          row.appendChild(tagNameCell);
@@ -310,12 +321,9 @@
    function openModal(imgElement) {
       var modal = document.getElementById("myModal");
       var modalImg = document.getElementById("img01");
-
       modal.style.display = "block";
       modalImg.src = imgElement.src;
-
       var span = document.getElementsByClassName("close")[0];
-
       span.onclick = function () {
          modal.style.display = "none";
       }

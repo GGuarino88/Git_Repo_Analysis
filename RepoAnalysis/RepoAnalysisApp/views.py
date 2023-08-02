@@ -112,6 +112,12 @@ def analyze_repository(repository_url, access_token):
             branches_json_file = os.path.join(repo_directory, "branches.json")
             save_json_file(branches, branches_json_file)
 
+        ## Commits Count per branch
+        commits_per_branch = retry_api(lambda: github_api.get_commit_count_per_branch(repository_url))
+        if commits_per_branch:
+            commits_per_branch_json_file = os.path.join(repo_directory, "commits_per_branch.json")
+            save_json_file(commits_per_branch, commits_per_branch_json_file)
+
     except Exception as e:
         print("An error occurred while analyzing the repository:")
         print(e)
