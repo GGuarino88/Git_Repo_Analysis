@@ -20,8 +20,8 @@
       </div>
       <div class="container">
          <h2>Repository Information</h2>
-         <div class="row d-flex">
-            <div class="col-md-6">
+         <div class="row d-flex full-height">
+            <div class="col-md-6 equal-height">
                <div class="result-card info">
                   <h3 class="underlined">Details</h3>
                   <div style="max-height: 400px; overflow-y: auto;">
@@ -66,93 +66,81 @@
                   </div>
                </div>
             </div>
-            <div class="col-md-6">
-               <div class="result-card">
-                  <h3 class="underlined">Branches</h3>
-                  <div style="max-height: 400px; overflow-y: auto;">
-                     <table class="table" id="tableContainer">
-                        <thead></thead>
-                        <tbody></tbody>
-                     </table>
+            <div id="myModal-{{ repo_name }}" class="modal">
+               <span class="close">&times;</span>
+               <img class="modal-content" id="img01-{{ repo_name }}">
+            </div>
+            <div class="row full-height">
+               <div class="col-md-12">
+                  <h2>Commits Summary</h2>
+               </div>
+               <div class="col-md-6 equal-height">
+                  <div class="result-card">
+                     <h3 class="underlined">Graph</h3>
+                     <div>
+                        <strong>The graph visually shows contributors' commits in the repository:</strong>
+                        <ul>
+                           <li>X-axis: Contributors' names are displayed</li>
+                           <li>Y-axis: Number of commits made by contributors</li>
+                        </ul>
+                     </div>
+                     <div id="contributors-{{ repo_name }}"></div>
+                  </div>
+               </div>
+               <div class="col-md-6 equal-height">
+                  <div class="result-card">
+                     <h3 class="underlined">Contributors</h3>
+                     <div style="max-height: 500px; overflow-y: auto;">
+                        <table class="table">
+                           <thead>
+                              <tr>
+                                 <th>Contributor</th>
+                                 <th>Number of Commits</th>
+                              </tr>
+                           </thead>
+                           <tbody id="contributorsTableBody-{{ repo_name }}"></tbody>
+                        </table>
+                     </div>
                   </div>
                </div>
             </div>
+            <div class="row full-height">
+               <div class="col-md-12">
+                  <h2>Code Churn Over Time</h2>
+               </div>
+               <div class="col-md-6 equal-height">
+                  <div class="result-card">
+                     <h3 class="underlined">Graph</h3>
+                     <div>
+                        <strong>Illustrates code churn over time, showing code changes</strong><br>
+                        <strong>(additions, deletions, commits)</strong>
+                        <div id="code-{{ repo_name }}"></div>
+                     </div>
+                  </div>
+               </div>
+               <div class="col-md-6 equal-height">
+                  <div class="result-card">
+                     <h3 class="underlined">Details</h3>
+                     <div style="max-height: 500px; overflow-y: auto;">
+                        <table class="table">
+                           <thead>
+                              <tr>
+                                 <th>Date</th>
+                                 <th>Additions</th>
+                                 <th>Deletions</th>
+                                 <th>Modifications</th>
+                              </tr>
+                           </thead>
+                           <tbody id="codeChurnTableBody-{{ repo_name }}"></tbody>
+                        </table>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div style="height: 100px;"></div>
+            <div class="repo-info" name="{{ repo_name }}"></div>
+            <div id="path-{{ repo_name }}" name="{{ repo_name }}" url="{% static "results/" %}{{ repo_name }}/" style="display: none;">
          </div>
-         <div id="myModal-{{ repo_name }}" class="modal">
-            <span class="close">&times;</span>
-            <img class="modal-content" id="img01-{{ repo_name }}">
-         </div>
-         <div class="row full-height">
-            <div class="col-md-12">
-               <h2>Commits Summary</h2>
-            </div>
-            <div class="col-md-6 equal-height">
-               <div class="result-card">
-                  <h3 class="underlined">Graph</h3>
-                  <div>
-                     <strong>The graph visually shows contributors' commits in the repository:</strong>
-                     <ul>
-                        <li>X-axis: Contributors' names are displayed</li>
-                        <li>Y-axis: Number of commits made by contributors</li>
-                     </ul>
-                  </div>
-                  <div id="contributors-{{ repo_name }}"></div>
-               </div>
-            </div>
-            <div class="col-md-6 equal-height">
-               <div class="result-card">
-                  <h3 class="underlined">Contributors</h3>
-                  <div style="max-height: 500px; overflow-y: auto;">
-                     <table class="table">
-                        <thead>
-                           <tr>
-                              <th>Contributor</th>
-                              <th>Number of Commits</th>
-                           </tr>
-                        </thead>
-                        <tbody id="contributorsTableBody-{{ repo_name }}"></tbody>
-                     </table>
-                  </div>
-               </div>
-            </div>
-         </div>
-         <div class="row full-height">
-            <div class="col-md-12">
-               <h2>Code Churn Over Time</h2>
-            </div>
-            <div class="col-md-6 equal-height">
-               <div class="result-card">
-                  <h3 class="underlined">Graph</h3>
-                  <div>
-                     <strong>Illustrates code churn over time, showing code changes</strong><br>
-                     <strong>(additions, deletions, commits)</strong>
-                     <div id="code-{{ repo_name }}"></div>
-                  </div>
-               </div>
-            </div>
-            <div class="col-md-6 equal-height">
-               <div class="result-card">
-                  <h3 class="underlined">Details</h3>
-                  <div style="max-height: 500px; overflow-y: auto;">
-                     <table class="table">
-                        <thead>
-                           <tr>
-                              <th>Date</th>
-                              <th>Additions</th>
-                              <th>Deletions</th>
-                              <th>Modifications</th>
-                           </tr>
-                        </thead>
-                        <tbody id="codeChurnTableBody-{{ repo_name }}"></tbody>
-                     </table>
-                  </div>
-               </div>
-            </div>
-         </div>
-         <div style="height: 100px;"></div>
-         <div class="repo-info" name="{{ repo_name }}"></div>
-         <div id="path-{{ repo_name }}" name="{{ repo_name }}" url="{% static "results/" %}{{ repo_name }}/" style="display: none;">
-      </div>
       </div>
       <footer>© 2023 GitHub Repository Analyzer. All rights reserved by BU MET CS673 Summer 2023 Team 1.</footer>
    </body>

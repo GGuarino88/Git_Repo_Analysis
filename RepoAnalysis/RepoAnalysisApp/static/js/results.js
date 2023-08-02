@@ -52,24 +52,35 @@
       protectedHeader.textContent = "Protected";
       headerRow.appendChild(protectedHeader);
       table.appendChild(headerRow);
-      data.forEach((item) => {
-         const row = document.createElement("tr");
-         const branchNameCell = document.createElement("td");
-         const branchLink = document.createElement("a");
-         branchLink.href = `${data1.html_url}/tree/${item.name}`;
-         branchLink.textContent = item.name;
-         branchLink.target = "_blank";
-         branchNameCell.appendChild(branchLink);
-         row.appendChild(branchNameCell);
-         const commitsCountCell = document.createElement("td");
-         commitsCountCell.textContent = commitsData[item.name] || 0;
-         row.appendChild(commitsCountCell);
-         const protectedCell = document.createElement("td");
-         protectedCell.textContent = item.protected;
-         row.appendChild(protectedCell);
-         table.appendChild(row);
+      const rowsWithCommits = data.map((item) => {
+         const commitsCount = commitsData[item.name] || 0;
+         return {
+            row: createRow(item, commitsCount, data1),
+            commitsCount: commitsCount
+         };
+      });
+      rowsWithCommits.sort((a, b) => b.commitsCount - a.commitsCount);
+      rowsWithCommits.forEach((rowWithCommits) => {
+         table.appendChild(rowWithCommits.row);
       });
       tableContainer.appendChild(table);
+   }
+   function createRow(item, commitsCount, data1) {
+      const row = document.createElement("tr");
+      const branchNameCell = document.createElement("td");
+      const branchLink = document.createElement("a");
+      branchLink.href = `${data1.html_url}/tree/${item.name}`;
+      branchLink.textContent = item.name;
+      branchLink.target = "_blank";
+      branchNameCell.appendChild(branchLink);
+      row.appendChild(branchNameCell);
+      const commitsCountCell = document.createElement("td");
+      commitsCountCell.textContent = commitsCount;
+      row.appendChild(commitsCountCell);
+      const protectedCell = document.createElement("td");
+      protectedCell.textContent = item.protected;
+      row.appendChild(protectedCell);
+      return row;
    }
    async function plot_contributors(url, repoName) {
       const path = url + "contributors_graph.json";
@@ -257,14 +268,12 @@
       var data = await get_data(path);
       const releasesContainer = document.getElementById(`releasesContainer-${repoName}`);
       releasesContainer.innerHTML = "";
-
       if (!data || data.length === 0) {
          const noReleasesMessage = document.createElement("h3");
          noReleasesMessage.textContent = "No releases are created on this repository.";
          releasesContainer.appendChild(noReleasesMessage);
          return;
       }
-
       const table = document.createElement("table");
       table.className = "table";
       const thead = document.createElement("thead");
@@ -296,7 +305,6 @@
          row.appendChild(bodyCell);
          tbody.appendChild(row);
       });
-
       releasesContainer.appendChild(table);
    }
    window.addEventListener("DOMContentLoaded", () => {
@@ -304,7 +312,6 @@
       for (let i = 0; i < repoElements.length; i++) {
          const repoName = repoElements[i].getAttribute("name");
          const url = document.getElementById(`path-${repoName}`).getAttribute('url')
-
          populateRepoInfo(url, repoName)
          table_branches(url, repoName)
          plot_contributors(url, repoName)
@@ -317,7 +324,6 @@
          plot_releases(url, repoName)
       }
    })
-
    function openModal(imgElement) {
       var modal = document.getElementById("myModal");
       var modalImg = document.getElementById("img01");
