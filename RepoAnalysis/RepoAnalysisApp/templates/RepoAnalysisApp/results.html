@@ -2,11 +2,11 @@
 {% load static %}
 <html>
    <head>
-      <title>Analysis Results</title>
       <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
       <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
       <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
       <link href="{% static 'css/results.css'%}" rel="stylesheet">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
       <script src="{% static 'js/results.js' %}"></script>
       <script src="https://cdn.plot.ly/plotly-2.24.1.min.js" charset="utf-8"></script>
       <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
@@ -20,16 +20,68 @@
          <a href="{% url 'logout'%}">Logout</a>
       </div>
       <div class="container">
-         <h1>Analysis Results</h1>
-         <div class="result-card">
-
-         <div style="text-align: center;">
-            <h3>Repository URL</h3>
-            <a class="lead" href="{{ repository_url }}" target="_blank"> {{ repository_url }}</a></div>
+         <h2>Repository Information</h2>
+         <div class="row">
+            <div class="col-md-6">
+               <div class="result-card info">
+                  <h3 class="underlined">Details</h3>
+                  <div style="max-height: 400px; overflow-y: auto;">
+                     <table class="table" id="repoInfoTable-{{ repo_name }}">
+                        <tbody>
+                           <tr>
+                              <td><strong>ID</strong></td>
+                              <td id="repoId-{{ repo_name }}"></td>
+                           </tr>
+                           <tr>
+                              <td><strong>Name</strong></td>
+                              <td id="repoName-{{ repo_name }}"></td>
+                           </tr>
+                           <tr>
+                              <td><strong>Public Repository</strong></td>
+                              <td id="privateRepo-{{ repo_name }}"></td>
+                           </tr>
+                           <tr>
+                              <td><strong>Repository URL</strong></td>
+                              <td id="repoURL">
+                                 <a id="repoLink-{{ repo_name }}" href="" target="_blank"></a>
+                              </td>
+                           </tr>
+                           <tr>
+                              <td><strong>Size</strong></td>
+                              <td id="repoSize-{{ repo_name }}"></td>
+                           </tr>
+                           <tr>
+                              <td><strong>Created At</strong></td>
+                              <td id="created_at-{{ repo_name }}"></td>
+                           </tr>
+                           <tr>
+                              <td><strong>Updated At</strong></td>
+                              <td id="updated_at-{{ repo_name }}"></td>
+                           </tr>
+                           <tr>
+                              <td><strong>Pushed At</strong></td>
+                              <td id="pushed_at-{{ repo_name }}"></td>
+                           </tr>
+                        </tbody>
+                     </table>
+                  </div>
+               </div>
+            </div>
+            <div class="col-md-6 equal-height">
+               <div class="result-card">
+                  <h3 class="underlined">Branches</h3>
+                  <div style="max-height: 400px; overflow-y: auto;">
+                     <table class="table" id="tableContainer">
+                        <thead></thead>
+                        <tbody></tbody>
+                     </table>
+                  </div>
+               </div>
+            </div>
          </div>
-         <div id="myModal" class="modal">
+         <div id="myModal-{{ repo_name }}" class="modal">
             <span class="close">&times;</span>
-            <img class="modal-content" id="img01">
+            <img class="modal-content" id="img01-{{ repo_name }}">
          </div>
          <div class="row full-height">
             <div class="col-md-12">
@@ -38,29 +90,30 @@
             <div class="col-md-6 equal-height">
                <div class="result-card">
                   <h3 class="underlined">Graph</h3>
-                  <div>The graph provides a visual representation of the commits made by contributors to repository. On the x-axis, we have the contributors' names. On the y-axis, we have the number of commits made, representing the volume of contributions. </div>
-                  <div id="contributors"></div>
+                  <div>
+                     <strong>The graph visually shows contributors' commits in the repository:</strong>
+                     <ul>
+                        <li>X-axis: Contributors' names are displayed</li>
+                        <li>Y-axis: Number of commits made by contributors</li>
+                     </ul>
+                  </div>
+                  <div id="contributors-{{ repo_name }}"></div>
                </div>
             </div>
             <div class="col-md-6 equal-height">
                <div class="result-card">
-                  <h3 class="underlined">Details</h3>
-                  <table class="table">
-                     <thead>
-                        <tr>
-                           <th>Contributor</th>
-                           <th>Number of Commits</th>
-                        </tr>
-                     </thead>
-                     <tbody>
-                        {% for contributor in contributors_data %}
-                        <tr>
-                           <td>{{ contributor.login }}</td>
-                           <td>{{ contributor.contributions }}</td>
-                        </tr>
-                        {% endfor %}
-                     </tbody>
-                  </table>
+                  <h3 class="underlined">Contributors</h3>
+                  <div style="max-height: 500px; overflow-y: auto;">
+                     <table class="table">
+                        <thead>
+                           <tr>
+                              <th>Contributor</th>
+                              <th>Number of Commits</th>
+                           </tr>
+                        </thead>
+                        <tbody id="contributorsTableBody-{{ repo_name }}"></tbody>
+                     </table>
+                  </div>
                </div>
             </div>
          </div>
@@ -72,50 +125,78 @@
                <div class="result-card">
                   <h3 class="underlined">Graph</h3>
                   <div>
-                     The graph represents the fluctuation in code churn over time, illustrating the quantity of code additions, deletions, and commits at various time points. </div>
-
-                  <div id="code"></div>
+                     <strong>Illustrates code churn over time, showing code changes</strong><br>
+                     <strong>(additions, deletions, commits)</strong>
+                     <div id="code-{{ repo_name }}"></div>
+                  </div>
                </div>
             </div>
             <div class="col-md-6 equal-height">
                <div class="result-card">
                   <h3 class="underlined">Details</h3>
-                  <ul class="list-group">
-                     {% for code_churn in code_churn_data %}
-                     <li class="list-group-item">Additions: {{ code_churn.additions }}, Deletions: {{ code_churn.deletions }}, Commits: {{ code_churn.commits }}</li>
-                     {% endfor %}
-                  </ul>
+                  <div style="max-height: 500px; overflow-y: auto;">
+                     <table class="table">
+                        <thead>
+                           <tr>
+                              <th>Date</th>
+                              <th>Additions</th>
+                              <th>Deletions</th>
+                              <th>Modifications</th>
+                           </tr>
+                        </thead>
+                        <tbody id="codeChurnTableBody-{{ repo_name }}"></tbody>
+                     </table>
+                  </div>
                </div>
             </div>
          </div>
          <div class="result-card">
             <h2>Commit Activity</h2>
             <div style="padding-top: 15px;">The graph represents the frequency and distribution of code commits over time, indicating the level of project activity and contributor engagement.</div>
-            <div id="commit"></div>
+            <div id="commit-{{ repo_name }}"></div>
          </div>
          <div class="result-card">
             <h2>Pull Requests</h2>
             <div style="padding-top: 15px;">The graph represents the number and frequency of pull requests made by users in a repository.</div>
-            <div id="pull"></div>
+            <div id="pull-{{ repo_name }}"></div>
          </div>
-         <div class="result-card">
-            <h2>Issues</h2>
-            <div id="issues"></div>
-            <div style="padding-top: 15px;">The graph provides a visual representation of the various issues faced by users in the repository, demonstrating the frequency and types of issues.</div>
+         <div class="row full-height">
+            <div class="col-md-12">
+               <h2>Languages used in this Repository</h2>
+            </div>
+            <div class="col-md-6 equal-height">
+               <div class="result-card">
+                  <h3 class="underlined">Graph</h3>
+                  <div style="padding-top: 15px;">The pie chart illustrates the distribution of different languages used, each represented as a proportion of the whole. </div>
+
+                  <div id="languagesChart-{{ repo_name }}"></div>
+               </div>
+            </div>
+            <div class="col-md-6 equal-height">
+               <div class="result-card">
+                  <h3 class="underlined">Languages</h3>
+                  <div style="max-height: 500px; overflow-y: auto;">
+                     <table class="table">
+                        <thead>
+                           <tr>
+                              <th>Language</th>
+                              <th>Total bytes</th>
+                           </tr>
+                        </thead>
+                        <tbody id="languagesTableBody-{{ repo_name }}"></tbody>
+                     </table>
+                  </div>
+               </div>
+            </div>
          </div>
-         <div class="result-card">
-            <h2>Languages</h2>
-            <div id="languages"></div>
+         <div class="col-md-12">
+            <div class="result-card">
+               <h3 class="underlined">Releases</h3>
+               <div style="max-height: 500px; overflow-y: auto;" id="releasesContainer-{{ repo_name }}"></div>
+            </div>
          </div>
-         <div class="result-card">
-            <h2>Releases</h2>
-            <div id="releases"></div>
-         </div>
-         <div class="result-card">
-            <h2>Traffic Views</h2>
-            <div id="views"></div>
-         </div>
-         <div id="path" url="{% static "results/" %}{{ repo_name }}/" style="display: none;">
+         <div id="path-{{ repo_name }}" url="{% static "results/" %}{{ repo_name }}/" style="display: none;">
+         <div class="repo-info" name="{{ repo_name }}"></div>
       </div>
       </div>
       <footer>© 2023 GitHub Repository Analyzer. All rights reserved by BU MET CS673 Summer 2023 Team 1.</footer>
