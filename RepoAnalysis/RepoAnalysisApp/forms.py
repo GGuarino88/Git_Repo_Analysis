@@ -1,8 +1,8 @@
 from django import forms
 from django.forms import ModelForm
-from .models import ScanSession, SingleURLRepo
+from .models import Semester, SemesterProject
 
-class ScanSessionForm(ModelForm):
+class SemesterForm(ModelForm):
     title = forms.CharField(widget=forms.TextInput(attrs={
         'class': 'form-control',
         'id' : 'title',
@@ -11,10 +11,19 @@ class ScanSessionForm(ModelForm):
         'size' : 50
     }))
     class Meta:
-        model = ScanSession
+        model = Semester
         fields = ['title', ]
 
-class SingleURLRepoForm(ModelForm):
+class ProjectForm(ModelForm):
+    
+    team_name = forms.CharField(widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        'id' : 'team_name',
+        'type': 'text',
+        'placeholder': 'Enter Team Name',
+        'size' : 50
+    }))
+    
     repo_name = forms.CharField(widget=forms.TextInput(attrs={
         'class': 'form-control',
         'id' : 'repo_name',
@@ -30,7 +39,7 @@ class SingleURLRepoForm(ModelForm):
         'placeholder': 'Enter Repository URL',
         'size' : 50
     }))
-
+    
     class Meta:
-        model = SingleURLRepo
-        fields = ['repo_name', 'url_name']
+        model = SemesterProject
+        fields = ['team_name', 'repo_name', 'url_name']

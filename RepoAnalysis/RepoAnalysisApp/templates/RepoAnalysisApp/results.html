@@ -21,46 +21,62 @@
       </div>
       <div class="container">
          <h2>Repository Information</h2>
-         <div class="result-card info">
-            <div style="text-align: center;">
-               <table class="table" id="repoInfoTable-{{ repo_name }}">
-                  <tbody>
-                     <tr>
-                        <td><strong>ID</strong></td>
-                        <td id="repoId-{{ repo_name }}"></td>
-                     </tr>
-                     <tr>
-                        <td><strong>Name</strong></td>
-                        <td id="repoName-{{ repo_name }}"></td>
-                     </tr>
-                     <tr>
-                        <td><strong>Public Repository</strong></td>
-                        <td id="privateRepo-{{ repo_name }}"></td>
-                     </tr>
-                     <tr>
-                        <td><strong>Repository URL</strong></td>
-                        <td id="repoURL">
-                           <a id="repoLink-{{ repo_name }}" href="" target="_blank"></a>
-                        </td>
-                     </tr>
-                     <tr>
-                        <td><strong>Size</strong></td>
-                        <td id="repoSize-{{ repo_name }}"></td>
-                     </tr>
-                     <tr>
-                        <td><strong>Created At</strong></td>
-                        <td id="created_at-{{ repo_name }}"></td>
-                     </tr>
-                     <tr>
-                        <td><strong>Updated At</strong></td>
-                        <td id="updated_at-{{ repo_name }}"></td>
-                     </tr>
-                     <tr>
-                        <td><strong>Pushed At</strong></td>
-                        <td id="pushed_at-{{ repo_name }}"></td>
-                     </tr>
-                  </tbody>
-               </table>
+         <div class="row">
+            <div class="col-md-6">
+               <div class="result-card info">
+                  <h3 class="underlined">Details</h3>
+                  <div style="max-height: 400px; overflow-y: auto;">
+                     <table class="table" id="repoInfoTable-{{ repo_name }}">
+                        <tbody>
+                           <tr>
+                              <td><strong>ID</strong></td>
+                              <td id="repoId-{{ repo_name }}"></td>
+                           </tr>
+                           <tr>
+                              <td><strong>Name</strong></td>
+                              <td id="repoName-{{ repo_name }}"></td>
+                           </tr>
+                           <tr>
+                              <td><strong>Public Repository</strong></td>
+                              <td id="privateRepo-{{ repo_name }}"></td>
+                           </tr>
+                           <tr>
+                              <td><strong>Repository URL</strong></td>
+                              <td id="repoURL">
+                                 <a id="repoLink-{{ repo_name }}" href="" target="_blank"></a>
+                              </td>
+                           </tr>
+                           <tr>
+                              <td><strong>Size</strong></td>
+                              <td id="repoSize-{{ repo_name }}"></td>
+                           </tr>
+                           <tr>
+                              <td><strong>Created At</strong></td>
+                              <td id="created_at-{{ repo_name }}"></td>
+                           </tr>
+                           <tr>
+                              <td><strong>Updated At</strong></td>
+                              <td id="updated_at-{{ repo_name }}"></td>
+                           </tr>
+                           <tr>
+                              <td><strong>Pushed At</strong></td>
+                              <td id="pushed_at-{{ repo_name }}"></td>
+                           </tr>
+                        </tbody>
+                     </table>
+                  </div>
+               </div>
+            </div>
+            <div class="col-md-6 equal-height">
+               <div class="result-card">
+                  <h3 class="underlined">Branches</h3>
+                  <div style="max-height: 400px; overflow-y: auto;">
+                     <table class="table" id="tableContainer">
+                        <thead></thead>
+                        <tbody></tbody>
+                     </table>
+                  </div>
+               </div>
             </div>
          </div>
          <div id="myModal-{{ repo_name }}" class="modal">
@@ -176,10 +192,6 @@
                <h3 class="underlined">Releases</h3>
                <div style="max-height: 500px; overflow-y: auto;" id="releasesContainer-{{ repo_name }}"></div>
             </div>
-         </div>
-         <div class="result-card">
-            <h2>Traffic Views</h2>
-            <div id="views-{{ repo_name }}"></div>
          </div>
          <div id="path-{{ repo_name }}" url="{% static "results/" %}{{ repo_name }}/" style="display: none;">
          <div class="repo-info" name="{{ repo_name }}"></div>

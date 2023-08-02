@@ -9,12 +9,12 @@
 </div>
 <div class="content-body" style="padding-top: 80px; padding-bottom: 100px; flex-grow: 1; overflow: auto; width: 100%;">
    <h1>GitHub Repository Analysis</h1>
-   <p>On this page, you can add repositories and generate insightful reports.</p>
-   <h2>{{ scan_session }}</h2>
+   <p>On this page, you can add Projects and generate insightful reports.</p>
+   <h2>Semester: {{ semester }}</h2>
    <div style="margin-bottom: 50px; max-width: 70%;" class="card1">
       <div class="card-body">
          <div class="d-flex justify-content-end">
-            <a type="button" class="btn btn-success mb-3" href="{% url 'repo-create' scan_session %}">Add a new Repository</a>
+            <a type="button" class="btn btn-success mb-3" href="{% url 'project-create' semester %}">Add a new Project</a>
          </div>
          <table class="table">
             <thead>
@@ -22,19 +22,21 @@
                   <th scope="col">
                      <input type="checkbox" id="selectAllCheckbox">
                   </th>
-                  <th scope="col">Team Name</th>
-                  <th scope="col">Repository URL</th>
+                  <th scope="col">Team</th>
+                  <th scope="col">Project Name</th>
+                  <th scope="col">GitHub URL</th>
                   <th scope="col">Action</th>
                </tr>
             </thead>
             <tbody>
-               {% for repo in user_scanned_repos %}
+               {% for repo in user_semester_projects %}
                <tr>
                   <td><input type="checkbox" class="repoCheckbox" name="selected_repos" value="{{ repo.url_name }}"></td>
+                  <td>{{ repo.team_name }}</td>
                   <td>{{ repo.repo_name }}</td>
                   <td><a href="{{ repo.url_name }}" target="_blank">{{ repo.url_name }}</a></td>
                   <td>
-                     <form action="{% url 'analyze' scan_session repo.repo_name %}" method="POST">
+                     <form action="{% url 'analyze' semester repo.repo_name %}" method="POST">
                         {% csrf_token %}
                         <div id="repositoryInput" class="form-group">
                            <input type="submit" class="btn btn-primary" name="submit" value="Generate Report">
@@ -42,15 +44,15 @@
                            <input type="hidden" name="input_method" value="repository">
                         </div>
                      </form>
-                     <a class="btn btn-warning btn-sm" href="{% url 'repo-edit' scan_session repo.id %}">Edit</a>
-                     <a class="btn btn-danger btn-sm" href="{% url 'repo-delete' scan_session repo.id %}">Delete</a>
+                     <a class="btn btn-warning btn-sm" href="{% url 'project-edit' semester repo.id %}">Edit</a>
+                     <a class="btn btn-danger btn-sm" href="{% url 'project-delete' semester repo.id %}">Delete</a>
                   </td>
                </tr>
                {% endfor %}
             </tbody>
          </table>
          <div class="d-flex justify-content-center mt-3" style="margin: auto; gap: 20px;">
-            <form method="POST" id="generateAllReportsForm" action="{% url 'generate-all-reports' scan_session %}">
+            <form method="POST" id="generateAllReportsForm" action="{% url 'generate-all-reports' semester %}">
                {% csrf_token %}
                <input type="hidden" name="selected_repos" id="selectedReposField" value="">
                <button type="submit" class="btn btn-info" id="generateAllReportsBtn" disabled>Generate All Reports</button>

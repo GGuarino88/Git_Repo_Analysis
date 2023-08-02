@@ -7,7 +7,7 @@
          console.log(error)
       }
    }
-   async function populateRepoInfo(url,repoName) {
+   async function populateRepoInfo(url, repoName) {
       const path = url + "repo_info.json";
       var data = await get_data(path);
       const repoIdCell = document.getElementById(`repoId-${repoName}`);
@@ -27,11 +27,42 @@
       createdAtCell.textContent = data.created_at;
       updatedAtCell.textContent = data.updated_at;
       pushedAtCell.textContent = data.pushed_at;
-      createdAtCell.textContent = data.created_at.slice(0, -1);
-      updatedAtCell.textContent = data.updated_at.slice(0, -1);
-      pushedAtCell.textContent = data.pushed_at.slice(0, -1);
+      createdAtCell.textContent = data.created_at.slice(0, -1).replace("T", " ");
+      updatedAtCell.textContent = data.updated_at.slice(0, -1).replace("T", " ");
+      pushedAtCell.textContent = data.pushed_at.slice(0, -1).replace("T", " ");
    }
-   async function plot_contributors(url,repoName) {
+   async function table_branches(url, repoName) {
+      const path1 = url + "repo_info.json";
+      var data1 = await get_data(path1);
+      const path = url + "branches.json";
+      var data = await get_data(path);
+      const tableContainer = document.getElementById("tableContainer");
+      const table = document.createElement("table");
+      table.classList.add("table");
+      const headerRow = document.createElement("tr");
+      const branchNameHeader = document.createElement("th");
+      branchNameHeader.textContent = "Branch Name";
+      headerRow.appendChild(branchNameHeader);
+      const protectedHeader = document.createElement("th");
+      protectedHeader.textContent = "Protected";
+      headerRow.appendChild(protectedHeader);
+      table.appendChild(headerRow);
+      data.forEach((item) => {
+         const row = document.createElement("tr");
+         const branchNameCell = document.createElement("td");
+         const branchLink = document.createElement("a");
+         branchLink.href = `${data1.html_url}/tree/${item.name}`;
+         branchLink.textContent = item.name;
+         branchNameCell.appendChild(branchLink);
+         row.appendChild(branchNameCell);
+         const protectedCell = document.createElement("td");
+         protectedCell.textContent = item.protected;
+         row.appendChild(protectedCell);
+         table.appendChild(row);
+      });
+      tableContainer.appendChild(table);
+   }
+   async function plot_contributors(url, repoName) {
       const path = url + "contributors_graph.json";
       var data = await get_data(path);
       const x = data.map(ob => ob.login);
@@ -173,41 +204,41 @@
       const firstWeek = data[index].week;
       const today = new Date().getTime();
       for (let i = 0; i < index; i++) {
-          const missingWeek = firstWeek - (index - i) * 86400;
-          week.push(formatDate(missingWeek * 1000));
-          total.push(0);
+         const missingWeek = firstWeek - (index - i) * 86400;
+         week.push(formatDate(missingWeek * 1000));
+         total.push(0);
       }
       for (let i = index; i < data.length; i++) {
-          week.push(formatDate(data[i].week * 1000));
-          total.push(data[i].total);
+         week.push(formatDate(data[i].week * 1000));
+         total.push(data[i].total);
       }
       var plot_data = {
-          x: week,
-          y: total,
+         x: week,
+         y: total,
       };
       Plotly.newPlot(commit, [plot_data]);
-  }
+   }
    async function plot_pr(url, repoName) {
       const path = url + "pull_requests.json";
       var data = await get_data(path);
       const pull = document.getElementById(`pull-${repoName}`);
-      
+
       if (!data || data.length === 0) {
-        const noPRMessage = document.createElement("h3");
-        noPRMessage.textContent = "No PR's are made to this repository.";
-        pull.appendChild(noPRMessage);
-        return;
+         const noPRMessage = document.createElement("h3");
+         noPRMessage.textContent = "No PR's are made to this repository.";
+         pull.appendChild(noPRMessage);
+         return;
       }
-    
+
       const pr_data = _.countBy(data, 'user.login');
       var plot_data = {
-        x: Object.keys(pr_data),
-        y: Object.values(pr_data),
-        type: 'bar'
+         x: Object.keys(pr_data),
+         y: Object.values(pr_data),
+         type: 'bar'
       };
-    
+
       Plotly.newPlot(pull, [plot_data]);
-    }    
+   }
    async function plot_releases(url, repoName) {
       const path = url + "releases.json";
       var data = await get_data(path);
@@ -215,21 +246,21 @@
       releasesContainer.innerHTML = "";
 
       if (!data || data.length === 0) {
-          const noReleasesMessage = document.createElement("h3");
-          noReleasesMessage.textContent = "No releases are created on this repository.";
-          releasesContainer.appendChild(noReleasesMessage);
-          return;
+         const noReleasesMessage = document.createElement("h3");
+         noReleasesMessage.textContent = "No releases are created on this repository.";
+         releasesContainer.appendChild(noReleasesMessage);
+         return;
       }
-      
+
       const table = document.createElement("table");
       table.className = "table";
       const thead = document.createElement("thead");
       const tr = document.createElement("tr");
       const headers = ["Created At", "Name", "Tag Name", "Message"];
       headers.forEach(header => {
-          const th = document.createElement("th");
-          th.textContent = header;
-          tr.appendChild(th);
+         const th = document.createElement("th");
+         th.textContent = header;
+         tr.appendChild(th);
       });
       thead.appendChild(tr);
       table.appendChild(thead);
@@ -237,59 +268,34 @@
       tbody.id = `releasesTableBody-${repoName}`;
       table.appendChild(tbody);
       data.forEach(release => {
-          const row = document.createElement("tr");
-          const createdAtCell = document.createElement("td");
-          const nameCell = document.createElement("td");
-          const tagNameCell = document.createElement("td");
-          const bodyCell = document.createElement("td");
-  
-          createdAtCell.textContent = release.created_at;
-          nameCell.textContent = release.name;
-          tagNameCell.textContent = release.tag_name;
-          bodyCell.textContent = release.body;
-  
-          row.appendChild(createdAtCell);
-          row.appendChild(nameCell);
-          row.appendChild(tagNameCell);
-          row.appendChild(bodyCell);
-          tbody.appendChild(row);
+         const row = document.createElement("tr");
+         const createdAtCell = document.createElement("td");
+         const nameCell = document.createElement("td");
+         const tagNameCell = document.createElement("td");
+         const bodyCell = document.createElement("td");
+
+         createdAtCell.textContent = release.created_at;
+         nameCell.textContent = release.name;
+         tagNameCell.textContent = release.tag_name;
+         bodyCell.textContent = release.body;
+
+         row.appendChild(createdAtCell);
+         row.appendChild(nameCell);
+         row.appendChild(tagNameCell);
+         row.appendChild(bodyCell);
+         tbody.appendChild(row);
       });
-  
+
       releasesContainer.appendChild(table);
-  } 
-   async function plot_views(url, repoName) {
-      const path = url + "traffic_views.json"
-      var data = await get_data(path)
-      const views = document.getElementById(`views-${repoName}`)
-      if (!data || data.message) {
-         const noViewMessage = document.createElement("h3");
-         noViewMessage.textContent = data.message;
-         views.appendChild(noViewMessage);
-         return;
-       }
-      const view_data = data.views
-      const timestamps = view_data.map(view => view.timestamp.slice(0, 10))
-      const count = view_data.map(view => view.count)
-      const uniques = view_data.map(view => view.uniques)
-      var count_trace = {
-         x: timestamps,
-         y: count,
-         name: 'count'
-      }
-      var unique_trace = {
-         x: timestamps,
-         y: uniques,
-         name: 'uniques'
-      }
-      Plotly.newPlot(views, [count_trace, unique_trace])
    }
    window.addEventListener("DOMContentLoaded", () => {
       const repoElements = document.querySelectorAll(".repo-info");
-      for(let i = 0; i < repoElements.length; i++){
+      for (let i = 0; i < repoElements.length; i++) {
          const repoName = repoElements[i].getAttribute("name");
          const url = document.getElementById(`path-${repoName}`).getAttribute('url')
 
-         populateRepoInfo(url,repoName)
+         populateRepoInfo(url, repoName)
+         table_branches(url, repoName)
          plot_contributors(url, repoName)
          populateContributorsTable(url, repoName)
          plot_code_churn(url, repoName)
@@ -298,11 +304,9 @@
          plot_pr(url, repoName)
          plot_lang(url, repoName)
          plot_releases(url, repoName)
-         plot_views(url, repoName)
-
       }
    })
-   
+
    function openModal(imgElement) {
       var modal = document.getElementById("myModal");
       var modalImg = document.getElementById("img01");
