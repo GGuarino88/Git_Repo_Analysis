@@ -364,7 +364,7 @@
       table.className = "table";
       const thead = document.createElement("thead");
       const tr = document.createElement("tr");
-      const headers = ["Created At", "Name", "Tag Name", "Message"];
+      const headers = ["Released On", "Name", "Tag Name", "Message"];
       headers.forEach(header =>
       {
          const th = document.createElement("th");
