@@ -20,7 +20,7 @@
       </div>
       <div class="container">
          <h2>Repository Information</h2>
-         <div class="row">
+         <div class="row d-flex">
             <div class="col-md-6">
                <div class="result-card info">
                   <h3 class="underlined">Details</h3>
@@ -66,7 +66,7 @@
                   </div>
                </div>
             </div>
-            <div class="col-md-6 equal-height">
+            <div class="col-md-6">
                <div class="result-card">
                   <h3 class="underlined">Branches</h3>
                   <div style="max-height: 400px; overflow-y: auto;">
@@ -149,8 +149,8 @@
                </div>
             </div>
          </div>
-         <div class="repo-info" name="{{ repo_name }}">
-         </div>
+         <div style="height: 100px;"></div>
+         <div class="repo-info" name="{{ repo_name }}"></div>
          <div id="path-{{ repo_name }}" name="{{ repo_name }}" url="{% static "results/" %}{{ repo_name }}/" style="display: none;">
       </div>
       </div>

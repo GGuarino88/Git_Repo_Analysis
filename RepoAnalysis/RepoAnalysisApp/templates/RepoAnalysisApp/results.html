@@ -21,7 +21,7 @@
       </div>
       <div class="container">
          <h2>Repository Information</h2>
-         <div class="row">
+         <div class="row d-flex">
             <div class="col-md-6">
                <div class="result-card info">
                   <h3 class="underlined">Details</h3>
@@ -67,7 +67,7 @@
                   </div>
                </div>
             </div>
-            <div class="col-md-6 equal-height">
+            <div class="col-md-6">
                <div class="result-card">
                   <h3 class="underlined">Branches</h3>
                   <div style="max-height: 400px; overflow-y: auto;">
@@ -188,13 +188,14 @@
             </div>
          </div>
          <div class="col-md-12">
-            <div class="result-card">
+            <div class="result-card" style="max-height: 300px;">
                <h3 class="underlined">Releases</h3>
-               <div style="max-height: 500px; overflow-y: auto;" id="releasesContainer-{{ repo_name }}"></div>
+               <div style="max-height: 100%; overflow-y: auto;" id="releasesContainer-{{ repo_name }}"></div>
             </div>
          </div>
-         <div id="path-{{ repo_name }}" url="{% static "results/" %}{{ repo_name }}/" style="display: none;">
+         <div style="height: 100px;"></div>
          <div class="repo-info" name="{{ repo_name }}"></div>
+         <div id="path-{{ repo_name }}" url="{% static "results/" %}{{ repo_name }}/" style="display: none;">
       </div>
       </div>
       <footer>© 2023 GitHub Repository Analyzer. All rights reserved by BU MET CS673 Summer 2023 Team 1.</footer>
