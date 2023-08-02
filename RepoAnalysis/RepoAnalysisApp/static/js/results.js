@@ -1,13 +1,22 @@
-(function () {
-   async function get_data(path) {
-      try {
-         var response = await fetch(path)
-         return await response.json()
-      } catch (error) {
-         console.log(error)
+(function ()
+{
+   async function get_data(path)
+   {
+      try
+      {
+         var response = await fetch(path);
+         var responseData = await response.json();
+         // console.log("API response:", responseData) // enable while debugging
+         return responseData;
+      }
+      catch (error)
+      {
+         console.log("Fetch Error:", error);
       }
    }
-   async function populateRepoInfo(url, repoName) {
+
+   async function populateRepoInfo(url, repoName)
+   {
       const path = url + "repo_info.json";
       var data = await get_data(path);
       const repoIdCell = document.getElementById(`repoId-${repoName}`);
@@ -31,7 +40,9 @@
       updatedAtCell.textContent = data.updated_at.slice(0, -1).replace("T", " ");
       pushedAtCell.textContent = data.pushed_at.slice(0, -1).replace("T", " ");
    }
-   async function table_branches(url, repoName) {
+
+   async function branchesTable(url, repoName)
+   {
       const path1 = url + "repo_info.json";
       var data1 = await get_data(path1);
       const path = url + "branches.json";
@@ -52,7 +63,8 @@
       protectedHeader.textContent = "Protected";
       headerRow.appendChild(protectedHeader);
       table.appendChild(headerRow);
-      const rowsWithCommits = data.map((item) => {
+      const rowsWithCommits = data.map((item) =>
+      {
          const commitsCount = commitsData[item.name] || 0;
          return {
             row: createRow(item, commitsCount, data1),
@@ -60,12 +72,15 @@
          };
       });
       rowsWithCommits.sort((a, b) => b.commitsCount - a.commitsCount);
-      rowsWithCommits.forEach((rowWithCommits) => {
+      rowsWithCommits.forEach((rowWithCommits) =>
+      {
          table.appendChild(rowWithCommits.row);
       });
       tableContainer.appendChild(table);
    }
-   function createRow(item, commitsCount, data1) {
+
+   function createRow(item, commitsCount, data1)
+   {
       const row = document.createElement("tr");
       const branchNameCell = document.createElement("td");
       const branchLink = document.createElement("a");
@@ -82,7 +97,9 @@
       row.appendChild(protectedCell);
       return row;
    }
-   async function plot_contributors(url, repoName) {
+
+   async function plot_contributors(url, repoName)
+   {
       const path = url + "contributors_graph.json";
       var data = await get_data(path);
       const x = data.map(ob => ob.login);
@@ -93,13 +110,17 @@
          type: 'bar'
       };
       var layout = {
-         xaxis: {
-            title: {
+         xaxis:
+         {
+            title:
+            {
                text: 'Contributors'
             }
          },
-         yaxis: {
-            title: {
+         yaxis:
+         {
+            title:
+            {
                text: 'No. of Contributions'
             }
          },
@@ -108,12 +129,15 @@
       const contributions = document.getElementById(`contributors-${repoName}`);
       Plotly.newPlot(contributions, [plot_data], layout);
    }
-   async function populateContributorsTable(url, repoName) {
+
+   async function populateContributorsTable(url, repoName)
+   {
       const path = url + "contributors_graph.json";
       var data = await get_data(path);
       const contributorsTableBody = document.getElementById(`contributorsTableBody-${repoName}`);
       contributorsTableBody.innerHTML = "";
-      data.forEach(contributor => {
+      data.forEach(contributor =>
+      {
          const row = document.createElement("tr");
          const contributorCell = document.createElement("td");
          const contributorLink = document.createElement("a");
@@ -128,36 +152,176 @@
          contributorsTableBody.appendChild(row);
       });
    }
-   async function populateCodeChurnTable(url, repoName) {
+
+   async function plot_code_churn(url, repoName)
+   {
+      const path = url + "code_churn_over_time.json";
+      try
+      {
+         var data = await get_data(path);
+         if (!data)
+         {
+            console.error("Invalid data format: undefined");
+            return;
+         }
+         const code = document.getElementById(`code-${repoName}`);
+         const week = data.map(ob => formatDate(ob[0] * 1000));
+         const additions = data.map(ob => ob[1]);
+         const deletions = data.map(ob => -ob[2]);
+         const modifications = additions.map((val, ind) => val + deletions[ind]);
+         var addtion_trace = {
+            x: week,
+            y: additions,
+            name: "additions",
+            type: "line",
+         };
+         var deletion_trace = {
+            x: week,
+            y: deletions,
+            name: "deletions",
+            type: "line",
+         };
+         var modification_trace = {
+            x: week,
+            y: modifications,
+            name: "modifications",
+            type: "line",
+         };
+         var layout = {
+            xaxis:
+            {
+               title:
+               {
+                  text: 'Date'
+               }
+            },
+            yaxis:
+            {
+               title:
+               {
+                  text: 'lines of code'
+               }
+            }
+         };
+         Plotly.newPlot(code, [addtion_trace, deletion_trace, modification_trace], layout);
+      }
+      catch (error)
+      {
+         console.error("Error fetching or processing data:", error);
+      }
+   }
+
+   async function populateCodeChurnTable(url, repoName)
+   {
       const path = url + "code_churn_over_time.json";
       var data = await get_data(path);
       const codeChurnTableBody = document.getElementById(`codeChurnTableBody-${repoName}`);
       codeChurnTableBody.innerHTML = "";
-      data.forEach(codeChurn => {
+      data.forEach(codeChurn =>
+      {
          const row = document.createElement("tr");
          const timeCell = document.createElement("td");
          const additionsCell = document.createElement("td");
          const deletionsCell = document.createElement("td");
-         const modificationsCell = document.createElement("td");
-         timeCell.textContent = formatDate(codeChurn.additions * 1000);
-         additionsCell.textContent = codeChurn.additions;
-         deletionsCell.textContent = codeChurn.deletions;
-         modificationsCell.textContent = codeChurn.additions + codeChurn.deletions;
+         timeCell.textContent = formatDate(codeChurn[0] * 1000);
+         additionsCell.textContent = codeChurn[1];
+         deletionsCell.textContent = codeChurn[2];
          row.appendChild(timeCell);
          row.appendChild(additionsCell);
          row.appendChild(deletionsCell);
-         row.appendChild(modificationsCell);
          codeChurnTableBody.appendChild(row);
       });
    }
-   async function plot_lang(url, repoName) {
+
+   async function plot_commit(url, repoName)
+   {
+      const path = url + "commit_activity.json";
+      try
+      {
+         const data = await get_data(path);
+         if (!data || data.length === 0)
+         {
+            console.error("Error fetching or processing data: Data is empty or undefined.", data);
+            return;
+         }
+         const filteredData = [];
+         let firstZeroSequence = true;
+         for (const weekData of data)
+         {
+            if (firstZeroSequence && weekData.total === 0)
+            {
+               continue; // Skip the first sequence with total = 0
+            }
+            firstZeroSequence = false;
+            filteredData.push(weekData);
+         }
+         const weekLabels = filteredData.map((weekData) =>
+         {
+            const date = new Date(weekData.week * 1000);
+            return formatDate(date);
+         });
+         const commit = document.getElementById(`commit-${repoName}`);
+         const week = filteredData.map((weekData) => formatDate(weekData.week * 1000));
+         const total = filteredData.map((weekData) => weekData.total);
+         var plot_data = {
+            x: week,
+            y: total,
+         };
+         var layout = {
+            xaxis: {
+               title: 'Date',
+            },
+            yaxis: {
+               title: 'Count of Commits'
+            }
+         };
+         Plotly.newPlot(commit, [plot_data], layout);
+      }
+      catch (error)
+      {
+         console.error("Error fetching or processing data:", error);
+      }
+   }
+
+   async function plot_pr(url, repoName)
+   {
+      const path = url + "pull_requests.json";
+      var data = await get_data(path);
+      const pull = document.getElementById(`pull-${repoName}`);
+      if (!data || data.length === 0)
+      {
+         const noPRMessage = document.createElement("h3");
+         noPRMessage.textContent = "No PR's are made to this repository.";
+         pull.appendChild(noPRMessage);
+         return;
+      }
+      const pr_data = _.countBy(data, 'user');
+      var plot_data = {
+         x: Object.keys(pr_data),
+         y: Object.values(pr_data),
+         type: 'line'
+      };
+      var layout = {
+         xaxis: {
+            title: 'user',
+         },
+         yaxis: {
+            title: 'Count of Pull Requests'
+         }
+      };
+      Plotly.newPlot(pull, [plot_data], layout);
+   }
+
+   async function plot_lang(url, repoName)
+   {
       const path = url + "languages.json";
       var data = await get_data(path);
       const langTableBody = document.getElementById(`languagesTableBody-${repoName}`);
       const langChart = document.getElementById(`languagesChart-${repoName}`);
       langTableBody.innerHTML = "";
       langChart.innerHTML = "";
-      Object.entries(data).forEach(([language, total]) => {
+      Object.entries(data).forEach(([language, total]) =>
+      {
          const row = document.createElement("tr");
          const languageCell = document.createElement("td");
          const totalCell = document.createElement("td");
@@ -174,101 +338,23 @@
       };
       Plotly.newPlot(langChart, [plot_data]);
    }
-   const formatDate = (timestamp) => {
+   const formatDate = (timestamp) =>
+   {
       const date = new Date(timestamp)
       const year = date.getFullYear()
       const month = String(date.getMonth() + 1).padStart(2, '0')
       const day = String(date.getDate()).padStart(2, '0')
       return `${year}-${month}-${day}`
    }
-   async function plot_code_churn(url, repoName) {
-      const path = url + "code_churn_over_time.json";
-      var data = await get_data(path);
-      const code = document.getElementById(`code-${repoName}`);
-      const week = data.map(ob => formatDate(ob.additions * 1000));
-      const additions = data.map(ob => ob.deletions);
-      const deletions = data.map(ob => -ob.commits);
-      const modifications = additions.map((val, ind) => val + deletions[ind]);
-      var addtion_trace = {
-         x: week,
-         y: additions,
-         name: "addtions"
-      }
-      var deletion_trace = {
-         x: week,
-         y: deletions,
-         name: "deletions"
-      }
-      var modification_trace = {
-         x: week,
-         y: modifications,
-         name: "modifications"
-      }
-      var layout = {
-         xaxis: {
-            title: {
-               text: 'Date'
-            }
-         },
-         yaxis: {
-            title: {
-               text: 'lines of code'
-            }
-         }
-      }
-      Plotly.newPlot(code, [addtion_trace, deletion_trace, modification_trace], layout)
-   }
-   async function plot_commit(url, repoName) {
-      const path = url + "commit_activity.json";
-      var data = await get_data(path);
-      const commit = document.getElementById(`commit-${repoName}`);
-      const index = _.findIndex(data, (ob) => ob.total > 0);
-      const week = [];
-      const total = [];
-      const firstWeek = data[index].week;
-      const today = new Date().getTime();
-      for (let i = 0; i < index; i++) {
-         const missingWeek = firstWeek - (index - i) * 86400;
-         week.push(formatDate(missingWeek * 1000));
-         total.push(0);
-      }
-      for (let i = index; i < data.length; i++) {
-         week.push(formatDate(data[i].week * 1000));
-         total.push(data[i].total);
-      }
-      var plot_data = {
-         x: week,
-         y: total,
-      };
-      Plotly.newPlot(commit, [plot_data]);
-   }
-   async function plot_pr(url, repoName) {
-      const path = url + "pull_requests.json";
-      var data = await get_data(path);
-      const pull = document.getElementById(`pull-${repoName}`);
 
-      if (!data || data.length === 0) {
-         const noPRMessage = document.createElement("h3");
-         noPRMessage.textContent = "No PR's are made to this repository.";
-         pull.appendChild(noPRMessage);
-         return;
-      }
-
-      const pr_data = _.countBy(data, 'user.login');
-      var plot_data = {
-         x: Object.keys(pr_data),
-         y: Object.values(pr_data),
-         type: 'bar'
-      };
-
-      Plotly.newPlot(pull, [plot_data]);
-   }
-   async function plot_releases(url, repoName) {
+   async function plot_releases(url, repoName)
+   {
       const path = url + "releases.json";
       var data = await get_data(path);
       const releasesContainer = document.getElementById(`releasesContainer-${repoName}`);
       releasesContainer.innerHTML = "";
-      if (!data || data.length === 0) {
+      if (!data || data.length === 0)
+      {
          const noReleasesMessage = document.createElement("h3");
          noReleasesMessage.textContent = "No releases are created on this repository.";
          releasesContainer.appendChild(noReleasesMessage);
@@ -279,7 +365,8 @@
       const thead = document.createElement("thead");
       const tr = document.createElement("tr");
       const headers = ["Created At", "Name", "Tag Name", "Message"];
-      headers.forEach(header => {
+      headers.forEach(header =>
+      {
          const th = document.createElement("th");
          th.textContent = header;
          tr.appendChild(th);
@@ -289,7 +376,8 @@
       const tbody = document.createElement("tbody");
       tbody.id = `releasesTableBody-${repoName}`;
       table.appendChild(tbody);
-      data.forEach(release => {
+      data.forEach(release =>
+      {
          const row = document.createElement("tr");
          const createdAtCell = document.createElement("td");
          const nameCell = document.createElement("td");
@@ -307,13 +395,15 @@
       });
       releasesContainer.appendChild(table);
    }
-   window.addEventListener("DOMContentLoaded", () => {
+   window.addEventListener("DOMContentLoaded", () =>
+   {
       const repoElements = document.querySelectorAll(".repo-info");
-      for (let i = 0; i < repoElements.length; i++) {
+      for (let i = 0; i < repoElements.length; i++)
+      {
          const repoName = repoElements[i].getAttribute("name");
          const url = document.getElementById(`path-${repoName}`).getAttribute('url')
          populateRepoInfo(url, repoName)
-         table_branches(url, repoName)
+         branchesTable(url, repoName)
          plot_contributors(url, repoName)
          populateContributorsTable(url, repoName)
          plot_code_churn(url, repoName)
@@ -324,13 +414,16 @@
          plot_releases(url, repoName)
       }
    })
-   function openModal(imgElement) {
+
+   function openModal(imgElement)
+   {
       var modal = document.getElementById("myModal");
       var modalImg = document.getElementById("img01");
       modal.style.display = "block";
       modalImg.src = imgElement.src;
       var span = document.getElementsByClassName("close")[0];
-      span.onclick = function () {
+      span.onclick = function ()
+      {
          modal.style.display = "none";
       }
    }
