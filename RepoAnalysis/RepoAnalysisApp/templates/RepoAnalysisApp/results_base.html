@@ -24,7 +24,7 @@
             <div class="col-md-6 equal-height">
                <div class="result-card info">
                   <h3 class="underlined">Details</h3>
-                  <div style="max-height: 400px; overflow-y: auto;">
+                  <div style="max-height: 600px; overflow-y: auto;">
                      <table class="table" id="repoInfoTable-{{ repo_name }}">
                         <tbody>
                            <tr>
@@ -66,6 +66,18 @@
                   </div>
                </div>
             </div>
+            <div class="col-md-6 equal-height">
+               <div class="result-card">
+                  <h3 class="underlined">Branches</h3>
+                  <div style="max-height: 600px; overflow-y: auto;">
+                     <table class="table" id="tableContainer">
+                        <thead></thead>
+                        <tbody></tbody>
+                     </table>
+                  </div>
+               </div>
+            </div>
+         </div>
             <div id="myModal-{{ repo_name }}" class="modal">
                <span class="close">&times;</span>
                <img class="modal-content" id="img01-{{ repo_name }}">
@@ -90,7 +102,7 @@
                <div class="col-md-6 equal-height">
                   <div class="result-card">
                      <h3 class="underlined">Contributors</h3>
-                     <div style="max-height: 500px; overflow-y: auto;">
+                     <div style="max-height: 600px; overflow-y: auto;">
                         <table class="table">
                            <thead>
                               <tr>
@@ -121,14 +133,13 @@
                <div class="col-md-6 equal-height">
                   <div class="result-card">
                      <h3 class="underlined">Details</h3>
-                     <div style="max-height: 500px; overflow-y: auto;">
+                     <div style="max-height: 600px; overflow-y: auto;">
                         <table class="table">
                            <thead>
                               <tr>
                                  <th>Date</th>
                                  <th>Additions</th>
                                  <th>Deletions</th>
-                                 <th>Modifications</th>
                               </tr>
                            </thead>
                            <tbody id="codeChurnTableBody-{{ repo_name }}"></tbody>
