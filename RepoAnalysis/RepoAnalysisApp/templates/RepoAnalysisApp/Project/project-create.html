@@ -1,6 +1,6 @@
-{% extends "RepoAnalysisApp/ScanSession/base.html" %}
+{% extends "RepoAnalysisApp/Semester/base.html" %}
 {% block card_title %}
-<h1 style="text-align: center; color: #4B0082;">Add a new Repository for {{ scan_session }}</h1>
+<h1 style="text-align: center; color: #4B0082;">Add a new Project for {{ semester }}</h1>
 {% endblock %}
 {% load static %}
 {% block content %}
@@ -13,18 +13,21 @@
    {% csrf_token %}
    <div class="form-group">
       <div class="form-group">
+         {{ form.team_name}}
+      </div>
+      <div class="form-group">
          {{ form.repo_name}}
       </div>
       <div class="form-group">
          {{ form.url_name}}
       </div>
    </div>
-   <a type="button" class="btn btn-danger" href="{% url 'scan' scan_session %}">Cancel</a>
+   <a type="button" class="btn btn-danger" href="{% url 'scan' semester %}">Cancel</a>
    <input type="submit" class="btn btn-success" name="submit" id="generateReportBtn" value="Validate" disabled>
 </form>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    window.url_name_id = "{{ form.url_name.id_for_label }}";
+   window.url_name_id = "{{ form.url_name.id_for_label }}";
 </script>
 <script src="{% static 'js/repo.js' %}"></script>
 {% endblock %}

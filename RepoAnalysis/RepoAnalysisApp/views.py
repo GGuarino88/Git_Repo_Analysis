@@ -1,11 +1,10 @@
 ## Modules Initialization
 import os, json
 from django.contrib import messages
-from django.http import JsonResponse
-from .models import ScanSession, SingleURLRepo
+from .models import Semester, SemesterProject
 from django.db import IntegrityError
 from django.urls import reverse_lazy
-from .forms import ScanSessionForm, SingleURLRepoForm
+from .forms import SemesterForm, ProjectForm
 from django.shortcuts import render, redirect
 from django.utils.decorators import method_decorator
 from RepoAnalysisApp.utils.github_api import GitHubAPI
@@ -63,57 +62,55 @@ def analyze_repository(repository_url, access_token):
         create_directory(repo_directory)
     try:
         ## Contributors Details
-        contributors = retry_api(lambda: github_api.get_contributors(repository_url))
+        contributors = retry_api(lambda: github_api.get_code_generic(repository_url, "/contributors"))
         if contributors:
             contributors_data = [{"login": contributor["login"],"contributions": contributor["contributions"],} for contributor in contributors]
             contributors_json_file = os.path.join(repo_directory, "contributors_graph.json")
             save_json_file(contributors_data, contributors_json_file)
 
         ## Code CRUD Details
-        code_churn = retry_api(lambda: github_api.get_code_churn(repository_url))
+        code_churn = retry_api(lambda: github_api.get_code_generic(repository_url, "/stats/code_frequency"))
         if code_churn:
             code_churn_data = [{"additions": entry[0], "deletions": entry[1], "commits": entry[2]} for entry in code_churn]
             code_churn_json_file = os.path.join(repo_directory, "code_churn_over_time.json")
             save_json_file(code_churn_data, code_churn_json_file)
 
         ## Commit Details
-        commit_activity = retry_api(lambda: github_api.get_commit_activity(repository_url))
+        commit_activity = retry_api(lambda: github_api.get_code_generic(repository_url, "/stats/commit_activity"))
         if commit_activity:
             commit_activity_data = [{"week": data["week"], "total": data["total"]} for data in commit_activity]
             commit_activity_json_file = os.path.join(repo_directory, "commit_activity.json")
             save_json_file(commit_activity_data, commit_activity_json_file)
 
         ## Repository Info
-        repo_info = retry_api(lambda: github_api.get_repository_info(repository_url))
+        repo_info = retry_api(lambda: github_api.get_code_generic(repository_url, ""))
         if repo_info:
             repo_info_json_file = os.path.join(repo_directory, "repo_info.json")
             save_json_file(repo_info, repo_info_json_file)
 
         ## Pull Requests
-        pull_requests = retry_api(lambda: github_api.get_pull_requests(repository_url))
+        pull_requests = retry_api(lambda: github_api.get_code_generic(repository_url, "/pulls?state=all"))
         if pull_requests:
             pull_requests_json_file = os.path.join(repo_directory, "pull_requests.json")
             save_json_file(pull_requests, pull_requests_json_file)
 
         ## Languages
-        languages = retry_api(lambda: github_api.get_languages(repository_url))
+        languages = retry_api(lambda: github_api.get_code_generic(repository_url, "/languages"))
         if languages:
             languages_json_file = os.path.join(repo_directory, "languages.json")
             save_json_file(languages, languages_json_file)
 
         ## Releases
-        releases = retry_api(lambda: github_api.get_releases(repository_url))
+        releases = retry_api(lambda: github_api.get_code_generic(repository_url, "/releases"))
         if releases:
             releases_json_file = os.path.join(repo_directory, "releases.json")
             save_json_file(releases, releases_json_file)
 
-        ## Traffic Views
-        traffic_views = retry_api(lambda: github_api.get_traffic_views(repository_url))
-        if traffic_views:
-            if isinstance(traffic_views, str):
-                traffic_views = json.loads(traffic_views)
-            traffic_views_json_file = os.path.join(repo_directory, "traffic_views.json")
-            save_json_file(traffic_views, traffic_views_json_file)
+        ## Branches
+        branches = retry_api(lambda: github_api.get_code_generic(repository_url, "/branches"))
+        if branches:
+            branches_json_file = os.path.join(repo_directory, "branches.json")
+            save_json_file(branches, branches_json_file)
 
     except Exception as e:
         print("An error occurred while analyzing the repository:")
@@ -135,169 +132,173 @@ def home(request):
 
 @login_required
 def index(request):
-    mydata = ScanSession.objects.filter(author=request.user).values()
+    mydata = Semester.objects.filter(author=request.user).values()
     return render(request, "RepoAnalysisApp/index.html", {"mydata": mydata})
 
 @method_decorator(login_required, name="dispatch")
-class ScanCreateView(CreateView):
-    model = ScanSession
-    form_class = ScanSessionForm
-    template_name = "RepoAnalysisApp/ScanSession/scan-create.html"
+class SemesterCreateView(CreateView):
+    model = Semester
+    form_class = SemesterForm
+    template_name = "RepoAnalysisApp/Semester/semester-create.html"
     success_url = reverse_lazy("index")
     def form_valid(self, form):
         form.instance.author = self.request.user
-        scan_session_title = form.cleaned_data.get("title")
+        semester_title = form.cleaned_data.get("title")
         try:
-            new_scan_session = super().form_valid(form)
-            messages.success(self.request, f'Session: "{ scan_session_title }" Created')
-            return new_scan_session
+            new_semester = super().form_valid(form)
+            messages.success(self.request, f'Semester: "{ semester_title }" Created')
+            return new_semester
 
         except IntegrityError:
-            form.add_error(None, f'"{scan_session_title}" already exists')
+            form.add_error(None, f'"{semester_title}" already exists')
             return self.form_invalid(form)
         
-scan_create = ScanCreateView.as_view()
+semester_create = SemesterCreateView.as_view()
 
 @method_decorator(login_required, name="dispatch")
-class ScanEditView(UpdateView):
-    model = ScanSession
-    form_class = ScanSessionForm
-    template_name = "RepoAnalysisApp/ScanSession/scan-edit.html"
+class SemesterEditView(UpdateView):
+    model = Semester
+    form_class = SemesterForm
+    template_name = "RepoAnalysisApp/Semester/semester-edit.html"
     success_url = reverse_lazy("index")
     def form_valid(self, form):
         form.instance.author = self.request.user
-        scan_session_title = form.initial.get("title")
-        new_scan_session_title = form.cleaned_data.get("title")
+        semester_title = form.initial.get("title")
+        new_semester_title = form.cleaned_data.get("title")
         try:
-            new_scan_session = super().form_valid(form)
-            if scan_session_title == new_scan_session_title:
-                messages.success(self.request, f'No changes to: "{scan_session_title}"')
+            new_semester_session = super().form_valid(form)
+            if semester_title == new_semester_title:
+                messages.success(self.request, f'No changes to: "{semester_title}"')
             else:
-                messages.info(
-                    self.request,
-                    f'Session: "{scan_session_title}" Changed to: "{new_scan_session_title}"',
-                )
-            return new_scan_session
+                messages.info(self.request, f'Semester: "{semester_title}" Changed to: "{new_semester_title}"')
+            return new_semester_session
         
         except IntegrityError:
-            form.add_error(None, f'"{scan_session_title}" already exists')
+            form.add_error(None, f'"{semester_title}" already exists')
             return self.form_invalid(form)
 
-scan_edit = ScanEditView.as_view()
+semester_edit = SemesterEditView.as_view()
 
 @method_decorator(login_required, name="dispatch")
-class ScanDeleteView(DeleteView):
-    model = ScanSession
-    template_name = "RepoAnalysisApp/ScanSession/scan-delete.html"
+class SemesterDeleteView(DeleteView):
+    model = Semester
+    template_name = "RepoAnalysisApp/Semester/semester-delete.html"
     def get_success_url(self):
-        deleted_scan_session_title = self.get_object().__dict__["title"]
-        messages.success(self.request, f'Session: "{deleted_scan_session_title}" Deleted')
+        deleted_semester = self.get_object().__dict__["title"]
+        messages.success(self.request, f'Semester: "{deleted_semester}" Deleted')
         return reverse_lazy("index")
     
-scan_delete = ScanDeleteView.as_view()
+semester_delete = SemesterDeleteView.as_view()
 
-def scan(request, scan_session):
+def scan(request, semester):
     context = {}
-    scan_session_id = (ScanSession.objects.filter(title=scan_session).filter(author_id=request.user.id).values()[0]["id"])
-    user_scanned_repos = SingleURLRepo.objects.filter(scan_id=scan_session_id).values()
-    context = {"scan_session": scan_session, "user_scanned_repos": user_scanned_repos}
+    semester_id = (Semester.objects.filter(title=semester).filter(author_id=request.user.id).values()[0]["id"])
+    user_semester_projects = SemesterProject.objects.filter(scan_id=semester_id).values()
+    context = {"semester": semester, "user_semester_projects": user_semester_projects}
     return render(request, "RepoAnalysisApp/scan.html", context)
 
 @method_decorator(login_required, name="dispatch")
 
-class RepoCreateView(CreateView):
-    model = SingleURLRepo
-    form_class = SingleURLRepoForm
-    template_name = "RepoAnalysisApp/RepoScanned/repo-create.html"
+class ProjectCreateView(CreateView):
+    model = SemesterProject
+    form_class = ProjectForm
+    template_name = "RepoAnalysisApp/Project/project-create.html"
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        scan_session = {"scan_session": self.kwargs["scan_session"]}
-        context.update(scan_session)
+        semester = {"semester": self.kwargs["semester"]}
+        context.update(semester)
         return context
     def form_valid(self, form):
-        scan_session = self.kwargs["scan_session"]
+        semester = self.kwargs["semester"]
+        team_name = form.cleaned_data.get("team_name")
         repo_name = form.cleaned_data.get("repo_name")
         repo_url = form.cleaned_data.get("url_name")
-        form.instance.scan_id = ScanSession.objects.filter(title=scan_session).filter(
-            author_id=self.request.user.id
-        )[0]
+        form.instance.scan_id = Semester.objects.filter(title=semester).filter(author_id=self.request.user.id)[0]
         try:
             new_repo = super().form_valid(form)
             messages.success(self.request, f'Repository: "{ repo_name }" Created')
             return new_repo
 
         except IntegrityError as integrity_exc:
-            if (str(integrity_exc) == "UNIQUE constraint failed: user_scaned_repo.scan_id_id, user_scaned_repo.repo_name"):
-                form.add_error(None, f'Repository Name: "{repo_name}" already exists in {scan_session}',)
-            elif (str(integrity_exc) == "UNIQUE constraint failed: user_scaned_repo.scan_id_id, user_scaned_repo.url_name"):
-                form.add_error(None, f'Repository URL: "{repo_url}" already exists in {scan_session}',)
+            if (str(integrity_exc) == "UNIQUE constraint failed: user_semester_projects.scan_id_id, user_semester_projects.team_name"):
+                form.add_error(None, f'Team: "{team_name}" already exists in {semester}',)
+            elif (str(integrity_exc) == "UNIQUE constraint failed: user_semester_projects.scan_id_id, user_semester_projects.repo_name"):
+                form.add_error(None, f'Project Name: "{repo_name}" already exists in {semester}',)
+            elif (str(integrity_exc) == "UNIQUE constraint failed: user_semester_projects.scan_id_id, user_semester_projects.url_name"):
+                form.add_error(None, f'GitHub URL: "{repo_url}" already exists in {semester}',)
             return self.form_invalid(form)
         
     def get_success_url(self):
-        scan_session = self.kwargs["scan_session"]
-        return reverse_lazy("scan", kwargs={"scan_session": scan_session})
+        semester = self.kwargs["semester"]
+        return reverse_lazy("scan", kwargs={"semester": semester})
     
-repo_create = RepoCreateView.as_view()
+project_create = ProjectCreateView.as_view()
 
 @method_decorator(login_required, name="dispatch")
-class RepoEditView(UpdateView):
-    model = SingleURLRepo
-    form_class = SingleURLRepoForm
-    template_name = "RepoAnalysisApp/RepoScanned/repo-edit.html"
+class ProjectEditView(UpdateView):
+    model = SemesterProject
+    form_class = ProjectForm
+    template_name = "RepoAnalysisApp/Project/project-edit.html"
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        scan_session = {"scan_session": self.kwargs["scan_session"]}
-        context.update(scan_session)
+        semester = {"semester": self.kwargs["semester"]}
+        context.update(semester)
         return context
     
     def form_valid(self, form):
-        scan_session = self.kwargs["scan_session"]
+        semester = self.kwargs["semester"]
+        team_name = form.initial.get("team_name")
         repo_name = form.initial.get("repo_name")
         repo_url = form.initial.get("url_name")
+        new_team_name = form.cleaned_data.get("team_name")
         new_repo_name = form.cleaned_data.get("repo_name")
         new_repo_url = form.cleaned_data.get("url_name")
-        form.instance.scan_id = ScanSession.objects.filter(title=scan_session).filter(author_id=self.request.user.id)[0]
+        form.instance.scan_id = Semester.objects.filter(title=semester).filter(author_id=self.request.user.id)[0]
         try:
             edited_repo = super().form_valid(form)
             repo_data_changed = [key for key, value in form.cleaned_data.items() if form.initial.get(key) != value]
             if repo_data_changed:
-                if repo_data_changed[0] == "repo_name":
-                    messages.success(self.request, f'Repository name: "{repo_name}" changed to: "{new_repo_name}"',)
-                elif repo_data_changed[0] == "url_name":
+                if "team_name" in repo_data_changed:
+                    messages.success(self.request, f'"{team_name}" changed to: "{new_team_name}"',)
+                elif "repo_name" in repo_data_changed:
+                    messages.success(self.request, f'Project: "{repo_name}" changed to: "{new_repo_name}"',)
+                elif "url_name" in repo_data_changed:
                     messages.success(self.request, f'"{repo_name}" URL changed to: "{new_repo_url}"')
             return edited_repo
         
         except IntegrityError as integrity_exc:
-            if (str(integrity_exc) == "UNIQUE constraint failed: user_scaned_repo.scan_id_id, user_scaned_repo.repo_name"):
-                form.add_error(None, f'Repository Name: "{repo_name}" already exists in {scan_session}',)
-            elif (str(integrity_exc) == "UNIQUE constraint failed: user_scaned_repo.scan_id_id, user_scaned_repo.url_name"):
-                form.add_error(None, f'Repository URL: "{repo_url}" already exists in {scan_session}',)
+            if (str(integrity_exc) == "UNIQUE constraint failed: user_semester_projects.scan_id_id, user_semester_projects.team_name"):
+                form.add_error(None, f'Team: "{team_name}" already exists in {semester}',)
+            elif (str(integrity_exc) == "UNIQUE constraint failed: user_semester_projects.scan_id_id, user_semester_projects.repo_name"):
+                form.add_error(None, f'Project Name: "{repo_name}" already exists in {semester}',)
+            elif (str(integrity_exc) == "UNIQUE constraint failed: user_semester_projects.scan_id_id, user_semester_projects.url_name"):
+                form.add_error(None, f'GitHub URL: "{repo_url}" already exists in {semester}',)
             return self.form_invalid(form)
         
     def get_success_url(self):
-        scan_session = self.kwargs["scan_session"]
-        return reverse_lazy("scan", kwargs={"scan_session": scan_session})
+        semester = self.kwargs["semester"]
+        return reverse_lazy("scan", kwargs={"semester": semester})
     
-repo_edit = RepoEditView.as_view()
+project_edit = ProjectEditView.as_view()
 
 @method_decorator(login_required, name="dispatch")
-class RepoDeleteView(DeleteView):
-    model = SingleURLRepo
-    template_name = "RepoAnalysisApp/RepoScanned/repo-delete.html"
+class ProjectDeleteView(DeleteView):
+    model = SemesterProject
+    template_name = "RepoAnalysisApp/Project/project-delete.html"
     success_url = reverse_lazy("index")
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        scan_session = {"scan_session": self.kwargs["scan_session"]}
-        context.update(scan_session)
+        semester = {"semester": self.kwargs["semester"]}
+        context.update(semester)
         return context
-    
+
     def get_success_url(self):
-        scan_session = self.kwargs["scan_session"]
+        semester = self.kwargs["semester"]
         deleted_repo = self.get_object().__dict__["repo_name"]
         messages.success(self.request, f'Repository: "{deleted_repo}" Deleted')
-        return reverse_lazy("scan", kwargs={"scan_session": scan_session})
-    
-repo_delete = RepoDeleteView.as_view()
+        return reverse_lazy("scan", kwargs={"semester": semester})
+
+project_delete = ProjectDeleteView.as_view()
 
 def about(request):
     context = {}
@@ -313,7 +314,7 @@ def load_json_data(repo_name, file_name):
         return {}
 
 @login_required
-def analyze(request, scan_session, url_name):
+def analyze(request, semester, url_name):
     if request.method == "POST":
         input_method = request.POST.get("input_method")
         if input_method == "repository":
@@ -324,16 +325,16 @@ def analyze(request, scan_session, url_name):
             return render(request, "RepoAnalysisApp/results.html", context)
     return render(request, "RepoAnalysisApp/index.html")
 
-def generate_all_reports(request, scan_session):
+def generate_all_reports(request, semester):
     if request.method == "POST":
         selected_repos_json = request.POST.get("selected_repos")
         selected_repos = json.loads(selected_repos_json)
         if selected_repos:
             repo_ids = []
             for url in selected_repos:
-                user_scan = SingleURLRepo.objects.filter(scan_id__title=scan_session, url_name=url).first()
-                if user_scan:
-                    repo_ids.append(user_scan.id)
+                user_semester_projects = SemesterProject.objects.filter(scan_id__title=semester, url_name=url).first()
+                if user_semester_projects:
+                    repo_ids.append(user_semester_projects.id)
             access_token = SocialAccountDATA(request).get_access_token()
             for repository_url in selected_repos:
                 analyze_repository(repository_url, access_token)
@@ -345,7 +346,7 @@ def generate_all_reports(request, scan_session):
         else:
             return render(request, "RepoAnalysisApp/index.html")
         
-    return redirect("scan", scan_session=scan_session)
+    return redirect("scan", semester=semester)
 
 class RepoAnalysisLogin(LoginView):
     template_name = "account/login.html"

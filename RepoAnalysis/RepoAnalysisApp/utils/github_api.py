@@ -14,51 +14,9 @@ class GitHubAPI:
         owner = parts[-2]
         repo = parts[-1].split(".")[0]
         return owner, repo
-
-    def get_repository_info(self, repository_url):
+    
+    def get_code_generic(self, repository_url, method):
         owner, repo = self.parse_repository_url(repository_url)
-        endpoint = f"repos/{owner}/{repo}"
-        repo_info = self.make_authenticated_request(endpoint)
-        return repo_info
-
-    def get_contributors(self, repository_url):
-        owner, repo = self.parse_repository_url(repository_url)
-        endpoint = f"repos/{owner}/{repo}/contributors"
-        contributors = self.make_authenticated_request(endpoint)
-        return contributors
-
-    def get_pull_requests(self, repository_url):
-        owner, repo = self.parse_repository_url(repository_url)
-        endpoint = f"repos/{owner}/{repo}/pulls?state=all"
-        pull_requests = self.make_authenticated_request(endpoint)
-        return pull_requests
-
-    def get_languages(self, repository_url):
-        owner, repo = self.parse_repository_url(repository_url)
-        endpoint = f"repos/{owner}/{repo}/languages"
-        languages = self.make_authenticated_request(endpoint)
-        return languages
-
-    def get_releases(self, repository_url):
-        owner, repo = self.parse_repository_url(repository_url)
-        endpoint = f"repos/{owner}/{repo}/releases"
-        releases = self.make_authenticated_request(endpoint)
-        return releases
-
-    def get_traffic_views(self, repository_url):
-        owner, repo = self.parse_repository_url(repository_url)
-        endpoint = f"repos/{owner}/{repo}/traffic/views"
-        views = self.make_authenticated_request(endpoint)
-        return views
-
-    def get_commit_activity(self, repository_url):
-        owner, repo = self.parse_repository_url(repository_url)
-        endpoint = f"repos/{owner}/{repo}/stats/commit_activity"
-        commit_activity = self.make_authenticated_request(endpoint)
-        return commit_activity
-
-    def get_code_churn(self, repository_url):
-        owner, repo = self.parse_repository_url(repository_url)
-        endpoint = f"repos/{owner}/{repo}/stats/code_frequency"
-        code_churn = self.make_authenticated_request(endpoint)
-        return code_churn
+        endpoint = f"repos/{owner}/{repo}{method}"
+        generic_data = self.make_authenticated_request(endpoint)
+        return generic_data
