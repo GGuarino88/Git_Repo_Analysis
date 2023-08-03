@@ -16,7 +16,7 @@ SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool("DEBUG", default=False)
-ALLOWED_HOSTS = [ '*' ]
+ALLOWED_HOSTS = [ 'gitrepoanalysis.onrender.com' ]
 
 # Application definition
 INSTALLED_APPS = [
@@ -50,7 +50,11 @@ ROOT_URLCONF = 'RepoAnalysisApp.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, "RepoAnalysisApp/templates/RepoAnalysisApp")],
+        'DIRS': [
+            os.path.join(BASE_DIR, "RepoAnalysisApp/templates/RepoAnalysisApp"),
+            os.path.join(BASE_DIR, "RepoAnalysisApp/templates/socialaccount"),
+            os.path.join(BASE_DIR, "RepoAnalysisApp/templates/account")
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -100,6 +104,11 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
+SOCIALACCOUNT_ADAPTER = 'RepoAnalysisApp.adapters.CustomSocialAccountAdapter'
+SOCIALACCOUNT_QUERY_EMAIL = True
+SOCIALACCOUNT_AUTO_SIGNUP = True
+SOCIALACCOUNT_STORE_TOKENS = True
+SOCIALACCOUNT_ADAPTER = 'RepoAnalysisApp.adapters.CustomSocialAccountAdapter'
 SOCIALACCOUNT_PROVIDERS = {
     'github': {
         'SCOPE': [
@@ -108,6 +117,9 @@ SOCIALACCOUNT_PROVIDERS = {
             'read:org',
             'user:mail',
         ],
+        'AUTH_PARAMS': {
+            'redirect_uri': 'http://gitrepoanalysis.onrender.com/accounts/github/login/callback/'
+        }
     }
 }
 
@@ -116,8 +128,6 @@ LOGIN_URL = '/'
 LOGOUT_URL = 'logout/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL ='/'
-SOCIALACCOUNT_QUERY_EMAIL = True
-SOCIALACCOUNT_STORE_TOKENS = True
 ACCOUNT_EMAIL_VERIFICATION = "none"
 AUTO_LOGOUT = {
     'IDLE_TIME': timedelta(minutes=10),
