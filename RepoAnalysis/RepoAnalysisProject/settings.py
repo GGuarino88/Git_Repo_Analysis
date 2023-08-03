@@ -104,6 +104,11 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
+SOCIALACCOUNT_ADAPTER = 'RepoAnalysisApp.adapters.CustomSocialAccountAdapter'
+SOCIALACCOUNT_QUERY_EMAIL = True
+SOCIALACCOUNT_AUTO_SIGNUP = True
+SOCIALACCOUNT_STORE_TOKENS = True
+SOCIALACCOUNT_ADAPTER = 'RepoAnalysisApp.adapters.CustomSocialAccountAdapter'
 SOCIALACCOUNT_PROVIDERS = {
     'github': {
         'SCOPE': [
@@ -113,7 +118,7 @@ SOCIALACCOUNT_PROVIDERS = {
             'user:mail',
         ],
         'AUTH_PARAMS': {
-            'callback_url': 'http://gitrepoanalysis.onrender.com/accounts/github/login/callback/'
+            'redirect_uri': 'http://gitrepoanalysis.onrender.com/accounts/github/login/callback/'
         }
     }
 }
@@ -123,8 +128,6 @@ LOGIN_URL = '/'
 LOGOUT_URL = 'logout/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL ='/'
-SOCIALACCOUNT_QUERY_EMAIL = True
-SOCIALACCOUNT_STORE_TOKENS = True
 ACCOUNT_EMAIL_VERIFICATION = "none"
 AUTO_LOGOUT = {
     'IDLE_TIME': timedelta(minutes=10),
