@@ -10,9 +10,6 @@ RUN ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime && dpkg-reconfigu
 ## Copying the latest code
 RUN git clone https://github.com/GGuarino88/Git_Repo_Analysis /Git_Repo_Analysis
 
-RUN echo 127.0.0.1 gitrepoanalysis.onrender.com >> /etc/hosts
-RUN echo localhost gitrepoanalysis.onrender.com >> /etc/hosts
-
 ## Copy the .env file
 COPY .env /Git_Repo_Analysis/RepoAnalysis/.env
 
