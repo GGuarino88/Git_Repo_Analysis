@@ -16,7 +16,7 @@ SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool("DEBUG", default=False)
-ALLOWED_HOSTS = [ 'gitrepoanalysis.onrender.com', '*' ]
+ALLOWED_HOSTS = [ 'gitrepoanalysis.onrender.com' ]
 
 # Application definition
 INSTALLED_APPS = [
@@ -112,6 +112,9 @@ SOCIALACCOUNT_PROVIDERS = {
             'read:org',
             'user:mail',
         ],
+        'AUTH_PARAMS': {
+            'callback_url': 'http://gitrepoanalysis.onrender.com/accounts/github/login/callback/'
+        }
     }
 }
 
