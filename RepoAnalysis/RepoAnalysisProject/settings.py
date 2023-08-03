@@ -50,7 +50,11 @@ ROOT_URLCONF = 'RepoAnalysisApp.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, "RepoAnalysisApp/templates/RepoAnalysisApp")],
+        'DIRS': [
+            os.path.join(BASE_DIR, "RepoAnalysisApp/templates/RepoAnalysisApp"),
+            os.path.join(BASE_DIR, "RepoAnalysisApp/templates/socialaccount"),
+            os.path.join(BASE_DIR, "RepoAnalysisApp/templates/account")
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
