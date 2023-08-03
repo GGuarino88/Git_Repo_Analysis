@@ -16,7 +16,7 @@ SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool("DEBUG", default=False)
-ALLOWED_HOSTS = [ 'gitrepoanalysis.onrender.com' ]
+ALLOWED_HOSTS = [ 'gitrepoanalysis.onrender.com', '127.0.0.1', '*' ]
 
 # Application definition
 INSTALLED_APPS = [
@@ -118,7 +118,7 @@ SOCIALACCOUNT_PROVIDERS = {
             'user:mail',
         ],
         'AUTH_PARAMS': {
-            'redirect_uri': 'http://gitrepoanalysis.onrender.com/accounts/github/login/callback/'
+            'redirect_uri': 'https://gitrepoanalysis.onrender.com/accounts/github/login/callback/'
         }
     }
 }
