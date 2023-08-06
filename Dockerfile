@@ -23,4 +23,4 @@ RUN pip3 install -r requirements.txt
 RUN python3 manage.py migrate
 
 ## Start the Project
-CMD ["sh", "-c", "python3 manage.py runserver 0.0.0.0:443 2>&1 | tee runserver.log"]
+CMD ["sh", "-c", "python3 manage.py runsslserver 0.0.0.0:443 2>&1 | tee runserver.log"]
