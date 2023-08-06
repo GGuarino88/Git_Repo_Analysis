@@ -19,9 +19,6 @@ WORKDIR /Git_Repo_Analysis/RepoAnalysis
 ## Install the required modules
 RUN pip3 install -r requirements.txt
 
-## Run Collect Static
-RUN python3 manage.py collectstatic
-
 ## Run Migration
 RUN python3 manage.py migrate
 
