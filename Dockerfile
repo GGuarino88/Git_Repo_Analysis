@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y python3 python3-pip tzdata git
 RUN ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime && dpkg-reconfigure --frontend noninteractive tzdata
 
 ## Copying the latest code
-RUN git clone https://github.com/GGuarino88/Git_Repo_Analysis /Git_Repo_Analysis
+git clone -b production https://github.com/GGuarino88/Git_Repo_Analysis.git /Git_Repo_Analysis
 
 ## Copy the .env file
 COPY .env /Git_Repo_Analysis/RepoAnalysis/.env
@@ -23,4 +23,4 @@ RUN pip3 install -r requirements.txt
 RUN python3 manage.py migrate
 
 ## Start the Project
-CMD ["sh", "-c", "python3 manage.py runserver 0.0.0.0:8000 2>&1 | tee runserver.log"]
+CMD ["sh", "-c", "python3 manage.py runserver 0.0.0.0:80 2>&1 | tee runserver.log"]
