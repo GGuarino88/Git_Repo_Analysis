@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'RepoAnalysisApp',
     'allauth',
+    'sslserver',
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.github',
