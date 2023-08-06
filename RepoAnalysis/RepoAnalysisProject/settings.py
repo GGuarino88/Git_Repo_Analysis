@@ -14,6 +14,7 @@ environ.Env.read_env(env_file)
 SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
 DEBUG = "False"
 ALLOWED_HOSTS = [ 'gitrepoanalysis.onrender.com' ]
 CSRF_TRUSTED_ORIGINS = [ 'https://gitrepoanalysis.onrender.com' ]
