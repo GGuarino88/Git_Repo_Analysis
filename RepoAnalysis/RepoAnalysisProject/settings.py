@@ -14,9 +14,9 @@ environ.Env.read_env(env_file)
 SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
-ALLOWED_HOSTS = [ 'www.gitrepoanalysis.onrender.com', 'gitrepoanalysis.onrender.com', '*.onrender.com' ]
-CSRF_TRUSTED_ORIGINS = [ 'www.gitrepoanalysis.onrender.com', 'gitrepoanalysis.onrender.com', '*.onrender.com' ]
+DEBUG = "False"
+ALLOWED_HOSTS = [ 'gitrepoanalysis.onrender.com' ]
+CSRF_TRUSTED_ORIGINS = [ 'https://gitrepoanalysis.onrender.com' ]
 
 # Application definition
 INSTALLED_APPS = [
@@ -94,6 +94,7 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     BASE_DIR / "RepoAnalysisApp/static/",
 ]
+STATIC_ROOT = BASE_DIR / "staticfiles"
 SITE_ID = 1
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTHENTICATION_BACKENDS = [
