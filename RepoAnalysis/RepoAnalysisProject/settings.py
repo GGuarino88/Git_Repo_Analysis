@@ -17,6 +17,13 @@ SECRET_KEY = env("SECRET_KEY")
 DEBUG = "False"
 ALLOWED_HOSTS = [ 'gitrepoanalysis.onrender.com' ]
 CSRF_TRUSTED_ORIGINS = [ 'https://gitrepoanalysis.onrender.com' ]
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+SECURE_SSL_REDIRECT = True
+SECURE_HSTS_SECONDS = 3600  # This sets it for 1 hour, consider a higher value for production
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Application definition
 INSTALLED_APPS = [
@@ -90,7 +97,7 @@ LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
-STATIC_URL = 'static/'
+STATIC_URL = 'https://gitrepoanalysis.onrender.com/static/'
 STATICFILES_DIRS = [
     BASE_DIR / "RepoAnalysisApp/static/",
 ]
