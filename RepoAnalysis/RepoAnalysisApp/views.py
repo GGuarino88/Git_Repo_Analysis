@@ -344,6 +344,8 @@ def generate_all_reports(request, semester):
     if request.method == "POST":
         selected_repos_json = request.POST.get("selected_repos")
         selected_repos = json.loads(selected_repos_json)
+        team_names = request.POST.getlist("team_names[]")
+        project_names = request.POST.getlist("project_names[]")
         if selected_repos:
             repo_ids = []
             for url in selected_repos:
@@ -353,11 +355,15 @@ def generate_all_reports(request, semester):
             access_token = SocialAccountDATA(request).get_access_token()
             for repository_url in selected_repos:
                 analyze_repository(repository_url, access_token)
-            context = {"repository_urls": selected_repos, "repo_names": [repo_url.replace("https://github.com/", "").replace("/", "_") for repo_url in selected_repos]}
-            repositories = list(zip(context["repository_urls"], context["repo_names"]))
+            context = {
+                "repository_urls": selected_repos,
+                "repo_names": [repo_url.replace("https://github.com/", "").replace("/", "_") for repo_url in selected_repos],
+                "team_names": team_names,
+                "project_names": project_names,
+            }
+            repositories = list(zip(context["repository_urls"], context["repo_names"], context["team_names"], context["project_names"]))
             context = {'repositories': repositories}
             return render(request, "RepoAnalysisApp/results_multiple.html", context)
-        
         else:
             return render(request, "RepoAnalysisApp/index.html")
         
