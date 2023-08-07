@@ -24,12 +24,12 @@ WORKDIR /Git_Repo_Analysis/RepoAnalysis
 ## Install the required modules
 RUN pip3 install -r requirements.txt
 
-## Expose port 443 for HTTPS
-EXPOSE 443
+## Expose port 80 for HTTP
+EXPOSE 80
 
 ## Set the environment variables
 ENV DJANGO_SSL_CERT=/Git_Repo_Analysis/RepoAnalysis/certs/certificate.crt
 ENV DJANGO_SSL_KEY=/Git_Repo_Analysis/RepoAnalysis/certs/private.key
 
 ## Start the Project with SSL support
-CMD ["sh", "-c", "python3 manage.py runsslserver 0.0.0.0:443 --cert $DJANGO_SSL_CERT --key $DJANGO_SSL_KEY 2>&1 | tee runserver.log"]
+CMD ["sh", "-c", "python3 manage.py runsslserver 0.0.0.0:80 --cert $DJANGO_SSL_CERT --key $DJANGO_SSL_KEY 2>&1 | tee runserver.log"]
