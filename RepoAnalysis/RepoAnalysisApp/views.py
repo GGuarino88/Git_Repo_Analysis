@@ -130,6 +130,57 @@ def analyze_repository(repository_url, access_token):
         print("An error occurred while analyzing the repository:")
         print(e)
 
+def analyze_repository_few(repository_url, access_token):
+    ## This is temporary API KEY, please use your gitHub KEY code while running locally
+    github_api = GitHubAPI(access_token)
+    repo_name = repository_url.replace("https://github.com/", "").replace("/", "_")
+    repo_directory = os.path.join(RESULTS_DIR, repo_name)
+    if os.path.exists(repo_directory):
+        remove_all_files(repo_directory)
+    else:
+        create_directory(repo_directory)
+    try:
+        ## Contributors Details
+        contributors = retry_api(lambda: github_api.get_code_generic(repository_url, "/contributors"))
+        if contributors:
+            contributors_data = [{"login": contributor["login"],"contributions": contributor["contributions"],} for contributor in contributors]
+            contributors_json_file = os.path.join(repo_directory, "contributors_graph.json")
+            save_json_file(contributors_data, contributors_json_file)
+
+        ## Code CRUD Details
+        code_churn = retry_api(lambda: github_api.get_code_generic(repository_url, "/stats/code_frequency"))
+        if code_churn:
+            code_churn_json_file = os.path.join(repo_directory, "code_churn_over_time.json")
+            save_json_file(code_churn, code_churn_json_file)
+
+        ## Commit Details
+        commit_activity = retry_api(lambda: github_api.get_code_generic(repository_url, "/stats/commit_activity"))
+        if commit_activity:
+            commit_activity_json_file = os.path.join(repo_directory, "commit_activity.json")
+            save_json_file(commit_activity, commit_activity_json_file)
+
+        ## Repository Info
+        repo_info = retry_api(lambda: github_api.get_code_generic(repository_url, ""))
+        if repo_info:
+            repo_info_json_file = os.path.join(repo_directory, "repo_info.json")
+            save_json_file(repo_info, repo_info_json_file)
+
+        ## Branches
+        branches = retry_api(lambda: github_api.get_code_generic(repository_url, "/branches"))
+        if branches:
+            branches_json_file = os.path.join(repo_directory, "branches.json")
+            save_json_file(branches, branches_json_file)
+
+        ## Commits Count per branch
+        commits_per_branch = retry_api(lambda: github_api.get_commit_count_per_branch(repository_url))
+        if commits_per_branch:
+            commits_per_branch_json_file = os.path.join(repo_directory, "commits_per_branch.json")
+            save_json_file(commits_per_branch, commits_per_branch_json_file)
+
+    except Exception as e:
+        print("An error occurred while analyzing the repository:")
+        print(e)
+
 # Create your views here.
 def home(request):
     context = {}
@@ -354,7 +405,7 @@ def generate_all_reports(request, semester):
                     repo_ids.append(user_semester_projects.id)
             access_token = SocialAccountDATA(request).get_access_token()
             for repository_url in selected_repos:
-                analyze_repository(repository_url, access_token)
+                analyze_repository_few(repository_url, access_token)
             context = {
                 "repository_urls": selected_repos,
                 "repo_names": [repo_url.replace("https://github.com/", "").replace("/", "_") for repo_url in selected_repos],
