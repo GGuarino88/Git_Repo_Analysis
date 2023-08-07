@@ -15,7 +15,7 @@ SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DOMAIN = "gitrepoanalysis.onrender.com"
-DEBUG = False
+DEBUG = env.bool("DEBUG", default=False)
 ALLOWED_HOSTS = [ 'gitrepoanalysis.onrender.com', '*' ]
 CSRF_TRUSTED_ORIGINS = [ 'http://gitrepoanalysis.onrender.com', 'https://gitrepoanalysis.onrender.com' ]
 
