@@ -12,7 +12,6 @@ RUN git clone -b production https://github.com/GGuarino88/Git_Repo_Analysis.git 
 
 ## Copy the .env file
 COPY .env /Git_Repo_Analysis/RepoAnalysis/.env
-RUN echo DEBUG=True >> /Git_Repo_Analysis/RepoAnalysis/.env
 
 # ## RUN mkdir /Git_Repo_Analysis/RepoAnalysis/certs
 # COPY certificate.crt /Git_Repo_Analysis/RepoAnalysis/certs/certificate.crt
