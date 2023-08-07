@@ -30,5 +30,8 @@ RUN pip3 install -r requirements.txt
 ## Expose port 80 for HTTP
 EXPOSE 8000
 
+## Collect Static Files
+RUN python3 manage.py collectstatic
+
 ## Start the Project with SSL support
 CMD ["sh", "-c", "python3 manage.py runserver 0.0.0.0:8000 2>&1 | tee runserver.log"]
