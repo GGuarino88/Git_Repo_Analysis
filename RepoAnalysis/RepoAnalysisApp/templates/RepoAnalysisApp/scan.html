@@ -39,7 +39,7 @@
                      <form action="{% url 'analyze' semester repo.team_name repo.repo_name %}" method="POST">
                         {% csrf_token %}
                         <div id="repositoryInput" class="form-group">
-                           <input type="submit" class="btn btn-primary" name="submit" value="Generate Report">
+                           <input type="submit" class="btn btn-primary report-gen" name="submit" value="Generate Report">
                            <input type="hidden" class="form-control" name="repository_url" value="{{ repo.url_name }}">
                            <input type="hidden" name="input_method" value="repository">
                         </div>
@@ -65,6 +65,42 @@
       </div>
    </div>
 </div>
+<div id="background"></div>
+<div id="note">
+   
+   <div id="note-icon">
+      <div class="sk-chase">
+         <div class="sk-chase-dot"></div>
+         <div class="sk-chase-dot"></div>
+         <div class="sk-chase-dot"></div>
+         <div class="sk-chase-dot"></div>
+         <div class="sk-chase-dot"></div>
+         <div class="sk-chase-dot"></div>
+      </div>
+   </div>
+    Hey Alex, have some water.
+We will fetch the results in mean time.
+</div>
+<script>
+   window.addEventListener("DOMContentLoaded", () => {
+      const note = document.getElementById("note")
+      note.style.display='none'
+      const background = document.getElementById("background")
+      background.style.display='none'
+      document.getElementById("generateAllReportsBtn").addEventListener("click", () => {
+         background.style.display = 'block'
+         note.style.display = 'block'
+      })
+
+      const buttons = document.getElementsByClassName("report-gen")
+      for(let i = 0; i < buttons.length; i++) {
+         buttons[i].addEventListener("click", () => {
+            background.style.display = 'block'
+            note.style.display = 'block'
+         })
+      }
+   })
+</script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="{% static 'js/scan.js' %}"></script>
 {% endblock %}
