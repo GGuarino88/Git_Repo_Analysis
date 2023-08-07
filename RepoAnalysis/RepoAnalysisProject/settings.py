@@ -15,17 +15,9 @@ SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DOMAIN = "gitrepoanalysis.onrender.com"
-ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
 DEBUG = False
 ALLOWED_HOSTS = [ 'gitrepoanalysis.onrender.com', '*' ]
-CSRF_TRUSTED_ORIGINS = [ 'https://gitrepoanalysis.onrender.com' ]
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
-SECURE_SSL_REDIRECT = True
-SECURE_HSTS_SECONDS = 3600  # This sets it for 1 hour, consider a higher value for production
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-SECURE_HSTS_PRELOAD = True
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+CSRF_TRUSTED_ORIGINS = [ 'http://gitrepoanalysis.onrender.com', 'https://gitrepoanalysis.onrender.com' ]
 
 # Application definition
 INSTALLED_APPS = [
@@ -37,7 +29,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'RepoAnalysisApp',
     'allauth',
-    'sslserver',
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.github',
@@ -99,7 +90,7 @@ LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
-STATIC_URL = 'https://gitrepoanalysis.onrender.com/static/'
+STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / "RepoAnalysisApp/static/",
 ]
