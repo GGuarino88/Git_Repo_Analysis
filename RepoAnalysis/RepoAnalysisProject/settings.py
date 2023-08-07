@@ -1,5 +1,4 @@
-import os
-import environ
+import os, environ
 from pathlib import Path
 from datetime import timedelta
 
@@ -15,8 +14,10 @@ environ.Env.read_env(env_file)
 SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env.bool("DEBUG", default=False)
-ALLOWED_HOSTS = [ 'gitrepoanalysis.onrender.com' ]
+DOMAIN = "gitrepoanalysis.onrender.com"
+DEBUG = False
+ALLOWED_HOSTS = [ 'gitrepoanalysis.onrender.com', '*' ]
+CSRF_TRUSTED_ORIGINS = [ 'http://gitrepoanalysis.onrender.com', 'https://gitrepoanalysis.onrender.com' ]
 
 # Application definition
 INSTALLED_APPS = [
@@ -26,7 +27,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.sites',
     'RepoAnalysisApp',
     'allauth',
     'allauth.account',
@@ -36,8 +36,8 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -50,11 +50,7 @@ ROOT_URLCONF = 'RepoAnalysisApp.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [
-            os.path.join(BASE_DIR, "RepoAnalysisApp/templates/RepoAnalysisApp"),
-            os.path.join(BASE_DIR, "RepoAnalysisApp/templates/socialaccount"),
-            os.path.join(BASE_DIR, "RepoAnalysisApp/templates/account")
-        ],
+        'DIRS': [os.path.join(BASE_DIR, "RepoAnalysisApp/templates/RepoAnalysisApp")],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -94,21 +90,17 @@ LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / "RepoAnalysisApp/static/",
 ]
+STATIC_ROOT = BASE_DIR / "staticfiles"
 SITE_ID = 1
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
-SOCIALACCOUNT_ADAPTER = 'RepoAnalysisApp.adapters.CustomSocialAccountAdapter'
-SOCIALACCOUNT_QUERY_EMAIL = True
-SOCIALACCOUNT_AUTO_SIGNUP = True
-SOCIALACCOUNT_STORE_TOKENS = True
-SOCIALACCOUNT_ADAPTER = 'RepoAnalysisApp.adapters.CustomSocialAccountAdapter'
 SOCIALACCOUNT_PROVIDERS = {
     'github': {
         'SCOPE': [
@@ -117,9 +109,6 @@ SOCIALACCOUNT_PROVIDERS = {
             'read:org',
             'user:mail',
         ],
-        'AUTH_PARAMS': {
-            'redirect_uri': 'http://gitrepoanalysis.onrender.com/accounts/github/login/callback/'
-        }
     }
 }
 
@@ -128,6 +117,8 @@ LOGIN_URL = '/'
 LOGOUT_URL = 'logout/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL ='/'
+SOCIALACCOUNT_QUERY_EMAIL = True
+SOCIALACCOUNT_STORE_TOKENS = True
 ACCOUNT_EMAIL_VERIFICATION = "none"
 AUTO_LOGOUT = {
     'IDLE_TIME': timedelta(minutes=10),
