@@ -24,7 +24,7 @@ urlpatterns = [
     path('index/<str:semester>/project-edit/<int:pk>', views.project_edit, name='project-edit'),
     path('index/<str:semester>/project-delete/<int:pk>', views.project_delete, name='project-delete'),
     path('index/<str:semester>', views.scan, name='scan'),
-    path('index/<str:semester>/<str:url_name>/analyze',views.analyze,name='analyze'),
+    path('index/<str:semester>/<str:team_name>/<str:repo_name>/analyze',views.analyze,name='analyze'),
     path('scan/<str:semester>/generate-all-reports/', views.generate_all_reports, name='generate-all-reports'),
     path('about', views.about, name='about'),
 ]

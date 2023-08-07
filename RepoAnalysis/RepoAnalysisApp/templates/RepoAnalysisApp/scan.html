@@ -36,7 +36,7 @@
                   <td>{{ repo.repo_name }}</td>
                   <td><a href="{{ repo.url_name }}" target="_blank">{{ repo.url_name }}</a></td>
                   <td>
-                     <form action="{% url 'analyze' semester repo.repo_name %}" method="POST">
+                     <form action="{% url 'analyze' semester repo.team_name repo.repo_name %}" method="POST">
                         {% csrf_token %}
                         <div id="repositoryInput" class="form-group">
                            <input type="submit" class="btn btn-primary" name="submit" value="Generate Report">

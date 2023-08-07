@@ -8,7 +8,6 @@
       <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
    </head>
    <body>
-      <h1>Analysis Results</h1>
       {% for repository_url, repo_name in repositories %}
       {% include "RepoAnalysisApp/results_base.html" with repository_url=repository_url repo_name=repo_name %}
       {% endfor %}

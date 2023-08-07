@@ -328,14 +328,15 @@ def load_json_data(repo_name, file_name):
         return {}
 
 @login_required
-def analyze(request, semester, url_name):
+def analyze(request, semester, team_name, repo_name):
+    project_title = repo_name
     if request.method == "POST":
         input_method = request.POST.get("input_method")
         if input_method == "repository":
             repository_url = request.POST.get("repository_url")
             analyze_repository(repository_url, SocialAccountDATA(request).get_access_token())
             repo_name = repository_url.replace("https://github.com/", "").replace("/", "_")
-            context = {"repository_url": repository_url, "repo_name": repo_name, }
+            context = {"repository_url": repository_url, "team_name": team_name, "repo_name": repo_name, "project_title": project_title, }
             return render(request, "RepoAnalysisApp/results.html", context)
     return render(request, "RepoAnalysisApp/index.html")
 
