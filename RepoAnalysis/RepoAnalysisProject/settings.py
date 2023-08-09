@@ -14,10 +14,10 @@ environ.Env.read_env(env_file)
 SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DOMAIN = "gitrepoanalysis.onrender.com"
+DOMAIN = "gitrepoanalysis-tupz.onrender.com"
 DEBUG = env.bool("DEBUG", default=False)
-ALLOWED_HOSTS = [ 'gitrepoanalysis.onrender.com', '*' ]
-CSRF_TRUSTED_ORIGINS = [ 'http://gitrepoanalysis.onrender.com', 'https://gitrepoanalysis.onrender.com' ]
+ALLOWED_HOSTS = [ 'gitrepoanalysis-tupz.onrender.com', '*' ]
+CSRF_TRUSTED_ORIGINS = [ 'https://gitrepoanalysis-tupz.onrender.com', 'https://gitrepoanalysis-tupz.onrender.com' ]
 
 # Application definition
 INSTALLED_APPS = [
