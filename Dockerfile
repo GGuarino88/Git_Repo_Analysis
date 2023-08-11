@@ -13,14 +13,6 @@ RUN git clone -b production https://github.com/GGuarino88/Git_Repo_Analysis.git 
 ## Copy the .env file
 COPY .env /Git_Repo_Analysis/RepoAnalysis/.env
 
-# ## RUN mkdir /Git_Repo_Analysis/RepoAnalysis/certs
-# COPY certificate.crt /Git_Repo_Analysis/RepoAnalysis/certs/certificate.crt
-# COPY private.key /Git_Repo_Analysis/RepoAnalysis/certs/private.key
-
-# ## Set the environment variables
-# ENV DJANGO_SSL_CERT=/Git_Repo_Analysis/RepoAnalysis/certs/certificate.crt
-# ENV DJANGO_SSL_KEY=/Git_Repo_Analysis/RepoAnalysis/certs/private.key
-
 ## Setting up the Env
 WORKDIR /Git_Repo_Analysis/RepoAnalysis
 
