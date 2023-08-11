@@ -1,4 +1,5 @@
 import os, environ
+import dj_database_url
 from pathlib import Path
 from datetime import timedelta
 
@@ -14,10 +15,10 @@ environ.Env.read_env(env_file)
 SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DOMAIN = "gitrepoanalysis.onrender.com"
+DOMAIN = "repoanalysisapp.onrender.com"
 DEBUG = env.bool("DEBUG", default=False)
-ALLOWED_HOSTS = [ 'gitrepoanalysis.onrender.com', '*' ]
-CSRF_TRUSTED_ORIGINS = [ 'http://gitrepoanalysis.onrender.com', 'https://gitrepoanalysis.onrender.com' ]
+ALLOWED_HOSTS = [ 'repoanalysisapp.onrender.com', '*' ]
+CSRF_TRUSTED_ORIGINS = [ 'https://repoanalysisapp.onrender.com', 'https://repoanalysisapp.onrender.com' ]
 
 # Application definition
 INSTALLED_APPS = [
@@ -67,11 +68,17 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'RepoAnalysisProject.wsgi.application'
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default' : dj_database_url.parse(env('DATABASE_URL'))
 }
+# if not DEBUG:
+#     DATABASES = {'default': dj_database_url.parse(os.environ.get('DATABASE_URL'))}
+# else:
+#     DATABASES = {
+#         'default': {
+#             'ENGINE': 'django.db.backends.sqlite3',
+#             'NAME': BASE_DIR / 'db.sqlite3',
+#         }
+#     }
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
