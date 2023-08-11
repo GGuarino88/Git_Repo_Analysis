@@ -36,10 +36,10 @@
                   <td>{{ repo.repo_name }}</td>
                   <td><a href="{{ repo.url_name }}" target="_blank">{{ repo.url_name }}</a></td>
                   <td>
-                     <form action="{% url 'analyze' semester repo.repo_name %}" method="POST">
+                     <form action="{% url 'analyze' semester repo.team_name repo.repo_name %}" method="POST">
                         {% csrf_token %}
                         <div id="repositoryInput" class="form-group">
-                           <input type="submit" class="btn btn-primary" name="submit" value="Generate Report">
+                           <input type="submit" class="btn btn-primary report-gen" name="submit" value="Generate Report">
                            <input type="hidden" class="form-control" name="repository_url" value="{{ repo.url_name }}">
                            <input type="hidden" name="input_method" value="repository">
                         </div>
@@ -55,12 +55,52 @@
             <form method="POST" id="generateAllReportsForm" action="{% url 'generate-all-reports' semester %}">
                {% csrf_token %}
                <input type="hidden" name="selected_repos" id="selectedReposField" value="">
+               {% for repo in user_semester_projects %}
+               <input type="hidden" name="team_names[]" value="{{ repo.team_name }}">
+               <input type="hidden" name="project_names[]" value="{{ repo.repo_name }}">
+               {% endfor %}
                <button type="submit" class="btn btn-info btn-cool" id="generateAllReportsBtn" disabled>Generate All Reports</button>
             </form>
          </div>
       </div>
    </div>
 </div>
+<div id="background"></div>
+<div id="note">
+   
+   <div id="note-icon">
+      <div class="sk-chase">
+         <div class="sk-chase-dot"></div>
+         <div class="sk-chase-dot"></div>
+         <div class="sk-chase-dot"></div>
+         <div class="sk-chase-dot"></div>
+         <div class="sk-chase-dot"></div>
+         <div class="sk-chase-dot"></div>
+      </div>
+   </div>
+    Hey Alex, have some water.
+We will fetch the results in mean time.
+</div>
+<script>
+   window.addEventListener("DOMContentLoaded", () => {
+      const note = document.getElementById("note")
+      note.style.display='none'
+      const background = document.getElementById("background")
+      background.style.display='none'
+      document.getElementById("generateAllReportsBtn").addEventListener("click", () => {
+         background.style.display = 'block'
+         note.style.display = 'block'
+      })
+
+      const buttons = document.getElementsByClassName("report-gen")
+      for(let i = 0; i < buttons.length; i++) {
+         buttons[i].addEventListener("click", () => {
+            background.style.display = 'block'
+            note.style.display = 'block'
+         })
+      }
+   })
+</script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="{% static 'js/scan.js' %}"></script>
 {% endblock %}
