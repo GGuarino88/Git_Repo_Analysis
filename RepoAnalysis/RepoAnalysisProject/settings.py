@@ -17,8 +17,8 @@ SECRET_KEY = env("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DOMAIN = "repoanalysisapp.onrender.com"
 DEBUG = env.bool("DEBUG", default=False)
-ALLOWED_HOSTS = [ 'repoanalysisapp.onrender.com', '*' ]
-CSRF_TRUSTED_ORIGINS = [ 'https://repoanalysisapp.onrender.com' ]
+ALLOWED_HOSTS = [ 'repoanalysisapp.onrender.com', '*', 'gitrepoanalysis.onrender.com' ]
+CSRF_TRUSTED_ORIGINS = [ 'https://repoanalysisapp.onrender.com', 'https://gitrepoanalysis.onrender.com' ]
 
 # Application definition
 INSTALLED_APPS = [
