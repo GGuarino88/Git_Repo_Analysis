@@ -279,14 +279,14 @@ class ProjectCreateView(CreateView):
         form.instance.semester_id = Semester.objects.filter(title=semester).filter(author_id=self.request.user.id)[0]
         try:
             new_repo = super().form_valid(form)
-            messages.success(self.request, f'Repository: "{repo_name}" Created')
+            messages.success(self.request, f'Project: "{repo_name}" Created')
             return new_repo
         except IntegrityError as integrity_exc:
-            if ( str(integrity_exc) == "UNIQUE constraint failed: user_semester_projects.semester_id_id, user_semester_projects.team_name" ):
+            if ( "duplicate key value violates unique constraint \"semester_id_team_name\"" in str(integrity_exc)):
                 form.add_error(None, f'Team: "{team_name}" already exists in {semester}', )
-            elif ( str(integrity_exc) == "UNIQUE constraint failed: user_semester_projects.semester_id_id, user_semester_projects.repo_name" ):
-                form.add_error(None, f'Project Name: "{repo_name}" already exists in {semester}', )
-            elif ( str(integrity_exc) == "UNIQUE constraint failed: user_semester_projects.semester_id_id, user_semester_projects.url_name" ):
+            elif ( "duplicate key value violates unique constraint \"semester_id_repo_name\"" in str(integrity_exc) ):
+                form.add_error(None, f'Project: "{repo_name}" already exists in {semester}', )
+            elif ( "duplicate key value violates unique constraint \"semester_id_url_name\"" in str(integrity_exc) ):
                 form.add_error(None, f'GitHub URL: "{repo_url}" already exists in {semester}', )
             return self.form_invalid(form)
     def get_success_url(self):
@@ -326,12 +326,12 @@ class ProjectEditView(UpdateView):
                     messages.success(self.request, f'"{repo_name}" URL changed to: "{new_repo_url}"')
             return edited_repo
         except IntegrityError as integrity_exc:
-            if ( str(integrity_exc) == "UNIQUE constraint failed: user_semester_projects.semester_id_id, user_semester_projects.team_name" ):
-                form.add_error(None, f'Team: "{new_team_name}" already exists in {semester}', )
-            elif ( str(integrity_exc) == "UNIQUE constraint failed: user_semester_projects.semester_id_id, user_semester_projects.repo_name" ):
-                form.add_error(None, f'Project Name: "{new_repo_name}" already exists in {semester}', )
-            elif ( str(integrity_exc) == "UNIQUE constraint failed: user_semester_projects.semester_id_id, user_semester_projects.url_name" ):
-                form.add_error(None, f'GitHub URL: "{new_repo_url}" already exists in {semester}', )
+            if ( "duplicate key value violates unique constraint \"semester_id_team_name\"" in str(integrity_exc)):
+                form.add_error(None, f'Team: "{team_name}" already exists in {semester}', )
+            elif ( "duplicate key value violates unique constraint \"semester_id_repo_name\"" in str(integrity_exc) ):
+                form.add_error(None, f'Project: "{repo_name}" already exists in {semester}', )
+            elif ( "duplicate key value violates unique constraint \"semester_id_url_name\"" in str(integrity_exc) ):
+                form.add_error(None, f'GitHub URL: "{repo_url}" already exists in {semester}', )
             return self.form_invalid(form)
     def get_success_url(self):
         semester = self.kwargs["semester"]
