@@ -279,7 +279,7 @@ class ProjectCreateView(CreateView):
         form.instance.semester_id = Semester.objects.filter(title=semester).filter(author_id=self.request.user.id)[0]
         try:
             new_repo = super().form_valid(form)
-            messages.success(self.request, f'Repository: "{repo_name}" Created')
+            messages.success(self.request, f'Project: "{repo_name}" Created')
             return new_repo
         except IntegrityError as integrity_exc:
             if ( str(integrity_exc) == "UNIQUE constraint failed: user_semester_projects.semester_id_id, user_semester_projects.team_name" ):
@@ -329,7 +329,7 @@ class ProjectEditView(UpdateView):
             if ( str(integrity_exc) == "UNIQUE constraint failed: user_semester_projects.semester_id_id, user_semester_projects.team_name" ):
                 form.add_error(None, f'Team: "{new_team_name}" already exists in {semester}', )
             elif ( str(integrity_exc) == "UNIQUE constraint failed: user_semester_projects.semester_id_id, user_semester_projects.repo_name" ):
-                form.add_error(None, f'Project Name: "{new_repo_name}" already exists in {semester}', )
+                form.add_error(None, f'Project: "{new_repo_name}" already exists in {semester}', )
             elif ( str(integrity_exc) == "UNIQUE constraint failed: user_semester_projects.semester_id_id, user_semester_projects.url_name" ):
                 form.add_error(None, f'GitHub URL: "{new_repo_url}" already exists in {semester}', )
             return self.form_invalid(form)
