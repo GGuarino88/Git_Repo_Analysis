@@ -41,11 +41,12 @@ $(document).ready(function ()
       }).get();
       const filteredSelectedRepos = selectedRepos.filter(Boolean);
       $("#selectedReposField").val(JSON.stringify(filteredSelectedRepos));
+      $("#generateAllReportsForm input[name='team_names[]']").remove();
+      $("#generateAllReportsForm input[name='project_names[]']").remove();
       $(".repoCheckbox:checked").each(function() {
           const row = $(this).closest('tr');
-          const teamName = row.find('td:nth-child(2)').text();
-          const projectName = row.find('td:nth-child(3)').text();
-  
+          const teamName = row.find('td:nth-child(2)').text().trim();
+          const projectName = row.find('td:nth-child(3)').text().trim();
           $("<input>").attr({
               type: "hidden",
               name: "team_names[]",
