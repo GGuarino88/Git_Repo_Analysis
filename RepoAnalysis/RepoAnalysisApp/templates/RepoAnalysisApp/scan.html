@@ -99,26 +99,4 @@ We will fetch the results in mean time.
 </script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="{% static 'js/scan.js' %}"></script>
-<script>
-   document.getElementById("generateAllReportsBtn").addEventListener("click", function() {
-    const form = document.getElementById("generateAllReportsForm");
-    document.querySelectorAll('input[name="team_names[]"]').forEach(e => e.remove());
-    document.querySelectorAll('input[name="project_names[]"]').forEach(e => e.remove());
-    document.querySelectorAll('.repoCheckbox:checked').forEach(checkbox => {
-        const row = checkbox.closest('tr');
-        const teamName = row.querySelector('td:nth-child(2)').innerText;
-        const projectName = row.querySelector('td:nth-child(3)').innerText;
-        const teamInput = document.createElement('input');
-        teamInput.type = 'hidden';
-        teamInput.name = 'team_names[]';
-        teamInput.value = teamName;
-        form.appendChild(teamInput);
-        const projectInput = document.createElement('input');
-        projectInput.type = 'hidden';
-        projectInput.name = 'project_names[]';
-        projectInput.value = projectName;
-        form.appendChild(projectInput);
-    });
-});
-</script>
 {% endblock %}

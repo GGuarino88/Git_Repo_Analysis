@@ -34,15 +34,29 @@ $(document).ready(function ()
       updateGenerateAllReportsButtonState();
    });
 
-   $("#generateAllReportsForm").on("submit", function (e)
-   {
+   $("#generateAllReportsForm").on("submit", function(e) {
       e.preventDefault();
-      const selectedRepos = $(".repoCheckbox:checked").map(function ()
-      {
-         return $(this).val();
+      const selectedRepos = $(".repoCheckbox:checked").map(function() {
+          return $(this).val();
       }).get();
       const filteredSelectedRepos = selectedRepos.filter(Boolean);
       $("#selectedReposField").val(JSON.stringify(filteredSelectedRepos));
+      $(".repoCheckbox:checked").each(function() {
+          const row = $(this).closest('tr');
+          const teamName = row.find('td:nth-child(2)').text();
+          const projectName = row.find('td:nth-child(3)').text();
+  
+          $("<input>").attr({
+              type: "hidden",
+              name: "team_names[]",
+              value: teamName
+          }).appendTo("#generateAllReportsForm");
+          $("<input>").attr({
+              type: "hidden",
+              name: "project_names[]",
+              value: projectName
+          }).appendTo("#generateAllReportsForm");
+      });
       this.submit();
-   });
+  });  
 });
