@@ -120,7 +120,7 @@ SOCIALACCOUNT_QUERY_EMAIL = True
 SOCIALACCOUNT_STORE_TOKENS = True
 ACCOUNT_EMAIL_VERIFICATION = "none"
 AUTO_LOGOUT = {
-    'IDLE_TIME': timedelta(minutes=10),
+    'IDLE_TIME': timedelta(hours=1),
     'SESSION_TIME':timedelta(hours=1),
     'MESSAGE': 'The session has expired. Please login again to continue.',
 }
