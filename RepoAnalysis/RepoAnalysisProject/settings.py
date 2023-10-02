@@ -100,16 +100,17 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
-SOCIALACCOUNT_PROVIDERS = {
-    'github': {
-        'SCOPE': [
-           'read:user',
-            'read:repo',
-            'read:org',
-            'user:mail',
-        ],
-    }
-}
+#access to personal data
+#SOCIALACCOUNT_PROVIDERS = {
+#    'github': {
+#        'SCOPE': [
+#           'read:user',
+#            'read:repo',
+#            'read:org',
+#            'user:mail',
+#        ],
+#    }
+#}
 
 # Login and Logout URLS
 LOGIN_URL = '/'
