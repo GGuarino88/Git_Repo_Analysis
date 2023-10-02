@@ -102,12 +102,12 @@ AUTHENTICATION_BACKENDS = [
 ]
 SOCIALACCOUNT_PROVIDERS = {
     'github': {
-        'SCOPE': [
-            'user',
-            'repo',
-            'read:org',
-            'user:mail',
-        ],
+#        'SCOPE': [
+#           'user',
+#            'repo',
+#            'read:org',
+#            'user:mail',
+#        ],
     }
 }
 
